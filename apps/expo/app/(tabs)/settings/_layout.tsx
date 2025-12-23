@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router'
 import { useTheme } from 'tamagui'
 
-export default function ProfileLayout() {
+export default function SettingsLayout() {
   const theme = useTheme()
 
   return (
@@ -13,7 +13,7 @@ export default function ProfileLayout() {
         headerTintColor: theme.color12.val,
       }}
     >
-      <Stack.Screen name="index" options={{ title: 'Profile' }} />
+      <Stack.Screen name="index" options={{ title: 'Settings' }} />
     </Stack>
   )
 }
