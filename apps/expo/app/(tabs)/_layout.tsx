@@ -1,4 +1,4 @@
-import { BookOpen, Download, Settings } from '@tamagui/lucide-icons'
+import { BookOpen, Download, Settings, Shield } from '@tamagui/lucide-icons'
 import { Tabs } from 'expo-router'
 import { useTheme } from 'tamagui'
 
@@ -25,6 +25,14 @@ export default function TabsLayout() {
         options={{
           title: 'Library',
           tabBarIcon: ({ color, size }) => <BookOpen size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="admin"
+        options={{
+          headerShown: false,
+          title: 'Admin',
+          tabBarIcon: ({ color, size }) => <Shield size={size} color={color} />,
         }}
       />
       <Tabs.Screen
