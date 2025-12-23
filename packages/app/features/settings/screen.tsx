@@ -1,7 +1,6 @@
 import { Paragraph, ScrollView, Separator, Settings, YStack, isWeb, useMedia } from '@my/ui'
-import { Book, Cog, Info, Lock, LogOut, Mail, Moon, Twitter } from '@tamagui/lucide-icons'
+import { Lock, LogOut, Mail, Moon, User } from '@tamagui/lucide-icons'
 import { useThemeSetting } from 'app/provider/theme'
-import { redirect } from 'app/utils/redirect'
 import { useSupabase } from 'app/utils/supabase/useSupabase'
 import { usePathname } from 'app/utils/usePathname'
 import { useLink } from 'solito/link'
@@ -20,12 +19,12 @@ export const SettingsScreen = () => {
           <Settings.Items>
             <Settings.Group $gtSm={{ space: '$1' }}>
               <Settings.Item
-                icon={Cog}
-                isActive={pathname === 'settings/general'}
-                {...useLink({ href: media.sm ? '/settings/general' : '/settings' })}
-                accentTheme="green"
+                icon={User}
+                isActive={pathname === '/settings/profile'}
+                {...useLink({ href: '/settings/profile' })}
+                accentTheme="blue"
               >
-                General
+                Profile
               </Settings.Item>
               <Settings.Item
                 icon={Lock}
@@ -45,42 +44,6 @@ export const SettingsScreen = () => {
               </Settings.Item>
             </Settings.Group>
             {isWeb && <Separator boc="$color3" mx="$-4" bw="$0.25" />}
-            <Settings.Group>
-              <Settings.Item
-                icon={Book}
-                isActive={pathname === '/privacy-policy'}
-                {...useLink({ href: '/privacy-policy' })}
-                accentTheme="purple"
-              >
-                Privacy Policy
-              </Settings.Item>
-              <Settings.Item
-                icon={Book}
-                isActive={pathname === '/terms-of-service'}
-                {...useLink({ href: '/terms-of-service' })}
-                accentTheme="purple"
-              >
-                Terms Of Service
-              </Settings.Item>
-              {/* removing about from web since landing pages are more common on web - feel free to add back if needed */}
-              {!isWeb && (
-                // isWeb is a constant so this isn't really a conditional hook
-                // eslint-disable-next-line react-hooks/rules-of-hooks
-                <Settings.Item icon={Info} {...useLink({ href: '/about' })} accentTheme="blue">
-                  About
-                </Settings.Item>
-              )}
-            </Settings.Group>
-            {isWeb && <Separator boc="$color3" mx="$-4" bw="$0.25" />}
-            <Settings.Group>
-              <Settings.Item
-                icon={Twitter}
-                onPress={() => redirect('https://twitter.com/tamagui_js')}
-                accentTheme="blue"
-              >
-                Our Twitter
-              </Settings.Item>
-            </Settings.Group>
             {isWeb && <Separator boc="$color3" mx="$-4" bw="$0.25" />}
             <Settings.Group>
               <SettingsThemeAction />

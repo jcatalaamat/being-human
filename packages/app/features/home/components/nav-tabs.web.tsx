@@ -98,8 +98,8 @@ export const NavTabs = (props: TabsProps) => {
         <Tab value="/admin" onInteraction={handleOnInteraction}>
           Admin
         </Tab>
-        <Tab value="/profile" onInteraction={handleOnInteraction}>
-          Profile
+        <Tab value="/settings" onInteraction={handleOnInteraction}>
+          Settings
         </Tab>
       </Tabs.List>
     </Tabs>

@@ -1,5 +1,5 @@
 import { HomeLayout } from 'app/features/home/layout.web'
-import { GeneralSettingsScreen } from 'app/features/settings/general-screen'
+import { ProfileSettingsScreen } from 'app/features/settings/profile-screen'
 import { SettingsLayout } from 'app/features/settings/layout.web'
 import Head from 'next/head'
 import { NextPageWithLayout } from 'pages/_app'
@@ -8,9 +8,9 @@ const Page: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Settings</title>
+        <title>Profile Settings</title>
       </Head>
-      <GeneralSettingsScreen />
+      <ProfileSettingsScreen />
     </>
   )
 }
