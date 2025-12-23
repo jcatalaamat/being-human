@@ -1,4 +1,4 @@
-import { BookOpen, Download, Settings, Shield } from '@tamagui/lucide-icons'
+import { BookOpen, Download, Settings as SettingsIcon, Shield } from '@tamagui/lucide-icons'
 import { Tabs } from 'expo-router'
 import { useTheme } from 'tamagui'
 
@@ -48,7 +48,7 @@ export default function TabsLayout() {
         options={{
           headerShown: false,
           title: 'Settings',
-          tabBarIcon: ({ color, size }) => <Settings size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <SettingsIcon size={size} color={color} />,
         }}
       />
     </Tabs>
