@@ -19,7 +19,7 @@ import { Link } from 'solito/link'
 import { useRouter } from 'solito/router'
 import { z } from 'zod'
 
-import { SocialLogin } from './components/SocialLogin'
+// import { SocialLogin } from './components/SocialLogin'
 
 const { useParams, useUpdateParams } = createParam<{ email?: string }>()
 
@@ -89,7 +89,7 @@ export const SignInScreen = () => {
                   </SubmitButton>
                 </Theme>
                 <SignUpLink />
-                {isWeb && <SocialLogin />}
+                {/* {isWeb && <SocialLogin />} */}
               </>
             )
           }}
@@ -101,11 +101,11 @@ export const SignInScreen = () => {
                 <Paragraph theme="alt1">Sign in to your account</Paragraph>
               </YStack>
               {Object.values(fields)}
-              {!isWeb && (
+              {/* {!isWeb && (
                 <YStack mt="$4">
                   <SocialLogin />
                 </YStack>
-              )}
+              )} */}
             </>
           )}
         </SchemaForm>

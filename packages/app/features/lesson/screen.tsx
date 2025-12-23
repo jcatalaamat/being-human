@@ -80,8 +80,8 @@ export function LessonScreen({ lessonId }: LessonScreenProps) {
   }
 
   return (
-    <YStack f={1}>
-      <YStack p="$4" borderBottomWidth={1} borderColor="$borderColor">
+    <YStack f={1} maw={800} mx="auto" w="100%">
+      <YStack py="$6" px="$4" borderBottomWidth={1} borderColor="$borderColor">
         <H3 numberOfLines={2}>{lesson.title}</H3>
       </YStack>
 

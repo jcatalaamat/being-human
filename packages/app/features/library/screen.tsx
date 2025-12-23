@@ -29,7 +29,7 @@ export function LibraryScreen() {
   if (coursesLoading && !allCourses) {
     return (
       <ScrollView>
-        <YStack p="$4" gap="$4">
+        <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$4">
           <H2>My Library</H2>
           <CourseCardSkeleton />
           <CourseCardSkeleton />
@@ -43,7 +43,7 @@ export function LibraryScreen() {
   if (!coursesLoading && (!allCourses || allCourses.length === 0)) {
     return (
       <ScrollView>
-        <YStack p="$4" gap="$6">
+        <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$6">
           <H2>My Library</H2>
           <EmptyState title="No courses yet" message="Egon will add content soon." />
         </YStack>
@@ -53,7 +53,7 @@ export function LibraryScreen() {
 
   return (
     <ScrollView>
-      <YStack p="$4" gap="$6">
+      <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$6">
         <H2>My Library</H2>
 
         {continueLearning && continueLearning.length > 0 && !continueError && (

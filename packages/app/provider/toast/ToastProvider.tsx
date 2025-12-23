@@ -1,4 +1,5 @@
 import { CustomToast, ToastProvider as ToastProviderOG } from '@my/ui'
+import React from 'react'
 
 import { ToastViewport, ToastViewportProps } from './ToastViewport'
 

@@ -1,4 +1,5 @@
-import { Button, H2, Label, Paragraph, ScrollView, Select, TextField, TextArea, YStack, XStack, Adapt, Sheet } from '@my/ui'
+import { Button, H2, Paragraph, ScrollView, YStack, XStack } from '@my/ui'
+import { Input, TextArea, Label, Select, Adapt, Sheet } from 'tamagui'
 import { Check, ChevronDown } from '@tamagui/lucide-icons'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
@@ -51,12 +52,12 @@ export function CreateLessonScreen({ courseId, moduleId }: CreateLessonScreenPro
 
   return (
     <ScrollView>
-      <YStack maw={600} mx="auto" w="100%" py="$6" px="$4" gap="$4">
+      <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$4">
         <H2>Add Lesson</H2>
 
         <YStack gap="$2">
           <Label htmlFor="title">Title *</Label>
-          <TextField id="title" value={title} onChangeText={setTitle} placeholder="Lesson title" />
+          <Input id="title" value={title} onChangeText={setTitle} placeholder="Lesson title" />
         </YStack>
 
         <YStack gap="$2">
@@ -124,7 +125,7 @@ export function CreateLessonScreen({ courseId, moduleId }: CreateLessonScreenPro
         {(lessonType === 'video' || lessonType === 'audio' || lessonType === 'pdf') && (
           <YStack gap="$2">
             <Label htmlFor="contentUrl">Content URL *</Label>
-            <TextField
+            <Input
               id="contentUrl"
               value={contentUrl}
               onChangeText={setContentUrl}
@@ -149,7 +150,7 @@ export function CreateLessonScreen({ courseId, moduleId }: CreateLessonScreenPro
         {(lessonType === 'video' || lessonType === 'audio') && (
           <YStack gap="$2">
             <Label htmlFor="duration">Duration (seconds)</Label>
-            <TextField
+            <Input
               id="duration"
               value={durationSec}
               onChangeText={setDurationSec}
@@ -161,7 +162,7 @@ export function CreateLessonScreen({ courseId, moduleId }: CreateLessonScreenPro
 
         <YStack gap="$2">
           <Label htmlFor="order">Order</Label>
-          <TextField
+          <Input
             id="order"
             value={orderIndex}
             onChangeText={setOrderIndex}

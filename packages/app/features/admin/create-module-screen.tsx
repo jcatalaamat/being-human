@@ -1,4 +1,5 @@
-import { Button, H2, Label, Paragraph, ScrollView, TextField, TextArea, YStack, XStack } from '@my/ui'
+import { Button, H2, Paragraph, ScrollView, YStack, XStack } from '@my/ui'
+import { Input, TextArea, Label } from 'tamagui'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
 import { useState } from 'react'
@@ -40,12 +41,12 @@ export function CreateModuleScreen({ courseId }: CreateModuleScreenProps) {
 
   return (
     <ScrollView>
-      <YStack maw={600} mx="auto" w="100%" py="$6" px="$4" gap="$4">
+      <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$4">
         <H2>Add Module</H2>
 
         <YStack gap="$2">
           <Label htmlFor="title">Title *</Label>
-          <TextField id="title" value={title} onChangeText={setTitle} placeholder="Module title" />
+          <Input id="title" value={title} onChangeText={setTitle} placeholder="Module title" />
         </YStack>
 
         <YStack gap="$2">
@@ -61,7 +62,7 @@ export function CreateModuleScreen({ courseId }: CreateModuleScreenProps) {
 
         <YStack gap="$2">
           <Label htmlFor="order">Order</Label>
-          <TextField
+          <Input
             id="order"
             value={orderIndex}
             onChangeText={setOrderIndex}

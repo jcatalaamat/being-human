@@ -55,7 +55,7 @@ export default {
         '@react-native-google-signin/google-signin',
         {
           // https://react-native-google-signin.github.io/docs/setting-up/expo
-          iosUrlScheme: process.env.GOOGLE_IOS_SCHEME,
+          iosUrlScheme: process.env.GOOGLE_IOS_SCHEME || 'com.googleusercontent.apps.571497840649-tqcs8mtqtnrkorj0iagsktomose67k5q',
         },
       ],
       'expo-apple-authentication',

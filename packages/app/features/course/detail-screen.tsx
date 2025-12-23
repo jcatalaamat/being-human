@@ -71,7 +71,7 @@ export function CourseDetailScreen({ courseId }: CourseDetailScreenProps) {
 
   return (
     <ScrollView>
-      <YStack gap="$4">
+      <YStack maw={800} mx="auto" w="100%" gap="$4">
         <CourseHeader
           title={course.title}
           description={course.description || undefined}

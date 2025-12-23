@@ -1,4 +1,5 @@
-import { Button, H2, Paragraph, ScrollView, TextField, TextArea, YStack, XStack, Switch, Label } from '@my/ui'
+import { Button, H2, ScrollView, YStack, XStack } from '@my/ui'
+import { Input, TextArea, Label, Switch } from 'tamagui'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
 import { useState } from 'react'
@@ -34,12 +35,12 @@ export function CreateCourseScreen() {
 
   return (
     <ScrollView>
-      <YStack maw={600} mx="auto" w="100%" py="$6" px="$4" gap="$4">
+      <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$4">
         <H2>Create Course</H2>
 
         <YStack gap="$2">
           <Label htmlFor="title">Title *</Label>
-          <TextField id="title" value={title} onChangeText={setTitle} placeholder="Course title" />
+          <Input id="title" value={title} onChangeText={setTitle} placeholder="Course title" />
         </YStack>
 
         <YStack gap="$2">
@@ -55,7 +56,7 @@ export function CreateCourseScreen() {
 
         <YStack gap="$2">
           <Label htmlFor="coverUrl">Cover Image URL</Label>
-          <TextField id="coverUrl" value={coverUrl} onChangeText={setCoverUrl} placeholder="https://..." />
+          <Input id="coverUrl" value={coverUrl} onChangeText={setCoverUrl} placeholder="https://..." />
         </YStack>
 
         <XStack gap="$3" ai="center">

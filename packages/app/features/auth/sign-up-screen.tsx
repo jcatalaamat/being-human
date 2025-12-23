@@ -18,7 +18,7 @@ import { createParam } from 'solito'
 import { Link } from 'solito/link'
 import { z } from 'zod'
 
-import { SocialLogin } from './components/SocialLogin'
+// import { SocialLogin } from './components/SocialLogin'
 
 const { useParams, useUpdateParams } = createParam<{ email?: string }>()
 
@@ -92,7 +92,7 @@ export const SignUpScreen = () => {
                 </SubmitButton>
               </Theme>
               <SignInLink />
-              {isWeb && <SocialLogin />}
+              {/* {isWeb && <SocialLogin />} */}
             </>
           )}
         >
@@ -103,11 +103,11 @@ export const SignUpScreen = () => {
                 <Paragraph theme="alt2">Create a new account</Paragraph>
               </YStack>
               {Object.values(fields)}
-              {!isWeb && (
+              {/* {!isWeb && (
                 <YStack mt="$4">
                   <SocialLogin />
                 </YStack>
-              )}
+              )} */}
             </>
           )}
         </SchemaForm>
