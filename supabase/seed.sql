@@ -162,7 +162,7 @@ VALUES
   )
 ON CONFLICT (id) DO NOTHING;
 
--- Insert lessons for React - Module 3 (State and Hooks)
+-- Insert lessons for React - Module 3 (State and Hooks) - Text lesson
 INSERT INTO lessons (id, module_id, title, description, lesson_type, content_text, order_index)
 VALUES
   (
@@ -173,7 +173,12 @@ VALUES
     'text',
     E'# Introduction to State\n\nState is one of the most important concepts in React. It allows components to create and manage their own data.\n\n## What is State?\n\nState is data that changes over time. Unlike props, which are passed to a component, state is managed within the component.\n\n## Example\n\n```jsx\nimport { useState } from ''react'';\n\nfunction Counter() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <div>\n      <p>You clicked {count} times</p>\n      <button onClick={() => setCount(count + 1)}>\n        Click me\n      </button>\n    </div>\n  );\n}\n```\n\n## Key Concepts\n\n- State is private to the component\n- Changing state triggers a re-render\n- Use `useState` hook to add state to function components',
     1
-  ),
+  )
+ON CONFLICT (id) DO NOTHING;
+
+-- Insert lessons for React - Module 3 (State and Hooks) - Video lesson
+INSERT INTO lessons (id, module_id, title, description, lesson_type, content_url, duration_sec, order_index)
+VALUES
   (
     '750e8400-e29b-41d4-a716-446655440008',
     '650e8400-e29b-41d4-a716-446655440003',
