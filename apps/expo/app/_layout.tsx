@@ -59,29 +59,8 @@ export default function HomeLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
         <Provider initialSession={initialSession}>
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen
-              name="(drawer)/(tabs)/index"
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="create"
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="settings/index"
-              options={{
-                headerShown: true,
-                headerBackTitle: 'Back',
-              }}
-            />
-          </Stack>
-        </Provider>
-      </View>
+          <Stack screenOptions={{ headerShown: false }} />
+        </Provider>      </View>
     </GestureHandlerRootView>
   )
 }

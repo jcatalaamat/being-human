@@ -21,7 +21,7 @@ import { useUser } from 'app/utils/useUser'
 import { useRouter as useNextRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { SolitoImage } from 'solito/image'
-import { Link, useLink } from 'solito/link'
+import { Link } from 'solito/link'
 
 import { NavTabs } from './components/nav-tabs.web'
 
@@ -182,20 +182,30 @@ export const MobileNavbar = ({ children }: { children: React.ReactNode }) => {
 const CtaButton = (props: ButtonProps) => {
   const { toggleCreateModal, setToggleCreateModal } = useGlobalStore()
   const pathName = usePathname()
-  const linkProps = useLink({ href: '/create' })
+  const router = useNextRouter()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
+  const handlePress = () => {
+    if (pathName !== '/create') {
+      // On small screens, navigate to /create
+      if (typeof window !== 'undefined' && window.innerWidth < 768) {
+        router.push('/create')
+      } else {
+        // On larger screens, show modal
+        setToggleCreateModal()
+      }
+    }
+  }
+
   if (!mounted) {
     return (
       <Theme inverse>
         <Button
-          onPress={() => {
-            if (pathName !== '/create') setToggleCreateModal()
-          }}
+          onPress={handlePress}
           size="$3"
           space="$1.5"
           my="$-1"
@@ -213,34 +223,17 @@ const CtaButton = (props: ButtonProps) => {
     <>
       <CreateModal toggleEvent={toggleCreateModal} setToggleEvent={setToggleCreateModal} />
       <Theme inverse>
-        <Adapt when="sm">
-          <Button
-            {...linkProps}
-            size="$3"
-            space="$1.5"
-            my="$-1"
-            icon={Plus}
-            br="$10"
-            {...props}
-          >
-            Create
-          </Button>
-        </Adapt>
-        <Adapt when="gtSm">
-          <Button
-            onPress={() => {
-              if (pathName !== '/create') setToggleCreateModal()
-            }}
-            size="$3"
-            space="$1.5"
-            my="$-1"
-            icon={Plus}
-            br="$10"
-            {...props}
-          >
-            Create
-          </Button>
-        </Adapt>
+        <Button
+          onPress={handlePress}
+          size="$3"
+          space="$1.5"
+          my="$-1"
+          icon={Plus}
+          br="$10"
+          {...props}
+        >
+          Create
+        </Button>
       </Theme>
     </>
   )

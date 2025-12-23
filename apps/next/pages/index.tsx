@@ -1,5 +1,5 @@
 import { HomeLayout } from 'app/features/home/layout.web'
-import { HomeScreen } from 'app/features/home/screen'
+import { LibraryScreen } from 'app/features/library/screen'
 import Head from 'next/head'
 
 import type { NextPageWithLayout } from './_app'
@@ -8,9 +8,9 @@ export const Page: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Home</title>
+        <title>Library - Egon Courses</title>
       </Head>
-      <HomeScreen />
+      <LibraryScreen />
     </>
   )
 }
