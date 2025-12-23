@@ -34,7 +34,10 @@ export const createTRPCContext = async (opts: FetchCreateContextFnOptions) => {
 
     if (accessToken) {
       try {
-        const { payload } = await jose.jwtVerify(accessToken, new TextEncoder().encode(jwtSecret))
+        const { payload } = await jose.jwtVerify(
+          accessToken,
+          new Uint8Array(Buffer.from(jwtSecret, 'base64'))
+        )
         userId = payload.sub
       } catch (error) {
         // Leaves userId undefined, which will eventually fail the enforceUserIsAuthed check
