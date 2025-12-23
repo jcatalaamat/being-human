@@ -5,7 +5,7 @@ import { MOCK_MODULES } from '../mock-data'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 
 // Set to true to use mock data, false to use real database
-const USE_MOCK_DATA = true
+const USE_MOCK_DATA = false
 
 export const lessonsRouter = createTRPCRouter({
   // Get lesson by ID with progress

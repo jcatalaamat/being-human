@@ -1,4 +1,4 @@
-import { Button, H2, Paragraph, ScrollView, Settings, YStack } from '@my/ui'
+import { Button, EmptyState, H2, Paragraph, ScrollView, Settings, YStack } from '@my/ui'
 import { Plus, BookOpen, Edit, Trash } from '@tamagui/lucide-icons'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
@@ -27,6 +27,12 @@ export function AdminCoursesScreen() {
 
         {isPending ? (
           <Paragraph>Loading...</Paragraph>
+        ) : courses && courses.length === 0 ? (
+          <EmptyState
+            icon={BookOpen}
+            title="No courses yet"
+            message="Create your first course to get started."
+          />
         ) : (
           <Settings>
             <Settings.Items>
