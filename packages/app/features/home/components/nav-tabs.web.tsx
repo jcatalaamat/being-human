@@ -95,6 +95,9 @@ export const NavTabs = (props: TabsProps) => {
         <Tab value="/" onInteraction={handleOnInteraction}>
           Library
         </Tab>
+        <Tab value="/admin" onInteraction={handleOnInteraction}>
+          Admin
+        </Tab>
         <Tab value="/profile" onInteraction={handleOnInteraction}>
           Profile
         </Tab>
