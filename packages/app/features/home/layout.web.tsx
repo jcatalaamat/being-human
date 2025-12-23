@@ -13,10 +13,7 @@ import {
   getTokens,
   validToken,
 } from '@my/ui'
-import { CreateModal } from '@my/ui/src/components/CreateModal'
-import { Menu, Plus } from '@tamagui/lucide-icons'
-import { useGlobalStore } from 'app/utils/global-store'
-import { usePathname } from 'app/utils/usePathname'
+import { Menu } from '@tamagui/lucide-icons'
 import { useUser } from 'app/utils/useUser'
 import { useRouter as useNextRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -53,8 +50,6 @@ export const HomeLayout = ({ children, fullPage = false, padded = false }: HomeL
               <YStack gap="$5" w="100%" ai="flex-end">
                 <NavTabs orientation="vertical" f={1} w="100%" size="$3" />
                 <Separator w="100%" />
-                <CtaButton w="100%" />
-                <Separator w="100%" />
                 <WithUserDetail ai="center" gap="$4">
                   <ProfileButton />
                 </WithUserDetail>
@@ -62,7 +57,6 @@ export const HomeLayout = ({ children, fullPage = false, padded = false }: HomeL
             </MobileNavbar>
           </YStack>
           <XStack ai="center" gap="$4" py="$3">
-            <CtaButton />
             <ProfileButton />
           </XStack>
         </XStack>
@@ -176,66 +170,6 @@ export const MobileNavbar = ({ children }: { children: React.ReactNode }) => {
         </Popover.ScrollView>
       </Popover.Content>
     </Popover>
-  )
-}
-
-const CtaButton = (props: ButtonProps) => {
-  const { toggleCreateModal, setToggleCreateModal } = useGlobalStore()
-  const pathName = usePathname()
-  const router = useNextRouter()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  const handlePress = () => {
-    if (pathName !== '/create') {
-      // On small screens, navigate to /create
-      if (typeof window !== 'undefined' && window.innerWidth < 768) {
-        router.push('/create')
-      } else {
-        // On larger screens, show modal
-        setToggleCreateModal()
-      }
-    }
-  }
-
-  if (!mounted) {
-    return (
-      <Theme inverse>
-        <Button
-          onPress={handlePress}
-          size="$3"
-          space="$1.5"
-          my="$-1"
-          icon={Plus}
-          br="$10"
-          {...props}
-        >
-          Create
-        </Button>
-      </Theme>
-    )
-  }
-
-  return (
-    <>
-      <CreateModal toggleEvent={toggleCreateModal} setToggleEvent={setToggleCreateModal} />
-      <Theme inverse>
-        <Button
-          onPress={handlePress}
-          size="$3"
-          space="$1.5"
-          my="$-1"
-          icon={Plus}
-          br="$10"
-          {...props}
-        >
-          Create
-        </Button>
-      </Theme>
-    </>
   )
 }
 
