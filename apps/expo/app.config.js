@@ -1,9 +1,9 @@
 export default {
   expo: {
-    name: 'takeout demo',
-    slug: 'takeout-demo',
+    name: 'Holistic Training',
+    slug: 'holistic-training',
     jsEngine: 'hermes',
-    scheme: 'myapp',
+    scheme: 'holistictraining',
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/icon.png',
@@ -11,7 +11,8 @@ export default {
     splash: {
       image: './assets/splash.png',
       contentFit: 'contain',
-      backgroundColor: '#ffffff',
+      // TODO: Update to brand color when final colors provided
+      backgroundColor: '#0D9488', // Teal-600 brand color
     },
     updates: {
       fallbackToCacheTimeout: 0,

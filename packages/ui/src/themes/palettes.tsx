@@ -1,3 +1,4 @@
+import { brandConfig } from './brand'
 import { objectFromEntries, objectKeys } from './helpers'
 import { color, colorTokens } from './token-colors'
 
@@ -33,9 +34,14 @@ export const palettes = (() => {
     ]
   }
 
+  // Brand color from config - uses Holistic Training brand colors
+  const brandColorKey = `${brandConfig.primaryColorName}${brandConfig.lightStep}` as keyof typeof color
+  const brandColorKeyLight = `${brandColorKey}Light` as keyof typeof color
+  const brandColorKeyDark = `${brandColorKey}Dark` as keyof typeof color
+
   const brandColor = {
-    light: color.blue4Light,
-    dark: color.blue4Dark,
+    light: color[brandColorKeyLight] || color.green4Light,
+    dark: color[brandColorKeyDark] || color.green4Dark,
   }
 
   const lightPalette = [

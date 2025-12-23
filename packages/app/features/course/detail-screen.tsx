@@ -1,5 +1,6 @@
 import { Button, EmptyState, ErrorState, FullscreenSpinner } from '@my/ui'
 import { ScrollView, YStack } from '@my/ui'
+import { PROGRAM } from 'app/constants/copy'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
 
@@ -80,13 +81,13 @@ export function CourseDetailScreen({ courseId }: CourseDetailScreenProps) {
         />
 
         <Button onPress={hasStarted ? handleResumeCourse : handleStartCourse} size="$5" mx="$4" themeInverse>
-          {hasStarted ? 'Resume Course' : 'Start Course'}
+          {hasStarted ? PROGRAM.resume : PROGRAM.start}
         </Button>
 
         {modules.length > 0 ? (
           <ModuleList modules={modules} courseId={courseId} />
         ) : (
-          <EmptyState title="No lessons yet" message="This course doesn't have any lessons yet." />
+          <EmptyState title={PROGRAM.noExercises} message={PROGRAM.noExercisesMessage} />
         )}
       </YStack>
     </ScrollView>

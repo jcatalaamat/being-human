@@ -1,5 +1,6 @@
 import { CourseCardSkeleton, EmptyState, ErrorState } from '@my/ui'
 import { ScrollView, YStack, H2 } from '@my/ui'
+import { TRAINING } from 'app/constants/copy'
 import { api } from 'app/utils/api'
 
 import { AllCoursesSection } from './components/all-courses-section'
@@ -30,7 +31,7 @@ export function LibraryScreen() {
     return (
       <ScrollView>
         <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$4">
-          <H2>My Library</H2>
+          <H2>{TRAINING.pageTitle}</H2>
           <CourseCardSkeleton />
           <CourseCardSkeleton />
           <CourseCardSkeleton />
@@ -44,8 +45,8 @@ export function LibraryScreen() {
     return (
       <ScrollView>
         <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$6">
-          <H2>My Library</H2>
-          <EmptyState title="No courses yet" message="Egon will add content soon." />
+          <H2>{TRAINING.pageTitle}</H2>
+          <EmptyState title={TRAINING.noPrograms} message={TRAINING.noProgramsMessage} />
         </YStack>
       </ScrollView>
     )
@@ -54,7 +55,7 @@ export function LibraryScreen() {
   return (
     <ScrollView>
       <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$6">
-        <H2>My Library</H2>
+        <H2>{TRAINING.pageTitle}</H2>
 
         {continueLearning && continueLearning.length > 0 && !continueError && (
           <ContinueLearningSection courses={continueLearning} />

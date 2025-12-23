@@ -1,5 +1,6 @@
 import { ContinueCard } from '@my/ui'
 import { H3, YStack } from '@my/ui'
+import { TRAINING } from 'app/constants/copy'
 import { useAppRouter } from 'app/utils/navigation'
 
 interface Course {
@@ -30,7 +31,7 @@ export function ContinueLearningSection({ courses }: ContinueLearningSectionProp
 
   return (
     <YStack gap="$3">
-      <H3>Continue Learning</H3>
+      <H3>{TRAINING.continueTraining}</H3>
       {courses.map((course) => (
         <ContinueCard
           key={course.id}

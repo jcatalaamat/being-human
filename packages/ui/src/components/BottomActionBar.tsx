@@ -1,4 +1,5 @@
 import { ArrowRight, CheckCircle } from '@tamagui/lucide-icons'
+import { EXERCISE } from 'app/constants/copy'
 import { useSafeAreaInsets } from 'app/utils/useSafeAreaInsets'
 import { Button, View, XStack } from 'tamagui'
 
@@ -29,12 +30,12 @@ export const BottomActionBar = ({
           disabled={isComplete || isLoading}
           theme={isComplete ? 'green' : undefined}
         >
-          {isComplete ? 'Completed' : 'Mark Complete'}
+          {isComplete ? EXERCISE.completed : EXERCISE.done}
         </Button>
 
         {hasNext && (
           <Button f={1} iconAfter={ArrowRight} onPress={onNext || onComplete} disabled={isLoading} themeInverse>
-            Next Lesson
+            {EXERCISE.next}
           </Button>
         )}
       </XStack>

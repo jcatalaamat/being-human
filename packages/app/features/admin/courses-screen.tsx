@@ -1,5 +1,6 @@
 import { Button, EmptyState, H2, Paragraph, ScrollView, Settings, YStack } from '@my/ui'
-import { Plus, BookOpen, Edit, Trash } from '@tamagui/lucide-icons'
+import { Plus, Dumbbell, Edit, Trash } from '@tamagui/lucide-icons'
+import { PROGRAM, TRAINING } from 'app/constants/copy'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
 
@@ -19,9 +20,9 @@ export function AdminCoursesScreen() {
     <ScrollView>
       <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$4">
         <YStack gap="$3">
-          <H2>Manage Courses</H2>
+          <H2>{PROGRAM.manage}</H2>
           <Button onPress={() => router.push('/admin/courses/new')} icon={Plus} themeInverse>
-            Create Course
+            {PROGRAM.create}
           </Button>
         </YStack>
 
@@ -29,9 +30,9 @@ export function AdminCoursesScreen() {
           <Paragraph>Loading...</Paragraph>
         ) : courses && courses.length === 0 ? (
           <EmptyState
-            icon={BookOpen}
-            title="No courses yet"
-            message="Create your first course to get started."
+            icon={Dumbbell}
+            title={TRAINING.noPrograms}
+            message={PROGRAM.createFirst}
           />
         ) : (
           <Settings>
@@ -40,14 +41,14 @@ export function AdminCoursesScreen() {
                 {courses?.map((course) => (
                   <Settings.Item
                     key={course.id}
-                    icon={BookOpen}
+                    icon={Dumbbell}
                     onPress={() => router.push(`/admin/courses/${course.id}`)}
-                    accentTheme="blue"
+                    accentTheme="green"
                   >
                     <YStack f={1}>
                       <Paragraph fontWeight="600">{course.title}</Paragraph>
                       <Paragraph size="$2" theme="alt2">
-                        {course.description || 'No description'}
+                        {course.description || PROGRAM.noDescription}
                       </Paragraph>
                     </YStack>
                     <Button

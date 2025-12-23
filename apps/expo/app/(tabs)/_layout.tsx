@@ -1,4 +1,5 @@
-import { BookOpen, Download, Settings as SettingsIcon, Shield } from '@tamagui/lucide-icons'
+import { Download, Dumbbell, Settings as SettingsIcon, Shield } from '@tamagui/lucide-icons'
+import { NAV } from 'app/constants/copy'
 import { Tabs } from 'expo-router'
 import { useTheme } from 'tamagui'
 
@@ -23,22 +24,22 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Library',
-          tabBarIcon: ({ color, size }) => <BookOpen size={size} color={color} />,
+          title: NAV.training,
+          tabBarIcon: ({ color, size }) => <Dumbbell size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="admin"
         options={{
           headerShown: false,
-          title: 'Admin',
+          title: NAV.admin,
           tabBarIcon: ({ color, size }) => <Shield size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="downloads"
         options={{
-          title: 'Downloads',
+          title: NAV.downloads,
           href: null, // Hide for MVP
           tabBarIcon: ({ color, size }) => <Download size={size} color={color} />,
         }}
@@ -47,7 +48,7 @@ export default function TabsLayout() {
         name="settings"
         options={{
           headerShown: false,
-          title: 'Settings',
+          title: NAV.settings,
           tabBarIcon: ({ color, size }) => <SettingsIcon size={size} color={color} />,
         }}
       />

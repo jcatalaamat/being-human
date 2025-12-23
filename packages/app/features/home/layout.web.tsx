@@ -1,6 +1,7 @@
 import {
   Adapt,
   Avatar,
+  BrandLogo,
   Button,
   type ButtonProps,
   Popover,
@@ -42,10 +43,16 @@ export const HomeLayout = ({ children, fullPage = false, padded = false }: HomeL
         bg="$color1"
       >
         <XStack jc="space-between" $sm={{ ai: 'center' }} ai="flex-end">
-          <YStack $sm={{ dsp: 'none' }}>
+          <XStack ai="center" gap="$4" $sm={{ dsp: 'none' }}>
+            <Link href="/">
+              <BrandLogo showText size="md" py="$3" />
+            </Link>
             <NavTabs orientation="horizontal" size="$4" />
-          </YStack>
-          <YStack $gtSm={{ dsp: 'none' }}>
+          </XStack>
+          <XStack ai="center" gap="$2" $gtSm={{ dsp: 'none' }}>
+            <Link href="/">
+              <BrandLogo showText size="sm" py="$3" />
+            </Link>
             <MobileNavbar>
               <YStack gap="$5" w="100%" ai="flex-end">
                 <NavTabs orientation="vertical" f={1} w="100%" size="$3" />
@@ -55,7 +62,7 @@ export const HomeLayout = ({ children, fullPage = false, padded = false }: HomeL
                 </WithUserDetail>
               </YStack>
             </MobileNavbar>
-          </YStack>
+          </XStack>
           <XStack ai="center" gap="$4" py="$3">
             <ProfileButton />
           </XStack>

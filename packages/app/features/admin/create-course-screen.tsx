@@ -1,5 +1,6 @@
 import { Button, H2, ScrollView, YStack, XStack } from '@my/ui'
 import { Input, TextArea, Label, Switch } from 'tamagui'
+import { ACTIONS, PROGRAM } from 'app/constants/copy'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
 import { useState } from 'react'
@@ -36,11 +37,11 @@ export function CreateCourseScreen() {
   return (
     <ScrollView>
       <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$4">
-        <H2>Create Course</H2>
+        <H2>{PROGRAM.create}</H2>
 
         <YStack gap="$2">
           <Label htmlFor="title">Title *</Label>
-          <Input id="title" value={title} onChangeText={setTitle} placeholder="Course title" />
+          <Input id="title" value={title} onChangeText={setTitle} placeholder="Program title" />
         </YStack>
 
         <YStack gap="$2">
@@ -49,7 +50,7 @@ export function CreateCourseScreen() {
             id="description"
             value={description}
             onChangeText={setDescription}
-            placeholder="Course description"
+            placeholder="Program description"
             numberOfLines={4}
           />
         </YStack>
@@ -66,10 +67,10 @@ export function CreateCourseScreen() {
 
         <XStack gap="$3" mt="$4">
           <Button f={1} onPress={() => router.back()}>
-            Cancel
+            {ACTIONS.cancel}
           </Button>
           <Button f={1} themeInverse onPress={handleSubmit} disabled={createMutation.isPending}>
-            {createMutation.isPending ? 'Creating...' : 'Create Course'}
+            {createMutation.isPending ? PROGRAM.creating : PROGRAM.create}
           </Button>
         </XStack>
       </YStack>

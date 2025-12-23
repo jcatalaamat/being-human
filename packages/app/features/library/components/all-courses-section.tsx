@@ -1,5 +1,6 @@
 import { CourseCard, CourseCardSkeleton } from '@my/ui'
 import { H3, YStack } from '@my/ui'
+import { TRAINING } from 'app/constants/copy'
 import { useAppRouter } from 'app/utils/navigation'
 
 interface Course {
@@ -24,7 +25,7 @@ export function AllCoursesSection({ courses, isLoading }: AllCoursesSectionProps
 
   return (
     <YStack gap="$3">
-      <H3>All Courses</H3>
+      <H3>{TRAINING.allPrograms}</H3>
       {isLoading ? (
         <>
           <CourseCardSkeleton />

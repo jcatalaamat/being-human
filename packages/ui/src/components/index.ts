@@ -1,6 +1,7 @@
 export * from './AchievementCard'
 export * from './Banner'
 export * from './BottomActionBar'
+export * from './BrandLogo'
 export * from './ContinueCard'
 export * from './CourseCard'
 export * from './CustomToast'
