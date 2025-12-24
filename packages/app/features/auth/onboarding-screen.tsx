@@ -1,5 +1,5 @@
 import { Onboarding, OnboardingStepInfo, StepContent } from '@my/ui'
-import { ArrowUp, Rocket, Sparkles } from '@tamagui/lucide-icons'
+import { Activity, Heart, TrendingUp } from '@tamagui/lucide-icons'
 import React from 'react'
 import { useRouter } from 'solito/router'
 
@@ -8,9 +8,9 @@ const steps: OnboardingStepInfo[] = [
     theme: 'orange',
     Content: () => (
       <StepContent
-        title="Kickstart"
-        icon={Sparkles}
-        description="Auth, profile, settings, adaptive layouts and many more ready for you to build on top of"
+        title="Build Strength"
+        icon={Activity}
+        description="Science-based TRX and Swiss Ball training designed specifically for ages 30-65. Move better, feel stronger, train smarter."
       />
     ),
   },
@@ -18,9 +18,9 @@ const steps: OnboardingStepInfo[] = [
     theme: 'green',
     Content: () => (
       <StepContent
-        title="Updates"
-        icon={ArrowUp}
-        description="As we make the starter better, we'll keep sending PRs with our GitHub app so your app keeps improving"
+        title="Pain-Free Movement"
+        icon={Heart}
+        description="Train smarter, not harder. Protect your muscles while gaining strength and mobility without aggravating old injuries."
       />
     ),
   },
@@ -28,9 +28,9 @@ const steps: OnboardingStepInfo[] = [
     theme: 'blue',
     Content: () => (
       <StepContent
-        title="Deploy"
-        icon={Rocket}
-        description="The Takeout starter is the best way to go from zero to deploy and target all platforms at the same time."
+        title="Progressive Training"
+        icon={TrendingUp}
+        description="Three carefully designed levels from Beginner to Advanced that safely advance your capabilities at your own pace."
       />
     ),
   },
