@@ -92,10 +92,10 @@ export function AdminCourseDetailScreen({ courseId }: AdminCourseDetailScreenPro
 
         <YStack gap="$4">
           {modules?.map((module, moduleIndex) => (
-            <YStack key={module.id} gap="$2" bg="$background" p="$4" br="$4" borderWidth={1} borderColor="$borderColor">
-              <XStack jc="space-between" ai="flex-start">
-                <XStack gap="$2" ai="center">
-                  <YStack>
+            <YStack key={module.id} gap="$2" bg="$background" p="$4" br="$4" borderWidth={1} borderColor="$borderColor" ov="hidden">
+              <XStack jc="space-between" ai="flex-start" gap="$2">
+                <XStack gap="$2" ai="center" f={1} miw={0}>
+                  <YStack flexShrink={0}>
                     <Button
                       size="$2"
                       chromeless
@@ -113,14 +113,14 @@ export function AdminCourseDetailScreen({ courseId }: AdminCourseDetailScreenPro
                       onPress={() => handleMoveModule(module.id, 'down')}
                     />
                   </YStack>
-                  <YStack gap="$2" f={1}>
+                  <YStack gap="$2" f={1} miw={0}>
                     <H4>{module.title}</H4>
                     <Paragraph size="$2" theme="alt2">
                       {module.description}
                     </Paragraph>
                   </YStack>
                 </XStack>
-                <XStack gap="$2">
+                <XStack gap="$2" flexShrink={0}>
                   <Button
                     size="$2"
                     chromeless
