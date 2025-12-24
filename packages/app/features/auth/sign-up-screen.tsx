@@ -1,4 +1,5 @@
 import {
+  BrandLogo,
   Button,
   FormWrapper,
   H2,
@@ -99,6 +100,7 @@ export const SignUpScreen = () => {
           {(fields) => (
             <>
               <YStack gap="$3" mb="$4">
+                <BrandLogo showText size="md" mb="$4" />
                 <H2 $sm={{ size: '$8' }}>Get Started</H2>
                 <Paragraph theme="alt2">Create a new account</Paragraph>
               </YStack>

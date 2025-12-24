@@ -1,4 +1,5 @@
 import {
+  BrandLogo,
   FormWrapper,
   H2,
   LoadingOverlay,
@@ -97,6 +98,7 @@ export const SignInScreen = () => {
           {(fields) => (
             <>
               <YStack gap="$3" mb="$4">
+                <BrandLogo showText size="md" mb="$4" />
                 <H2 $sm={{ size: '$8' }}>Welcome Back</H2>
                 <Paragraph theme="alt1">Sign in to your account</Paragraph>
               </YStack>

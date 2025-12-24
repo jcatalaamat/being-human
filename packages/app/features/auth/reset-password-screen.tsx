@@ -1,4 +1,14 @@
-import { Button, FormWrapper, H2, Paragraph, SubmitButton, Text, Theme, YStack } from '@my/ui'
+import {
+  BrandLogo,
+  Button,
+  FormWrapper,
+  H2,
+  Paragraph,
+  SubmitButton,
+  Text,
+  Theme,
+  YStack,
+} from '@my/ui'
 import { ChevronLeft } from '@tamagui/lucide-icons'
 import { SchemaForm, formFields } from 'app/utils/SchemaForm'
 import { useSupabase } from 'app/utils/supabase/useSupabase'
@@ -67,6 +77,7 @@ export const ResetPasswordScreen = () => {
           {(fields) => (
             <>
               <YStack gap="$3" mb="$4">
+                <BrandLogo showText size="md" mb="$4" />
                 <H2 $sm={{ size: '$8' }}>Reset your password</H2>
                 <Paragraph theme="alt1">
                   Type in your email and we&apos;ll send you a link to reset your password
