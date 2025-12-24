@@ -6,7 +6,6 @@ import { useSupabase } from 'app/utils/supabase/useSupabase'
 import { usePathname } from 'app/utils/usePathname'
 import { useLink } from 'solito/link'
 
-import rootPackageJson from '../../../../package.json'
 import packageJson from '../../package.json'
 
 export const SettingsScreen = () => {
@@ -58,7 +57,7 @@ export const SettingsScreen = () => {
         </Settings>
 
         <Paragraph py="$2" ta="center" theme="alt2">
-          {rootPackageJson.name} {packageJson.version}
+          Holistic Training {packageJson.version}
         </Paragraph>
       </YStack>
     </ScrollView>
