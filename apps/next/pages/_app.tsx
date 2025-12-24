@@ -34,7 +34,7 @@ function MyApp({
       <Head>
         <title>Holistic Training</title>
         <meta name="description" content="Transform your body, mind, and movement" />
-        <link rel="icon" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="stylesheet" href="/tamagui.css" />
       </Head>
       <NextThemeProvider
