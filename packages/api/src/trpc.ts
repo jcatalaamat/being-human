@@ -34,14 +34,17 @@ export const createTRPCContext = async (opts: FetchCreateContextFnOptions) => {
 
     if (accessToken) {
       try {
-        const { payload } = await jose.jwtVerify(
-          accessToken,
-          new Uint8Array(Buffer.from(jwtSecret, 'base64'))
+        // Supabase uses ES256 (asymmetric) for new projects
+        // Fetch the public key from Supabase's JWKS endpoint
+        const JWKS = jose.createRemoteJWKSet(
+          new URL(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/.well-known/jwks.json`)
         )
+        const { payload } = await jose.jwtVerify(accessToken, JWKS, {
+          issuer: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1`,
+        })
         userId = payload.sub
       } catch (error) {
         // Leaves userId undefined, which will eventually fail the enforceUserIsAuthed check
-        // Might want to log this out for debugging, etc.
         if (error instanceof Error) {
           console.error('Error parsing JWT', error.message)
         }
