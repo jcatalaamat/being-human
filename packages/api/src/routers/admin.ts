@@ -241,4 +241,50 @@ export const adminRouter = createTRPCRouter({
 
       return { success: true }
     }),
+
+  // ============ REORDERING ============
+
+  reorderModule: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        newOrderIndex: z.number().int().min(0),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { data, error } = await ctx.supabase
+        .from('modules')
+        .update({ order_index: input.newOrderIndex })
+        .eq('id', input.id)
+        .select()
+        .single()
+
+      if (error) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message })
+      }
+
+      return data
+    }),
+
+  reorderLesson: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        newOrderIndex: z.number().int().min(0),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { data, error } = await ctx.supabase
+        .from('lessons')
+        .update({ order_index: input.newOrderIndex })
+        .eq('id', input.id)
+        .select()
+        .single()
+
+      if (error) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message })
+      }
+
+      return data
+    }),
 })
