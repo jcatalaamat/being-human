@@ -33,9 +33,30 @@ function MyApp({
     <>
       <Head>
         <title>Holistic Training</title>
-        <meta name="description" content="Transform your body, mind, and movement" />
+        <meta
+          name="description"
+          content="Build Strength and Mobility Without Pain — Science-based TRX and Swiss Ball training for ages 30-65. Move better, feel stronger, train smarter."
+        />
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="stylesheet" href="/tamagui.css" />
+
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Holistic Training" />
+        <meta
+          property="og:description"
+          content="Build Strength and Mobility Without Pain — Science-based TRX and Swiss Ball training for ages 30-65. Move better, feel stronger, train smarter."
+        />
+        <meta property="og:image" content="/images/holistic-training-logo.png" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Holistic Training" />
+        <meta
+          name="twitter:description"
+          content="Build Strength and Mobility Without Pain — Science-based TRX and Swiss Ball training for ages 30-65."
+        />
+        <meta name="twitter:image" content="/images/holistic-training-logo.png" />
       </Head>
       <NextThemeProvider
         onChangeTheme={(next) => {
