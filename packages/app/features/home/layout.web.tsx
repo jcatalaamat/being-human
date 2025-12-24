@@ -49,10 +49,12 @@ export const HomeLayout = ({ children, fullPage = false, padded = false }: HomeL
             </Link>
             <NavTabs orientation="horizontal" size="$4" />
           </XStack>
-          <XStack ai="center" gap="$2" $gtSm={{ dsp: 'none' }}>
+          <XStack ai="center" $gtSm={{ dsp: 'none' }}>
             <Link href="/">
               <BrandLogo showText size="sm" py="$3" />
             </Link>
+          </XStack>
+          <XStack ai="center" gap="$3" $gtSm={{ dsp: 'none' }}>
             <MobileNavbar>
               <YStack gap="$5" w="100%" ai="flex-end">
                 <NavTabs orientation="vertical" f={1} w="100%" size="$3" />
@@ -62,8 +64,9 @@ export const HomeLayout = ({ children, fullPage = false, padded = false }: HomeL
                 </WithUserDetail>
               </YStack>
             </MobileNavbar>
+            <ProfileButton />
           </XStack>
-          <XStack ai="center" gap="$4" py="$3">
+          <XStack ai="center" gap="$4" py="$3" $sm={{ dsp: 'none' }}>
             <ProfileButton />
           </XStack>
         </XStack>
