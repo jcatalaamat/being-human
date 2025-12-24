@@ -9,6 +9,12 @@ import superJson from 'superjson'
 
 const jwtSecret = process.env.SUPABASE_AUTH_JWT_SECRET
 
+// Supabase public JWK for ES256 token verification
+// Set SUPABASE_AUTH_JWK in .env (JSON string from /.well-known/jwks.json)
+const SUPABASE_JWK = process.env.SUPABASE_AUTH_JWK
+  ? JSON.parse(process.env.SUPABASE_AUTH_JWK)
+  : null
+
 export const createTRPCContext = async (opts: FetchCreateContextFnOptions) => {
   // if there's auth cookie it'll be authenticated by this helper
   const cookiesStore = (await cookies()) as unknown as UnsafeUnwrappedCookies
@@ -32,14 +38,11 @@ export const createTRPCContext = async (opts: FetchCreateContextFnOptions) => {
   if (opts.req.headers.has('authorization')) {
     const accessToken = opts.req.headers.get('authorization')!.split('Bearer ').pop()
 
-    if (accessToken) {
+    if (accessToken && SUPABASE_JWK) {
       try {
         // Supabase uses ES256 (asymmetric) for new projects
-        // Fetch the public key from Supabase's JWKS endpoint
-        const JWKS = jose.createRemoteJWKSet(
-          new URL(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/.well-known/jwks.json`)
-        )
-        const { payload } = await jose.jwtVerify(accessToken, JWKS, {
+        const publicKey = await jose.importJWK(SUPABASE_JWK, 'ES256')
+        const { payload } = await jose.jwtVerify(accessToken, publicKey, {
           issuer: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1`,
         })
         userId = payload.sub
