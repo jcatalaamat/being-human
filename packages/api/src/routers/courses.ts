@@ -83,6 +83,8 @@ export const coursesRouter = createTRPCRouter({
       title: data.title,
       description: data.description,
       coverUrl: data.cover_url,
+      promoVideoUrl: data.promo_video_url,
+      isPublished: data.is_published,
       progressPct: progressPct || 0,
     }
   }),

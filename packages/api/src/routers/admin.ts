@@ -43,6 +43,7 @@ export const adminRouter = createTRPCRouter({
         title: z.string().min(1).optional(),
         description: z.string().optional(),
         coverUrl: z.string().url().optional(),
+        promoVideoUrl: z.string().url().optional(),
         isPublished: z.boolean().optional(),
       })
     )
@@ -55,6 +56,7 @@ export const adminRouter = createTRPCRouter({
           ...(updates.title && { title: updates.title }),
           ...(updates.description !== undefined && { description: updates.description }),
           ...(updates.coverUrl !== undefined && { cover_url: updates.coverUrl }),
+          ...(updates.promoVideoUrl !== undefined && { promo_video_url: updates.promoVideoUrl }),
           ...(updates.isPublished !== undefined && { is_published: updates.isPublished }),
         })
         .eq('id', id)
