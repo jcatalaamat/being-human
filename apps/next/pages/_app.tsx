@@ -47,16 +47,16 @@ function MyApp({
           property="og:description"
           content="Build Strength and Mobility Without Pain — Science-based TRX and Swiss Ball training for ages 30-65. Move better, feel stronger, train smarter."
         />
-        <meta property="og:image" content="/images/holistic-training-logo.png" />
+        <meta property="og:image" content="/images/og-image.jpg" />
 
         {/* Twitter Card */}
-        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Holistic Training" />
         <meta
           name="twitter:description"
           content="Build Strength and Mobility Without Pain — Science-based TRX and Swiss Ball training for ages 30-65."
         />
-        <meta name="twitter:image" content="/images/holistic-training-logo.png" />
+        <meta name="twitter:image" content="/images/og-image.jpg" />
       </Head>
       <NextThemeProvider
         onChangeTheme={(next) => {
