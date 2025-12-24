@@ -32,8 +32,8 @@ function MyApp({
   return (
     <>
       <Head>
-        <title>Tamagui Universal App</title>
-        <meta name="description" content="Tamagui Universal Starter" />
+        <title>Holistic Training</title>
+        <meta name="description" content="Transform your body, mind, and movement" />
         <link rel="icon" href="/favicon.svg" />
         <link rel="stylesheet" href="/tamagui.css" />
       </Head>
