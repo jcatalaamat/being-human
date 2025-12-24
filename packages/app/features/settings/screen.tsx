@@ -1,5 +1,6 @@
-import { Paragraph, ScrollView, Separator, Settings, YStack, isWeb, useMedia } from '@my/ui'
+import { H2, Paragraph, ScrollView, Settings, YStack } from '@my/ui'
 import { Lock, LogOut, Mail, Moon, User } from '@tamagui/lucide-icons'
+import { NAV } from 'app/constants/copy'
 import { useThemeSetting } from 'app/provider/theme'
 import { useSupabase } from 'app/utils/supabase/useSupabase'
 import { usePathname } from 'app/utils/usePathname'
@@ -9,15 +10,16 @@ import rootPackageJson from '../../../../package.json'
 import packageJson from '../../package.json'
 
 export const SettingsScreen = () => {
-  const media = useMedia()
   const pathname = usePathname()
 
   return (
-    <YStack f={1}>
-      <ScrollView>
+    <ScrollView>
+      <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$4">
+        <H2>{NAV.settings}</H2>
+
         <Settings>
           <Settings.Items>
-            <Settings.Group $gtSm={{ space: '$1' }}>
+            <Settings.Group>
               <Settings.Item
                 icon={User}
                 isActive={pathname === '/settings/profile'}
@@ -43,23 +45,23 @@ export const SettingsScreen = () => {
                 Change Email
               </Settings.Item>
             </Settings.Group>
-            {isWeb && <Separator boc="$color3" mx="$-4" bw="$0.25" />}
-            {isWeb && <Separator boc="$color3" mx="$-4" bw="$0.25" />}
+          </Settings.Items>
+        </Settings>
+
+        <Settings>
+          <Settings.Items>
             <Settings.Group>
               <SettingsThemeAction />
               <SettingsItemLogoutAction />
             </Settings.Group>
           </Settings.Items>
         </Settings>
-      </ScrollView>
-      {/*
-      NOTE: you should probably get the actual native version here using https://www.npmjs.com/package/react-native-version-info
-      we just did a simple package.json read since we want to keep things simple for the starter
-       */}
-      <Paragraph py="$2" ta="center" theme="alt2">
-        {rootPackageJson.name} {packageJson.version}
-      </Paragraph>
-    </YStack>
+
+        <Paragraph py="$2" ta="center" theme="alt2">
+          {rootPackageJson.name} {packageJson.version}
+        </Paragraph>
+      </YStack>
+    </ScrollView>
   )
 }
 
