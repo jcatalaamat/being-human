@@ -1,5 +1,5 @@
 {
-  "name": "holistic-training",
+  "name": "egon",
   "private": true,
   "workspaces": [
     "apps/*",
