@@ -1,9 +1,11 @@
-import { Button, H2, ScrollView, YStack, XStack, Spinner } from '@my/ui'
-import { Input, TextArea, Label, Switch } from 'tamagui'
+import { Button, H2, Paragraph, ScrollView, YStack, XStack, Spinner } from '@my/ui'
+import { Input, TextArea, Label } from 'tamagui'
 import { ACTIONS } from 'app/constants/copy'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
 import { useState, useEffect } from 'react'
+
+type CourseStatus = 'draft' | 'scheduled' | 'live'
 
 interface EditCourseScreenProps {
   courseId: string
@@ -17,7 +19,8 @@ export function EditCourseScreen({ courseId }: EditCourseScreenProps) {
   const [description, setDescription] = useState('')
   const [coverUrl, setCoverUrl] = useState('')
   const [promoVideoUrl, setPromoVideoUrl] = useState('')
-  const [isPublished, setIsPublished] = useState(false)
+  const [status, setStatus] = useState<CourseStatus>('draft')
+  const [releaseAt, setReleaseAt] = useState('')
 
   const updateMutation = api.admin.updateCourse.useMutation()
 
@@ -28,7 +31,9 @@ export function EditCourseScreen({ courseId }: EditCourseScreenProps) {
       setDescription(course.description || '')
       setCoverUrl(course.coverUrl || '')
       setPromoVideoUrl(course.promoVideoUrl || '')
-      setIsPublished(course.isPublished || false)
+      // Use status if available, fallback to isPublished
+      setStatus(course.status || (course.isPublished ? 'live' : 'draft'))
+      setReleaseAt(course.releaseAt || '')
     }
   }, [course])
 
@@ -45,7 +50,8 @@ export function EditCourseScreen({ courseId }: EditCourseScreenProps) {
         description: description.trim() || undefined,
         coverUrl: coverUrl.trim() || undefined,
         promoVideoUrl: promoVideoUrl.trim() || undefined,
-        isPublished,
+        status,
+        releaseAt: releaseAt || null,
       })
 
       router.back()
@@ -98,10 +104,57 @@ export function EditCourseScreen({ courseId }: EditCourseScreenProps) {
           />
         </YStack>
 
-        <XStack gap="$3" ai="center">
-          <Switch id="published" checked={isPublished} onCheckedChange={setIsPublished} />
-          <Label htmlFor="published">Published</Label>
-        </XStack>
+        {/* Status Selector */}
+        <YStack gap="$2">
+          <Label>Status</Label>
+          <XStack gap="$2" flexWrap="wrap">
+            <Button
+              size="$3"
+              theme={status === 'draft' ? 'active' : undefined}
+              themeInverse={status === 'draft'}
+              onPress={() => setStatus('draft')}
+            >
+              Draft
+            </Button>
+            <Button
+              size="$3"
+              theme={status === 'scheduled' ? 'active' : undefined}
+              themeInverse={status === 'scheduled'}
+              onPress={() => setStatus('scheduled')}
+            >
+              Scheduled
+            </Button>
+            <Button
+              size="$3"
+              theme={status === 'live' ? 'active' : undefined}
+              themeInverse={status === 'live'}
+              onPress={() => setStatus('live')}
+            >
+              Live
+            </Button>
+          </XStack>
+          <Paragraph size="$2" theme="alt2">
+            {status === 'draft' && 'Course is hidden from members'}
+            {status === 'scheduled' && 'Course visible but locked until release date'}
+            {status === 'live' && 'Course is visible and accessible to members'}
+          </Paragraph>
+        </YStack>
+
+        {/* Release Date - only show for scheduled status */}
+        {status === 'scheduled' && (
+          <YStack gap="$2">
+            <Label htmlFor="releaseAt">Release Date</Label>
+            <Input
+              id="releaseAt"
+              value={releaseAt ? new Date(releaseAt).toISOString().slice(0, 16) : ''}
+              onChangeText={(val) => setReleaseAt(val ? new Date(val).toISOString() : '')}
+              placeholder="YYYY-MM-DDTHH:MM"
+            />
+            <Paragraph size="$2" theme="alt2">
+              When should this course become available? (Format: 2025-01-15T09:00)
+            </Paragraph>
+          </YStack>
+        )}
 
         <XStack gap="$3" mt="$4">
           <Button f={1} onPress={() => router.back()}>
