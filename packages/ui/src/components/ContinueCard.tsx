@@ -1,5 +1,5 @@
 import { Play } from '@tamagui/lucide-icons'
-import { Button, Card, H5, Paragraph, YStack } from 'tamagui'
+import { Button, Card, H5, Paragraph, Text, YStack } from 'tamagui'
 
 import { ProgressBar } from './ProgressBar'
 
@@ -54,7 +54,7 @@ export const ContinueCard = ({
         <ProgressBar value={progressPct} />
 
         <Button size="$3" icon={Play} onPress={onContinue} themeInverse>
-          Continue ({progressPct}% complete)
+          <Text>Continue ({progressPct}% complete)</Text>
         </Button>
       </YStack>
     </Card>

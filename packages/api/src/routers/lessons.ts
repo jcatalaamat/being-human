@@ -75,6 +75,10 @@ export const lessonsRouter = createTRPCRouter({
       durationSec: lesson.duration_sec,
       contentUrl: lesson.content_url,
       contentText: lesson.content_text,
+      orderIndex: lesson.order_index,
+      status: (lesson.status || 'live') as 'draft' | 'scheduled' | 'live',
+      releaseAt: lesson.release_at,
+      isPublished: lesson.is_published,
       module: {
         id: lesson.modules.id,
         title: lesson.modules.title,

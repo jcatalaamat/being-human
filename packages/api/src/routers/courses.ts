@@ -216,6 +216,9 @@ export const coursesRouter = createTRPCRouter({
                 contentUrl: lesson.content_url,
                 contentText: lesson.content_text,
                 orderIndex: lesson.order_index,
+                status: (lesson.status || 'live') as 'draft' | 'scheduled' | 'live',
+                releaseAt: lesson.release_at,
+                isPublished: lesson.is_published,
                 isComplete,
                 lastPositionSec: progress?.last_position_sec || 0,
               }
@@ -231,6 +234,9 @@ export const coursesRouter = createTRPCRouter({
             title: module.title,
             description: module.description,
             orderIndex: module.order_index,
+            status: (module.status || 'live') as 'draft' | 'scheduled' | 'live',
+            releaseAt: module.release_at,
+            isPublished: module.is_published,
             // Completion overrides lock - if user completed any lesson, module stays accessible
             isLocked: hasCompletedLesson ? false : isLocked,
             unlockDate: unlockDate?.toISOString() || null,

@@ -166,6 +166,8 @@ export const adminRouter = createTRPCRouter({
         title: z.string().min(1),
         description: z.string().optional(),
         orderIndex: z.number().int().min(0),
+        status: z.enum(['draft', 'scheduled', 'live']).default('live'),
+        releaseAt: z.string().datetime().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -187,6 +189,9 @@ export const adminRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           order_index: input.orderIndex,
+          status: input.status,
+          release_at: input.releaseAt,
+          is_published: input.status === 'live',
         })
         .select()
         .single()
@@ -205,6 +210,8 @@ export const adminRouter = createTRPCRouter({
         title: z.string().min(1).optional(),
         description: z.string().optional(),
         orderIndex: z.number().int().min(0).optional(),
+        status: z.enum(['draft', 'scheduled', 'live']).optional(),
+        releaseAt: z.string().datetime().optional().nullable(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -227,6 +234,11 @@ export const adminRouter = createTRPCRouter({
           ...(updates.title && { title: updates.title }),
           ...(updates.description !== undefined && { description: updates.description }),
           ...(updates.orderIndex !== undefined && { order_index: updates.orderIndex }),
+          ...(updates.status !== undefined && {
+            status: updates.status,
+            is_published: updates.status === 'live',
+          }),
+          ...(updates.releaseAt !== undefined && { release_at: updates.releaseAt }),
         })
         .eq('id', id)
         .select()
@@ -275,6 +287,8 @@ export const adminRouter = createTRPCRouter({
         contentText: z.string().optional(),
         durationSec: z.number().int().min(0).optional(),
         orderIndex: z.number().int().min(0),
+        status: z.enum(['draft', 'scheduled', 'live']).default('live'),
+        releaseAt: z.string().datetime().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -300,6 +314,9 @@ export const adminRouter = createTRPCRouter({
           content_text: input.contentText,
           duration_sec: input.durationSec,
           order_index: input.orderIndex,
+          status: input.status,
+          release_at: input.releaseAt,
+          is_published: input.status === 'live',
         })
         .select()
         .single()
@@ -322,6 +339,8 @@ export const adminRouter = createTRPCRouter({
         contentText: z.string().optional(),
         durationSec: z.number().int().min(0).optional(),
         orderIndex: z.number().int().min(0).optional(),
+        status: z.enum(['draft', 'scheduled', 'live']).optional(),
+        releaseAt: z.string().datetime().optional().nullable(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -353,6 +372,11 @@ export const adminRouter = createTRPCRouter({
           ...(updates.contentText !== undefined && { content_text: updates.contentText }),
           ...(updates.durationSec !== undefined && { duration_sec: updates.durationSec }),
           ...(updates.orderIndex !== undefined && { order_index: updates.orderIndex }),
+          ...(updates.status !== undefined && {
+            status: updates.status,
+            is_published: updates.status === 'live',
+          }),
+          ...(updates.releaseAt !== undefined && { release_at: updates.releaseAt }),
         })
         .eq('id', id)
         .select()

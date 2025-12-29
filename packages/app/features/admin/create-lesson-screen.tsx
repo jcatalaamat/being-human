@@ -5,6 +5,8 @@ import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
 import { useState } from 'react'
 
+type LessonStatus = 'draft' | 'scheduled' | 'live'
+
 interface CreateLessonScreenProps {
   courseId: string
   moduleId: string
@@ -19,6 +21,8 @@ export function CreateLessonScreen({ courseId, moduleId }: CreateLessonScreenPro
   const [contentText, setContentText] = useState('')
   const [durationSec, setDurationSec] = useState('')
   const [orderIndex, setOrderIndex] = useState('0')
+  const [status, setStatus] = useState<LessonStatus>('live')
+  const [releaseAt, setReleaseAt] = useState('')
 
   const { data: modules } = api.courses.getModulesWithLessons.useQuery({ courseId })
   const createMutation = api.admin.createLesson.useMutation()
@@ -32,6 +36,11 @@ export function CreateLessonScreen({ courseId, moduleId }: CreateLessonScreenPro
       return
     }
 
+    if (status === 'scheduled' && !releaseAt) {
+      alert('Please set a release date for scheduled lessons')
+      return
+    }
+
     try {
       await createMutation.mutateAsync({
         moduleId,
@@ -42,6 +51,8 @@ export function CreateLessonScreen({ courseId, moduleId }: CreateLessonScreenPro
         contentText: contentText.trim() || undefined,
         durationSec: durationSec ? parseInt(durationSec) : undefined,
         orderIndex: parseInt(orderIndex) || nextOrder,
+        status,
+        releaseAt: releaseAt || undefined,
       })
 
       router.back()
@@ -173,6 +184,58 @@ export function CreateLessonScreen({ courseId, moduleId }: CreateLessonScreenPro
             Current lessons in module: {nextOrder}
           </Paragraph>
         </YStack>
+
+        {/* Status Selector */}
+        <YStack gap="$2">
+          <Label>Status</Label>
+          <XStack gap="$2" flexWrap="wrap">
+            <Button
+              size="$3"
+              theme={status === 'draft' ? 'active' : undefined}
+              themeInverse={status === 'draft'}
+              onPress={() => setStatus('draft')}
+            >
+              Draft
+            </Button>
+            <Button
+              size="$3"
+              theme={status === 'scheduled' ? 'active' : undefined}
+              themeInverse={status === 'scheduled'}
+              onPress={() => setStatus('scheduled')}
+            >
+              Scheduled
+            </Button>
+            <Button
+              size="$3"
+              theme={status === 'live' ? 'active' : undefined}
+              themeInverse={status === 'live'}
+              onPress={() => setStatus('live')}
+            >
+              Live
+            </Button>
+          </XStack>
+          <Paragraph size="$2" theme="alt2">
+            {status === 'draft' && 'Lesson is hidden from members'}
+            {status === 'scheduled' && 'Lesson visible but locked until release date'}
+            {status === 'live' && 'Lesson is visible and accessible to members'}
+          </Paragraph>
+        </YStack>
+
+        {/* Release Date - only show for scheduled status */}
+        {status === 'scheduled' && (
+          <YStack gap="$2">
+            <Label htmlFor="releaseAt">Release Date *</Label>
+            <Input
+              id="releaseAt"
+              value={releaseAt ? new Date(releaseAt).toISOString().slice(0, 16) : ''}
+              onChangeText={(val) => setReleaseAt(val ? new Date(val).toISOString() : '')}
+              placeholder="YYYY-MM-DDTHH:MM"
+            />
+            <Paragraph size="$2" theme="alt2">
+              When should this lesson become available? (Format: 2025-01-15T09:00)
+            </Paragraph>
+          </YStack>
+        )}
 
         <XStack gap="$3" mt="$4">
           <Button f={1} onPress={() => router.back()}>
