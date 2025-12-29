@@ -142,7 +142,7 @@ export function AdminCourseDetailScreen({ courseId }: AdminCourseDetailScreenPro
                 onPress={() => router.push(`/admin/courses/${courseId}/modules/${module.id}/lessons/new`)}
                 icon={Plus}
               >
-                Add Exercise
+                Add Lesson
               </Button>
 
               <Settings>

@@ -31,8 +31,8 @@ export const PROGRAM = {
   screenTitle: 'Course',
   start: 'Start Course',
   resume: 'Resume Course',
-  noExercises: 'No lessons yet',
-  noExercisesMessage: "This course doesn't have any lessons yet.",
+  noLessons: 'No lessons yet',
+  noLessonsMessage: "This course doesn't have any lessons yet.",
   // Admin labels
   manage: 'Manage Courses',
   create: 'Create Course',

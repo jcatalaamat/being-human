@@ -14,7 +14,7 @@ export const Page: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Edit Program</title>
+        <title>Edit Course</title>
       </Head>
       <EditCourseScreen courseId={id} />
     </>
