@@ -11,7 +11,6 @@ import {
   YStack,
   useToastController,
 } from '@my/ui'
-import { Adapt, Sheet } from 'tamagui'
 import { Check, ChevronDown } from '@tamagui/lucide-icons'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
@@ -108,24 +107,12 @@ export function CreateEventScreen() {
           <Paragraph size="$2" fontWeight="500">
             Related Course
           </Paragraph>
-          <Select value={courseId} onValueChange={setCourseId}>
+          <Select native value={courseId} onValueChange={setCourseId}>
             <Select.Trigger iconAfter={ChevronDown}>
               <Select.Value placeholder="None (visible to all members)" />
             </Select.Trigger>
 
-            <Adapt when="sm" platform="touch">
-              <Sheet modal dismissOnSnapToBottom>
-                <Sheet.Frame>
-                  <Sheet.ScrollView>
-                    <Adapt.Contents />
-                  </Sheet.ScrollView>
-                </Sheet.Frame>
-                <Sheet.Overlay />
-              </Sheet>
-            </Adapt>
-
             <Select.Content zIndex={200000}>
-              <Select.ScrollUpButton />
               <Select.Viewport>
                 <Select.Item value="" index={0}>
                   <Select.ItemText>None (visible to all members)</Select.ItemText>
@@ -142,7 +129,6 @@ export function CreateEventScreen() {
                   </Select.Item>
                 ))}
               </Select.Viewport>
-              <Select.ScrollDownButton />
             </Select.Content>
           </Select>
         </YStack>
@@ -178,24 +164,12 @@ export function CreateEventScreen() {
           <Paragraph size="$2" fontWeight="500">
             Timezone
           </Paragraph>
-          <Select value={timezone} onValueChange={setTimezone}>
+          <Select native value={timezone} onValueChange={setTimezone}>
             <Select.Trigger iconAfter={ChevronDown}>
               <Select.Value />
             </Select.Trigger>
 
-            <Adapt when="sm" platform="touch">
-              <Sheet modal dismissOnSnapToBottom>
-                <Sheet.Frame>
-                  <Sheet.ScrollView>
-                    <Adapt.Contents />
-                  </Sheet.ScrollView>
-                </Sheet.Frame>
-                <Sheet.Overlay />
-              </Sheet>
-            </Adapt>
-
             <Select.Content zIndex={200000}>
-              <Select.ScrollUpButton />
               <Select.Viewport>
                 <Select.Item value="America/New_York" index={0}>
                   <Select.ItemText>Eastern Time (ET)</Select.ItemText>
@@ -234,7 +208,6 @@ export function CreateEventScreen() {
                   </Select.ItemIndicator>
                 </Select.Item>
               </Select.Viewport>
-              <Select.ScrollDownButton />
             </Select.Content>
           </Select>
         </YStack>
@@ -258,24 +231,12 @@ export function CreateEventScreen() {
           <Paragraph size="$2" fontWeight="500">
             Visibility
           </Paragraph>
-          <Select value={visibility} onValueChange={(v) => setVisibility(v as typeof visibility)}>
+          <Select native value={visibility} onValueChange={(v) => setVisibility(v as typeof visibility)}>
             <Select.Trigger iconAfter={ChevronDown}>
               <Select.Value />
             </Select.Trigger>
 
-            <Adapt when="sm" platform="touch">
-              <Sheet modal dismissOnSnapToBottom>
-                <Sheet.Frame>
-                  <Sheet.ScrollView>
-                    <Adapt.Contents />
-                  </Sheet.ScrollView>
-                </Sheet.Frame>
-                <Sheet.Overlay />
-              </Sheet>
-            </Adapt>
-
             <Select.Content zIndex={200000}>
-              <Select.ScrollUpButton />
               <Select.Viewport>
                 <Select.Item value="tenant_members" index={0}>
                   <Select.ItemText>All Members</Select.ItemText>
@@ -290,7 +251,6 @@ export function CreateEventScreen() {
                   </Select.ItemIndicator>
                 </Select.Item>
               </Select.Viewport>
-              <Select.ScrollDownButton />
             </Select.Content>
           </Select>
         </YStack>

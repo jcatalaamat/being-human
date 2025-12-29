@@ -1,5 +1,5 @@
 import { Button, H2, Paragraph, ScrollView, YStack, XStack } from '@my/ui'
-import { Input, TextArea, Label, Select, Adapt, Sheet } from 'tamagui'
+import { Input, TextArea, Label, Select } from 'tamagui'
 import { Check, ChevronDown } from '@tamagui/lucide-icons'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
@@ -101,24 +101,12 @@ export function CreateLessonScreen({ courseId, moduleId }: CreateLessonScreenPro
 
         <YStack gap="$2">
           <Label>Type *</Label>
-          <Select value={lessonType} onValueChange={(val) => setLessonType(val as any)}>
+          <Select native value={lessonType} onValueChange={(val) => setLessonType(val as any)}>
             <Select.Trigger iconAfter={ChevronDown}>
               <Select.Value placeholder="Select type" />
             </Select.Trigger>
 
-            <Adapt when="sm" platform="touch">
-              <Sheet modal dismissOnSnapToBottom>
-                <Sheet.Frame>
-                  <Sheet.ScrollView>
-                    <Adapt.Contents />
-                  </Sheet.ScrollView>
-                </Sheet.Frame>
-                <Sheet.Overlay />
-              </Sheet>
-            </Adapt>
-
             <Select.Content zIndex={200000}>
-              <Select.ScrollUpButton />
               <Select.Viewport>
                 <Select.Item index={0} value="video">
                   <Select.ItemText>Video</Select.ItemText>
@@ -151,7 +139,6 @@ export function CreateLessonScreen({ courseId, moduleId }: CreateLessonScreenPro
                   </Select.ItemIndicator>
                 </Select.Item>
               </Select.Viewport>
-              <Select.ScrollDownButton />
             </Select.Content>
           </Select>
         </YStack>
@@ -159,24 +146,12 @@ export function CreateLessonScreen({ courseId, moduleId }: CreateLessonScreenPro
         {/* Content Category (optional) */}
         <YStack gap="$2">
           <Label>Content Category (optional)</Label>
-          <Select value={contentCategory} onValueChange={(val) => setContentCategory(val as ContentCategory)}>
+          <Select native value={contentCategory} onValueChange={(val) => setContentCategory(val as ContentCategory)}>
             <Select.Trigger iconAfter={ChevronDown}>
               <Select.Value placeholder="Select category" />
             </Select.Trigger>
 
-            <Adapt when="sm" platform="touch">
-              <Sheet modal dismissOnSnapToBottom>
-                <Sheet.Frame>
-                  <Sheet.ScrollView>
-                    <Adapt.Contents />
-                  </Sheet.ScrollView>
-                </Sheet.Frame>
-                <Sheet.Overlay />
-              </Sheet>
-            </Adapt>
-
             <Select.Content zIndex={200000}>
-              <Select.ScrollUpButton />
               <Select.Viewport>
                 <Select.Item index={0} value="orientation">
                   <Select.ItemText>Orientation</Select.ItemText>
@@ -221,7 +196,6 @@ export function CreateLessonScreen({ courseId, moduleId }: CreateLessonScreenPro
                   </Select.ItemIndicator>
                 </Select.Item>
               </Select.Viewport>
-              <Select.ScrollDownButton />
             </Select.Content>
           </Select>
         </YStack>

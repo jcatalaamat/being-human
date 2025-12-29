@@ -16,7 +16,6 @@ import {
   YStack,
   useToastController,
 } from '@my/ui'
-import { Adapt, Sheet } from 'tamagui'
 import { Calendar, Check, ChevronDown, Pencil, Plus, Trash, Video } from '@tamagui/lucide-icons'
 import { api } from 'app/utils/api'
 import { formatShortDate, formatTime, formatDateTimeLocal } from 'app/utils/dateFormatting'
@@ -233,6 +232,7 @@ export function AdminEventsScreen() {
           Related Course
         </Paragraph>
         <Select
+          native
           value={formData.courseId}
           onValueChange={(v) => setFormData((f) => ({ ...f, courseId: v }))}
         >
@@ -240,19 +240,7 @@ export function AdminEventsScreen() {
             <Select.Value placeholder="None (visible to all members)" />
           </Select.Trigger>
 
-          <Adapt when="sm" platform="touch">
-            <Sheet modal dismissOnSnapToBottom>
-              <Sheet.Frame>
-                <Sheet.ScrollView>
-                  <Adapt.Contents />
-                </Sheet.ScrollView>
-              </Sheet.Frame>
-              <Sheet.Overlay />
-            </Sheet>
-          </Adapt>
-
           <Select.Content zIndex={200000}>
-            <Select.ScrollUpButton />
             <Select.Viewport>
               <Select.Item value="" index={0}>
                 <Select.ItemText>None (visible to all members)</Select.ItemText>
@@ -269,7 +257,6 @@ export function AdminEventsScreen() {
                 </Select.Item>
               ))}
             </Select.Viewport>
-            <Select.ScrollDownButton />
           </Select.Content>
         </Select>
       </YStack>
@@ -304,6 +291,7 @@ export function AdminEventsScreen() {
           Timezone
         </Paragraph>
         <Select
+          native
           value={formData.timezone}
           onValueChange={(v) => setFormData((f) => ({ ...f, timezone: v }))}
         >
@@ -311,19 +299,7 @@ export function AdminEventsScreen() {
             <Select.Value />
           </Select.Trigger>
 
-          <Adapt when="sm" platform="touch">
-            <Sheet modal dismissOnSnapToBottom>
-              <Sheet.Frame>
-                <Sheet.ScrollView>
-                  <Adapt.Contents />
-                </Sheet.ScrollView>
-              </Sheet.Frame>
-              <Sheet.Overlay />
-            </Sheet>
-          </Adapt>
-
           <Select.Content zIndex={200000}>
-            <Select.ScrollUpButton />
             <Select.Viewport>
               <Select.Item value="America/New_York" index={0}>
                 <Select.ItemText>Eastern Time (ET)</Select.ItemText>
@@ -362,7 +338,6 @@ export function AdminEventsScreen() {
                 </Select.ItemIndicator>
               </Select.Item>
             </Select.Viewport>
-            <Select.ScrollDownButton />
           </Select.Content>
         </Select>
       </YStack>
@@ -401,6 +376,7 @@ export function AdminEventsScreen() {
           Visibility
         </Paragraph>
         <Select
+          native
           value={formData.visibility}
           onValueChange={(v) => setFormData((f) => ({ ...f, visibility: v as EventFormData['visibility'] }))}
         >
@@ -408,19 +384,7 @@ export function AdminEventsScreen() {
             <Select.Value />
           </Select.Trigger>
 
-          <Adapt when="sm" platform="touch">
-            <Sheet modal dismissOnSnapToBottom>
-              <Sheet.Frame>
-                <Sheet.ScrollView>
-                  <Adapt.Contents />
-                </Sheet.ScrollView>
-              </Sheet.Frame>
-              <Sheet.Overlay />
-            </Sheet>
-          </Adapt>
-
           <Select.Content zIndex={200000}>
-            <Select.ScrollUpButton />
             <Select.Viewport>
               <Select.Item value="tenant_members" index={0}>
                 <Select.ItemText>All Members</Select.ItemText>
@@ -435,7 +399,6 @@ export function AdminEventsScreen() {
                 </Select.ItemIndicator>
               </Select.Item>
             </Select.Viewport>
-            <Select.ScrollDownButton />
           </Select.Content>
         </Select>
       </YStack>

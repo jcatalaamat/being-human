@@ -4,7 +4,6 @@ import {
   FormSheet,
   Input,
   Paragraph,
-  Select,
   SizableText,
   Switch,
   TextArea,
@@ -12,8 +11,7 @@ import {
   YStack,
   useToastController,
 } from '@my/ui'
-import { Adapt, Sheet } from 'tamagui'
-import { Check, ChevronDown, Plus, Trash } from '@tamagui/lucide-icons'
+import { Plus, Trash } from '@tamagui/lucide-icons'
 import { api } from 'app/utils/api'
 import { useEffect, useState } from 'react'
 
@@ -291,72 +289,31 @@ export function PromptFormSheet({
                 onChangeText={(v) => updateField(field.id, { label: v })}
               />
 
-              <XStack gap="$2">
-                <YStack f={1}>
-                  <Select
-                    disablePreventBodyScroll
-                    value={field.type}
-                    onValueChange={(v) =>
-                      updateField(field.id, { type: v as PromptField['type'] })
-                    }
-                  >
-                    <Select.Trigger iconAfter={ChevronDown}>
-                      <Select.Value />
-                    </Select.Trigger>
-
-                    <Adapt when="sm" platform="touch">
-                      <Sheet
-                        modal
-                        dismissOnSnapToBottom
-                        zIndex={200_000}
-                        snapPointsMode="fit"
-                      >
-                        <Sheet.Frame>
-                          <Sheet.ScrollView>
-                            <Adapt.Contents />
-                          </Sheet.ScrollView>
-                        </Sheet.Frame>
-                        <Sheet.Overlay zIndex={199_999} />
-                      </Sheet>
-                    </Adapt>
-
-                    <Select.Content zIndex={200_000}>
-                      <Select.Viewport>
-                        <Select.Item value="text" index={0}>
-                          <Select.ItemText>Short Text</Select.ItemText>
-                          <Select.ItemIndicator>
-                            <Check size={16} />
-                          </Select.ItemIndicator>
-                        </Select.Item>
-                        <Select.Item value="textarea" index={1}>
-                          <Select.ItemText>Long Text</Select.ItemText>
-                          <Select.ItemIndicator>
-                            <Check size={16} />
-                          </Select.ItemIndicator>
-                        </Select.Item>
-                        <Select.Item value="markdown" index={2}>
-                          <Select.ItemText>Rich Text (Markdown)</Select.ItemText>
-                          <Select.ItemIndicator>
-                            <Check size={16} />
-                          </Select.ItemIndicator>
-                        </Select.Item>
-                      </Select.Viewport>
-                    </Select.Content>
-                  </Select>
-                </YStack>
-
-                <XStack ai="center" gap="$2">
-                  <Paragraph size="$2">Required</Paragraph>
-                  <Switch
+              <XStack gap="$2" flexWrap="wrap">
+                {(['text', 'textarea', 'markdown'] as const).map((type) => (
+                  <Button
+                    key={type}
                     size="$2"
-                    checked={field.required || false}
-                    onCheckedChange={(checked) =>
-                      updateField(field.id, { required: checked })
-                    }
+                    theme={field.type === type ? 'active' : undefined}
+                    themeInverse={field.type === type}
+                    onPress={() => updateField(field.id, { type })}
                   >
-                    <Switch.Thumb animation="quick" />
-                  </Switch>
-                </XStack>
+                    {type === 'text' ? 'Short' : type === 'textarea' ? 'Long' : 'Rich'}
+                  </Button>
+                ))}
+              </XStack>
+
+              <XStack ai="center" jc="space-between">
+                <Paragraph size="$2">Required</Paragraph>
+                <Switch
+                  size="$2"
+                  checked={field.required || false}
+                  onCheckedChange={(checked) =>
+                    updateField(field.id, { required: checked })
+                  }
+                >
+                  <Switch.Thumb animation="quick" />
+                </Switch>
               </XStack>
 
               <Input
