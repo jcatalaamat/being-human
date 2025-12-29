@@ -12,7 +12,8 @@ import {
   YStack,
   useToastController,
 } from '@my/ui'
-import { Plus, Trash } from '@tamagui/lucide-icons'
+import { Adapt, Sheet } from 'tamagui'
+import { Check, ChevronDown, Plus, Trash } from '@tamagui/lucide-icons'
 import { api } from 'app/utils/api'
 import { useEffect, useState } from 'react'
 
@@ -298,20 +299,41 @@ export function PromptFormSheet({
                       updateField(field.id, { type: v as PromptField['type'] })
                     }
                   >
-                    <Select.Trigger>
+                    <Select.Trigger iconAfter={ChevronDown}>
                       <Select.Value />
                     </Select.Trigger>
+
+                    <Adapt when="sm" platform="touch">
+                      <Sheet modal dismissOnSnapToBottom>
+                        <Sheet.Frame>
+                          <Sheet.ScrollView>
+                            <Adapt.Contents />
+                          </Sheet.ScrollView>
+                        </Sheet.Frame>
+                        <Sheet.Overlay />
+                      </Sheet>
+                    </Adapt>
+
                     <Select.Content zIndex={200000}>
                       <Select.ScrollUpButton />
                       <Select.Viewport>
                         <Select.Item value="text" index={0}>
                           <Select.ItemText>Short Text</Select.ItemText>
+                          <Select.ItemIndicator>
+                            <Check size={16} />
+                          </Select.ItemIndicator>
                         </Select.Item>
                         <Select.Item value="textarea" index={1}>
                           <Select.ItemText>Long Text</Select.ItemText>
+                          <Select.ItemIndicator>
+                            <Check size={16} />
+                          </Select.ItemIndicator>
                         </Select.Item>
                         <Select.Item value="markdown" index={2}>
                           <Select.ItemText>Rich Text (Markdown)</Select.ItemText>
+                          <Select.ItemIndicator>
+                            <Check size={16} />
+                          </Select.ItemIndicator>
                         </Select.Item>
                       </Select.Viewport>
                       <Select.ScrollDownButton />

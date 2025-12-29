@@ -11,6 +11,8 @@ import {
   YStack,
   useToastController,
 } from '@my/ui'
+import { Adapt, Sheet } from 'tamagui'
+import { Check, ChevronDown } from '@tamagui/lucide-icons'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
 import { useState } from 'react'
@@ -107,18 +109,36 @@ export function CreateEventScreen() {
             Related Course
           </Paragraph>
           <Select value={courseId} onValueChange={setCourseId}>
-            <Select.Trigger>
+            <Select.Trigger iconAfter={ChevronDown}>
               <Select.Value placeholder="None (visible to all members)" />
             </Select.Trigger>
-            <Select.Content>
+
+            <Adapt when="sm" platform="touch">
+              <Sheet modal dismissOnSnapToBottom>
+                <Sheet.Frame>
+                  <Sheet.ScrollView>
+                    <Adapt.Contents />
+                  </Sheet.ScrollView>
+                </Sheet.Frame>
+                <Sheet.Overlay />
+              </Sheet>
+            </Adapt>
+
+            <Select.Content zIndex={200000}>
               <Select.ScrollUpButton />
               <Select.Viewport>
                 <Select.Item value="" index={0}>
                   <Select.ItemText>None (visible to all members)</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
                 </Select.Item>
                 {courses?.map((course, i) => (
                   <Select.Item key={course.id} value={course.id} index={i + 1}>
                     <Select.ItemText>{course.title}</Select.ItemText>
+                    <Select.ItemIndicator>
+                      <Check size={16} />
+                    </Select.ItemIndicator>
                   </Select.Item>
                 ))}
               </Select.Viewport>
@@ -159,29 +179,59 @@ export function CreateEventScreen() {
             Timezone
           </Paragraph>
           <Select value={timezone} onValueChange={setTimezone}>
-            <Select.Trigger>
+            <Select.Trigger iconAfter={ChevronDown}>
               <Select.Value />
             </Select.Trigger>
-            <Select.Content>
+
+            <Adapt when="sm" platform="touch">
+              <Sheet modal dismissOnSnapToBottom>
+                <Sheet.Frame>
+                  <Sheet.ScrollView>
+                    <Adapt.Contents />
+                  </Sheet.ScrollView>
+                </Sheet.Frame>
+                <Sheet.Overlay />
+              </Sheet>
+            </Adapt>
+
+            <Select.Content zIndex={200000}>
               <Select.ScrollUpButton />
               <Select.Viewport>
                 <Select.Item value="America/New_York" index={0}>
                   <Select.ItemText>Eastern Time (ET)</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
                 </Select.Item>
                 <Select.Item value="America/Chicago" index={1}>
                   <Select.ItemText>Central Time (CT)</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
                 </Select.Item>
                 <Select.Item value="America/Denver" index={2}>
                   <Select.ItemText>Mountain Time (MT)</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
                 </Select.Item>
                 <Select.Item value="America/Los_Angeles" index={3}>
                   <Select.ItemText>Pacific Time (PT)</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
                 </Select.Item>
                 <Select.Item value="UTC" index={4}>
                   <Select.ItemText>UTC</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
                 </Select.Item>
                 <Select.Item value="Europe/London" index={5}>
                   <Select.ItemText>London (GMT/BST)</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
                 </Select.Item>
               </Select.Viewport>
               <Select.ScrollDownButton />
@@ -209,17 +259,35 @@ export function CreateEventScreen() {
             Visibility
           </Paragraph>
           <Select value={visibility} onValueChange={(v) => setVisibility(v as typeof visibility)}>
-            <Select.Trigger>
+            <Select.Trigger iconAfter={ChevronDown}>
               <Select.Value />
             </Select.Trigger>
-            <Select.Content>
+
+            <Adapt when="sm" platform="touch">
+              <Sheet modal dismissOnSnapToBottom>
+                <Sheet.Frame>
+                  <Sheet.ScrollView>
+                    <Adapt.Contents />
+                  </Sheet.ScrollView>
+                </Sheet.Frame>
+                <Sheet.Overlay />
+              </Sheet>
+            </Adapt>
+
+            <Select.Content zIndex={200000}>
               <Select.ScrollUpButton />
               <Select.Viewport>
                 <Select.Item value="tenant_members" index={0}>
                   <Select.ItemText>All Members</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
                 </Select.Item>
                 <Select.Item value="course_enrolled" index={1}>
                   <Select.ItemText>Course Enrollees Only</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
                 </Select.Item>
               </Select.Viewport>
               <Select.ScrollDownButton />
