@@ -62,7 +62,7 @@ export const journalRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { data: entry, error } = await ctx.supabase
         .from('journal_entries')
-        .select('*, courses(title), lessons(title)')
+        .select('*, courses(title), lessons(title), profiles!author_user_id(name, avatar_url)')
         .eq('id', input.entryId)
         .single()
 
@@ -114,6 +114,11 @@ export const journalRouter = createTRPCRouter({
         createdAt: entry.created_at,
         updatedAt: entry.updated_at,
         isOwner,
+        author: {
+          id: entry.author_user_id,
+          name: (entry.profiles as { name: string | null } | null)?.name || null,
+          avatarUrl: (entry.profiles as { avatar_url: string | null } | null)?.avatar_url || null,
+        },
         comments: (comments || []).map((c) => ({
           id: c.id,
           body: c.body,

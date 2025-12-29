@@ -52,13 +52,13 @@ export function AdminJournalEntryDetailScreen({ entryId }: AdminJournalEntryDeta
         {/* Author info */}
         <XStack gap="$3" ai="center">
           <Avatar size="$4" circular>
-            <Avatar.Image src={entry.authorAvatarUrl} />
+            <Avatar.Image src={entry.author.avatarUrl || undefined} />
             <Avatar.Fallback bg="$color5">
-              <Paragraph>{entry.authorName?.[0] || '?'}</Paragraph>
+              <Paragraph>{entry.author.name?.[0] || '?'}</Paragraph>
             </Avatar.Fallback>
           </Avatar>
           <YStack>
-            <Paragraph fontWeight="600">{entry.authorName || 'Unknown'}</Paragraph>
+            <Paragraph fontWeight="600">{entry.author.name || 'Unknown'}</Paragraph>
             <Paragraph size="$2" theme="alt2">
               {new Date(entry.createdAt).toLocaleDateString(undefined, {
                 weekday: 'long',
@@ -104,9 +104,9 @@ export function AdminJournalEntryDetailScreen({ entryId }: AdminJournalEntryDeta
               comments={entry.comments.map((c) => ({
                 id: c.id,
                 body: c.body,
-                authorName: c.authorName || 'Unknown',
-                authorAvatarUrl: c.authorAvatarUrl,
+                isStaffComment: c.isStaffComment,
                 createdAt: c.createdAt,
+                author: c.author,
               }))}
             />
           )}

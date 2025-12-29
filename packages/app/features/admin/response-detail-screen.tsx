@@ -69,13 +69,13 @@ export function AdminResponseDetailScreen({ responseId }: AdminResponseDetailScr
         <XStack gap="$3" ai="center" jc="space-between">
           <XStack gap="$3" ai="center">
             <Avatar size="$4" circular>
-              <Avatar.Image src={response.userAvatarUrl} />
+              <Avatar.Image src={response.user?.avatarUrl || undefined} />
               <Avatar.Fallback bg="$color5">
-                <Paragraph>{response.userName?.[0] || '?'}</Paragraph>
+                <Paragraph>{response.user?.name?.[0] || '?'}</Paragraph>
               </Avatar.Fallback>
             </Avatar>
             <YStack>
-              <Paragraph fontWeight="600">{response.userName || 'Unknown'}</Paragraph>
+              <Paragraph fontWeight="600">{response.user?.name || 'Unknown'}</Paragraph>
               <Paragraph size="$2" theme="alt2">
                 Submitted{' '}
                 {response.submittedAt
@@ -128,13 +128,13 @@ export function AdminResponseDetailScreen({ responseId }: AdminResponseDetailScr
         <YStack gap="$2">
           <H4>Response</H4>
           <YStack bg="$color2" p="$4" borderRadius="$3" borderWidth={1} borderColor="$borderColor">
-            {response.fields?.map((field) => (
+            {response.responseSchema?.map((field) => (
               <YStack key={field.id} gap="$1" mb="$3">
                 <Paragraph size="$2" fontWeight="500" theme="alt2">
                   {field.label}
                 </Paragraph>
                 <Paragraph whiteSpace="pre-wrap">
-                  {response.responseData?.[field.id] || '(No answer)'}
+                  {response.response?.[field.id] || '(No answer)'}
                 </Paragraph>
               </YStack>
             ))}
@@ -150,9 +150,8 @@ export function AdminResponseDetailScreen({ responseId }: AdminResponseDetailScr
               comments={response.feedback.map((f) => ({
                 id: f.id,
                 body: f.body,
-                authorName: f.authorName || 'Unknown',
-                authorAvatarUrl: f.authorAvatarUrl,
                 createdAt: f.createdAt,
+                author: f.author,
               }))}
             />
           )}

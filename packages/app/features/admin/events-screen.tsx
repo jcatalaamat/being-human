@@ -17,34 +17,9 @@ import {
 } from '@my/ui'
 import { Calendar, Pencil, Plus, Trash, Video } from '@tamagui/lucide-icons'
 import { api } from 'app/utils/api'
+import { formatShortDate, formatTime, formatDateTimeLocal } from 'app/utils/dateFormatting'
 import { useAppRouter } from 'app/utils/navigation'
 import { useEffect, useState } from 'react'
-
-function formatEventDate(dateStr: string): string {
-  const date = new Date(dateStr)
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-  return `${days[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}`
-}
-
-function formatEventTime(dateStr: string): string {
-  const date = new Date(dateStr)
-  const hours = date.getHours()
-  const minutes = date.getMinutes()
-  const ampm = hours >= 12 ? 'PM' : 'AM'
-  const displayHours = hours % 12 || 12
-  return `${displayHours}:${minutes.toString().padStart(2, '0')} ${ampm}`
-}
-
-function formatDateTimeLocal(isoString: string): string {
-  const date = new Date(isoString)
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  const hours = String(date.getHours()).padStart(2, '0')
-  const minutes = String(date.getMinutes()).padStart(2, '0')
-  return `${year}-${month}-${day} ${hours}:${minutes}`
-}
 
 interface EventFormData {
   title: string
@@ -158,6 +133,26 @@ export function AdminEventsScreen() {
     if (!formData.title.trim() || !formData.startsAt) {
       toast.show('Title and start time are required')
       return
+    }
+
+    // Validate date format
+    const startsAtDate = new Date(formData.startsAt)
+    if (isNaN(startsAtDate.getTime())) {
+      toast.show('Invalid start date format. Use: YYYY-MM-DD HH:MM')
+      return
+    }
+
+    // Validate end time if provided
+    if (formData.endsAt) {
+      const endsAtDate = new Date(formData.endsAt)
+      if (isNaN(endsAtDate.getTime())) {
+        toast.show('Invalid end date format. Use: YYYY-MM-DD HH:MM')
+        return
+      }
+      if (endsAtDate <= startsAtDate) {
+        toast.show('End time must be after start time')
+        return
+      }
     }
 
     if (editingEvent) {
@@ -429,7 +424,7 @@ export function AdminEventsScreen() {
                           {isLive && ' (Live)'}
                         </Paragraph>
                         <Paragraph size="$2" theme="alt2">
-                          {formatEventDate(event.startsAt)} at {formatEventTime(event.startsAt)}
+                          {formatShortDate(event.startsAt)} at {formatTime(event.startsAt)}
                         </Paragraph>
                       </YStack>
                       <Button

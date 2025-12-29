@@ -66,15 +66,15 @@ export function AdminResponsesScreen() {
               >
                 <XStack gap="$3" ai="flex-start">
                   <Avatar size="$3" circular>
-                    <Avatar.Image src={response.userAvatarUrl} />
+                    <Avatar.Image src={response.user?.avatarUrl || undefined} />
                     <Avatar.Fallback bg="$color5">
-                      <Paragraph size="$2">{response.userName?.[0] || '?'}</Paragraph>
+                      <Paragraph size="$2">{response.user?.name?.[0] || '?'}</Paragraph>
                     </Avatar.Fallback>
                   </Avatar>
 
                   <YStack f={1} gap="$1">
                     <XStack jc="space-between" ai="center">
-                      <Paragraph fontWeight="600">{response.userName || 'Unknown'}</Paragraph>
+                      <Paragraph fontWeight="600">{response.user?.name || 'Unknown'}</Paragraph>
                       <Paragraph size="$1" theme="alt2">
                         {response.submittedAt
                           ? new Date(response.submittedAt).toLocaleDateString()

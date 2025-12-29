@@ -46,6 +46,26 @@ export function CreateEventScreen() {
       return
     }
 
+    // Validate date format
+    const startsAtDate = new Date(startsAt)
+    if (isNaN(startsAtDate.getTime())) {
+      toast.show('Invalid start date format. Use: YYYY-MM-DD HH:MM')
+      return
+    }
+
+    // Validate end time if provided
+    if (endsAt) {
+      const endsAtDate = new Date(endsAt)
+      if (isNaN(endsAtDate.getTime())) {
+        toast.show('Invalid end date format. Use: YYYY-MM-DD HH:MM')
+        return
+      }
+      if (endsAtDate <= startsAtDate) {
+        toast.show('End time must be after start time')
+        return
+      }
+    }
+
     createMutation.mutate({
       title: title.trim(),
       description: description.trim() || undefined,

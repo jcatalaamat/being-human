@@ -217,7 +217,7 @@ export const eventsRouter = createTRPCRouter({
   update: tenantContentProcedure
     .input(
       z.object({
-        id: z.string().uuid(),
+        eventId: z.string().uuid(),
         title: z.string().min(1).max(255).optional(),
         description: z.string().optional().nullable(),
         startsAt: z.string().datetime().optional(),
@@ -230,13 +230,13 @@ export const eventsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, ...updates } = input
+      const { eventId, ...updates } = input
 
       // Verify event belongs to tenant
       const { data: existing } = await ctx.supabase
         .from('events')
         .select('tenant_id')
-        .eq('id', id)
+        .eq('id', eventId)
         .single()
 
       if (!existing || existing.tenant_id !== ctx.tenant.tenantId) {
@@ -270,7 +270,7 @@ export const eventsRouter = createTRPCRouter({
       const { data, error } = await ctx.supabase
         .from('events')
         .update(updateData)
-        .eq('id', id)
+        .eq('id', eventId)
         .select()
         .single()
 
@@ -287,20 +287,20 @@ export const eventsRouter = createTRPCRouter({
 
   // Delete an event (staff only)
   delete: tenantContentProcedure
-    .input(z.object({ id: z.string().uuid() }))
+    .input(z.object({ eventId: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
       // Verify event belongs to tenant
       const { data: existing } = await ctx.supabase
         .from('events')
         .select('tenant_id')
-        .eq('id', input.id)
+        .eq('id', input.eventId)
         .single()
 
       if (!existing || existing.tenant_id !== ctx.tenant.tenantId) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Event not found' })
       }
 
-      const { error } = await ctx.supabase.from('events').delete().eq('id', input.id)
+      const { error } = await ctx.supabase.from('events').delete().eq('id', input.eventId)
 
       if (error) {
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message })

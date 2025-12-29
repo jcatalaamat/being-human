@@ -2,11 +2,13 @@ import {
   Avatar,
   Button,
   EmptyState,
+  ErrorState,
   H2,
   Paragraph,
   ScrollView,
   XStack,
   YStack,
+  useToastController,
 } from '@my/ui'
 import { BookOpen, Check, Eye, Flag } from '@tamagui/lucide-icons'
 import { api } from 'app/utils/api'
@@ -14,11 +16,13 @@ import { useAppRouter } from 'app/utils/navigation'
 
 export function AdminJournalInboxScreen() {
   const router = useAppRouter()
+  const toast = useToastController()
   const utils = api.useUtils()
 
   const {
     data,
     isPending,
+    error,
     refetch,
   } = api.journal.listForStaff.useQuery({ status: 'active' })
 
@@ -28,11 +32,17 @@ export function AdminJournalInboxScreen() {
     onSuccess: () => {
       utils.journal.listForStaff.invalidate()
     },
+    onError: (err) => {
+      toast.show(err.message)
+    },
   })
 
   const setStatusMutation = api.journal.setStatus.useMutation({
     onSuccess: () => {
       utils.journal.listForStaff.invalidate()
+    },
+    onError: (err) => {
+      toast.show(err.message)
     },
   })
 
@@ -49,6 +59,10 @@ export function AdminJournalInboxScreen() {
 
   const handleFlag = (entryId: string) => {
     setStatusMutation.mutate({ entryId, status: 'flagged' })
+  }
+
+  if (error) {
+    return <ErrorState message={error.message} onRetry={() => refetch()} />
   }
 
   return (
