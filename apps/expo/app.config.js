@@ -11,8 +11,7 @@ export default {
     splash: {
       image: './assets/splash.png',
       contentFit: 'contain',
-      // TODO: Update to brand color when final colors provided
-      backgroundColor: '#0D9488', // Teal-600 brand color
+      backgroundColor: '#000000',
     },
     updates: {
       fallbackToCacheTimeout: 0,
@@ -28,7 +27,7 @@ export default {
       softwareKeyboardLayoutMode: 'pan',
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#000000',
       },
       package: 'dev.tamagui.takeoutdemo',
       permissions: ['android.permission.RECORD_AUDIO'],

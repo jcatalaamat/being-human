@@ -93,6 +93,7 @@ export function CourseDetailScreen({ courseId }: CourseDetailScreenProps) {
     <ScrollView>
       <YStack maw={800} mx="auto" w="100%" gap="$4">
         <CourseHeader
+          courseId={courseId}
           title={course.title}
           description={course.description || undefined}
           coverUrl={course.coverUrl || undefined}

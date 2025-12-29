@@ -1,10 +1,16 @@
-import { Download, Dumbbell, Settings as SettingsIcon, Shield } from '@tamagui/lucide-icons'
+import { Download, Sparkles, Settings as SettingsIcon, Shield } from '@tamagui/lucide-icons'
 import { NAV } from 'app/constants/copy'
+import { useTenant } from 'app/provider/tenant/TenantContext'
 import { Tabs } from 'expo-router'
 import { useTheme } from 'tamagui'
 
 export default function TabsLayout() {
   const theme = useTheme()
+  const { currentTenant } = useTenant()
+
+  // Only show admin tab for owners, admins, and instructors
+  const canAccessAdmin =
+    currentTenant?.role && ['owner', 'admin', 'instructor'].includes(currentTenant.role)
 
   return (
     <Tabs
@@ -25,7 +31,7 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: NAV.courses,
-          tabBarIcon: ({ color, size }) => <Dumbbell size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <Sparkles size={size} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -33,6 +39,7 @@ export default function TabsLayout() {
         options={{
           headerShown: false,
           title: NAV.admin,
+          href: canAccessAdmin ? undefined : null,
           tabBarIcon: ({ color, size }) => <Shield size={size} color={color} />,
         }}
       />

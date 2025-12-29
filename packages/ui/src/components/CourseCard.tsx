@@ -1,6 +1,7 @@
 import { LinearGradient } from '@tamagui/linear-gradient'
 import { Card, type CardProps, H4, Image, Paragraph, XStack, YStack } from 'tamagui'
 
+import { stripMarkdown } from './MarkdownText'
 import { ProgressBar } from './ProgressBar'
 
 export interface CourseCardProps extends CardProps {
@@ -39,7 +40,7 @@ export const CourseCard = ({
           </H4>
           {description && (
             <Paragraph size="$3" theme="alt1" numberOfLines={2}>
-              {description}
+              {stripMarkdown(description)}
             </Paragraph>
           )}
           {progressPct > 0 && (
