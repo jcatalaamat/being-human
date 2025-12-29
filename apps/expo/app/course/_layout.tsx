@@ -1,9 +1,12 @@
+import { ChevronLeft } from '@tamagui/lucide-icons'
 import { LESSON, COURSE } from 'app/constants/copy'
-import { Stack } from 'expo-router'
-import { useTheme } from 'tamagui'
+import { Stack, useRouter } from 'expo-router'
+import { Pressable } from 'react-native'
+import { Text, useTheme } from 'tamagui'
 
 export default function CourseLayout() {
   const theme = useTheme()
+  const router = useRouter()
 
   return (
     <Stack
@@ -19,8 +22,17 @@ export default function CourseLayout() {
         name="[id]"
         options={{
           title: COURSE.screenTitle,
-          headerBackVisible: true,
-          headerBackTitle: 'Back',
+          headerLeft: () => (
+            <Pressable
+              onPress={() => router.back()}
+              style={{ flexDirection: 'row', alignItems: 'center', marginLeft: -16 }}
+            >
+              <ChevronLeft size={30} color={theme.color12.val} />
+              <Text color="$color12" fontSize="$4">
+                Courses
+              </Text>
+            </Pressable>
+          ),
         }}
       />
       <Stack.Screen name="lesson/[id]" options={{ title: LESSON.screenTitle }} />
