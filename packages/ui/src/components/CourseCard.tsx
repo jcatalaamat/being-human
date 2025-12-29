@@ -23,7 +23,7 @@ export const CourseCard = ({
   ...props
 }: CourseCardProps) => {
   return (
-    <Card br="$3" bordered overflow="hidden" pressStyle={{ scale: 0.98 }} cursor="pointer" onPress={onPress} {...props}>
+    <Card br="$3" bordered overflow="hidden" pressStyle={{ scale: 0.98, opacity: 0.8 }} cursor="pointer" onPress={onPress} animation="quick" {...props}>
       <Card.Header p="$0">
         {coverUrl && (
           <Image

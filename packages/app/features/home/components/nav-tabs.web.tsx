@@ -101,6 +101,12 @@ export const NavTabs = (props: TabsProps) => {
         <Tab value="/" onInteraction={handleOnInteraction}>
           {NAV.courses}
         </Tab>
+        <Tab value="/events" onInteraction={handleOnInteraction}>
+          Events
+        </Tab>
+        <Tab value="/journal" onInteraction={handleOnInteraction}>
+          Journal
+        </Tab>
         {canAccessAdmin && (
           <Tab value="/admin" onInteraction={handleOnInteraction}>
             {NAV.admin}

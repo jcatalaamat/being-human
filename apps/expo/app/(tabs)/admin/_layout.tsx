@@ -23,6 +23,13 @@ export default function AdminLayout() {
       <Stack.Screen name="courses/[id]/modules/[moduleId]/lessons/[lessonId]/edit" options={{ title: 'Edit Lesson' }} />
       <Stack.Screen name="members/index" options={{ title: 'Members' }} />
       <Stack.Screen name="members/[userId]" options={{ title: 'Member Details' }} />
+      <Stack.Screen name="events/index" options={{ title: 'Events' }} />
+      <Stack.Screen name="events/new" options={{ title: 'Create Event' }} />
+      <Stack.Screen name="events/[id]/edit" options={{ title: 'Edit Event' }} />
+      <Stack.Screen name="journal/index" options={{ title: 'Journal Inbox' }} />
+      <Stack.Screen name="journal/[id]" options={{ title: 'Journal Entry' }} />
+      <Stack.Screen name="responses/index" options={{ title: 'Responses' }} />
+      <Stack.Screen name="responses/[id]" options={{ title: 'Response Details' }} />
     </Stack>
   )
 }

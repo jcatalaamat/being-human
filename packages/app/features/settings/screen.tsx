@@ -9,8 +9,9 @@ import {
   YStack,
   useToastController,
 } from '@my/ui'
-import { Lock, LogOut, Mail, Moon, Trash2, User } from '@tamagui/lucide-icons'
+import { Lock, LogOut, Mail, Moon, Shield, Trash2, User } from '@tamagui/lucide-icons'
 import { NAV } from 'app/constants/copy'
+import { useTenant } from 'app/provider/tenant/TenantContext'
 import { useThemeSetting } from 'app/provider/theme'
 import { api } from 'app/utils/api'
 import { useSupabase } from 'app/utils/supabase/useSupabase'
@@ -22,11 +23,18 @@ import packageJson from '../../package.json'
 
 export const SettingsScreen = () => {
   const pathname = usePathname()
+  const { currentTenant } = useTenant()
+
+  // Only show admin link for owners, admins, and instructors
+  const canAccessAdmin =
+    currentTenant?.role && ['owner', 'admin', 'instructor'].includes(currentTenant.role)
 
   return (
     <ScrollView>
       <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$4">
         <H2>{NAV.settings}</H2>
+
+        {canAccessAdmin && <AdminSettingsSection pathname={pathname} />}
 
         <Settings>
           <Settings.Items>
@@ -215,5 +223,26 @@ const DeleteAccountAction = () => {
         </AlertDialog.Content>
       </AlertDialog.Portal>
     </AlertDialog>
+  )
+}
+
+const AdminSettingsSection = ({ pathname }: { pathname: string | null }) => {
+  const adminLinkProps = useLink({ href: '/admin' })
+
+  return (
+    <Settings>
+      <Settings.Items>
+        <Settings.Group>
+          <Settings.Item
+            icon={Shield}
+            isActive={pathname?.startsWith('/admin')}
+            {...adminLinkProps}
+            accentTheme="purple"
+          >
+            {NAV.admin}
+          </Settings.Item>
+        </Settings.Group>
+      </Settings.Items>
+    </Settings>
   )
 }

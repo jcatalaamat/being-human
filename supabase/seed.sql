@@ -331,6 +331,29 @@ UPDATE lessons SET scheduled_at = '2025-01-29T19:00:00Z', meeting_url = ''
 WHERE id = 'c4000003-0000-0000-0000-000000000001';
 
 -- ============================================================================
+-- AUTO-JOIN EXISTING AUTH USERS TO DEFAULT TENANT
+-- (Needed after db reset since users exist in auth but not tenant_memberships)
+-- ============================================================================
+INSERT INTO tenant_memberships (tenant_id, user_id, role, accepted_at)
+SELECT
+  '00000000-0000-0000-0000-000000000001',
+  id,
+  'owner',
+  NOW()
+FROM auth.users
+WHERE id NOT IN (
+  SELECT user_id FROM tenant_memberships
+  WHERE tenant_id = '00000000-0000-0000-0000-000000000001'
+)
+ON CONFLICT (tenant_id, user_id) DO NOTHING;
+
+-- Also create profiles for any auth users that don't have one
+INSERT INTO profiles (id)
+SELECT id FROM auth.users
+WHERE id NOT IN (SELECT id FROM profiles)
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
 -- VERIFICATION QUERY (run after seeding to verify)
 -- ============================================================================
 -- SELECT

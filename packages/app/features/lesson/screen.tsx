@@ -1,5 +1,5 @@
-import { BottomActionBar, ErrorState, FullscreenSpinner } from '@my/ui'
-import { YStack, H3 } from '@my/ui'
+import { BottomActionBar, ErrorState, FullscreenSpinner, PromptCard } from '@my/ui'
+import { YStack, H3, H4, ScrollView } from '@my/ui'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
 import { useState } from 'react'
@@ -17,10 +17,14 @@ interface LessonScreenProps {
 export function LessonScreen({ lessonId }: LessonScreenProps) {
   const router = useAppRouter()
   const [isCompleting, setIsCompleting] = useState(false)
+  const utils = api.useUtils()
 
   const { data: lesson, isPending, error, refetch } = api.lessons.getById.useQuery({ lessonId })
 
   const { data: nextLesson } = api.lessons.getNextLesson.useQuery({ currentLessonId: lessonId })
+
+  // Get prompts for this lesson
+  const { data: prompts } = api.prompts.getForLesson.useQuery({ lessonId })
 
   const completeMutation = api.progress.markLessonComplete.useMutation()
 
@@ -111,7 +115,19 @@ export function LessonScreen({ lessonId }: LessonScreenProps) {
         <H3 numberOfLines={2}>{lesson.title}</H3>
       </YStack>
 
-      <YStack f={1}>{renderContent()}</YStack>
+      <ScrollView f={1}>
+        <YStack>{renderContent()}</YStack>
+
+        {/* Lesson Prompts/Assignments */}
+        {prompts && prompts.length > 0 && (
+          <YStack gap="$4" px="$4" py="$6">
+            <H4>Assignments</H4>
+            {prompts.map((prompt) => (
+              <PromptSection key={prompt.id} prompt={prompt} />
+            ))}
+          </YStack>
+        )}
+      </ScrollView>
 
       <BottomActionBar
         onComplete={handleComplete}
@@ -121,5 +137,59 @@ export function LessonScreen({ lessonId }: LessonScreenProps) {
         isLoading={isCompleting}
       />
     </YStack>
+  )
+}
+
+// Separate component for each prompt to handle its own response state
+interface PromptSectionProps {
+  prompt: {
+    id: string
+    title: string
+    promptBody: string
+    responseSchema: {
+      id: string
+      type: 'text' | 'textarea' | 'markdown'
+      label: string
+      placeholder?: string
+      required?: boolean
+    }[]
+    required: boolean
+  }
+}
+
+function PromptSection({ prompt }: PromptSectionProps) {
+  const utils = api.useUtils()
+  const { data: response } = api.prompts.getMyResponse.useQuery({ promptId: prompt.id })
+
+  const upsertMutation = api.prompts.upsertResponse.useMutation()
+  const submitMutation = api.prompts.submitResponse.useMutation({
+    onSuccess: () => {
+      utils.prompts.getMyResponse.invalidate({ promptId: prompt.id })
+      utils.prompts.getPendingRequired.invalidate()
+    },
+  })
+
+  const handleSave = (data: Record<string, string>) => {
+    upsertMutation.mutate({ promptId: prompt.id, response: data })
+  }
+
+  const handleSubmit = async (data: Record<string, string>) => {
+    await submitMutation.mutateAsync({ promptId: prompt.id, response: data })
+  }
+
+  return (
+    <PromptCard
+      id={prompt.id}
+      title={prompt.title}
+      promptBody={prompt.promptBody}
+      fields={prompt.responseSchema}
+      required={prompt.required}
+      initialData={response?.response}
+      status={response?.status}
+      feedback={response?.feedback}
+      onSave={handleSave}
+      onSubmit={handleSubmit}
+      isLoading={submitMutation.isPending}
+    />
   )
 }

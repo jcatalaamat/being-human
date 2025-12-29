@@ -1,4 +1,11 @@
-import { Download, Sparkles, Settings as SettingsIcon, Shield } from '@tamagui/lucide-icons'
+import {
+  BookOpen,
+  Calendar,
+  Download,
+  Sparkles,
+  Settings as SettingsIcon,
+  Shield,
+} from '@tamagui/lucide-icons'
 import { NAV } from 'app/constants/copy'
 import { useTenant } from 'app/provider/tenant/TenantContext'
 import { Tabs } from 'expo-router'
@@ -35,11 +42,25 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="events"
+        options={{
+          title: 'Events',
+          tabBarIcon: ({ color, size }) => <Calendar size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="journal"
+        options={{
+          title: 'Journal',
+          tabBarIcon: ({ color, size }) => <BookOpen size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="admin"
         options={{
           headerShown: false,
           title: NAV.admin,
-          href: canAccessAdmin ? undefined : null,
+          href: canAccessAdmin ? undefined : null, // Show for admins/instructors
           tabBarIcon: ({ color, size }) => <Shield size={size} color={color} />,
         }}
       />

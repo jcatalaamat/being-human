@@ -2,10 +2,13 @@ import { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 
 import { adminRouter } from './admin'
 import { coursesRouter } from './courses'
+import { eventsRouter } from './events'
 import { greetingRouter } from './greeting'
+import { journalRouter } from './journal'
 import { lessonsRouter } from './lessons'
 import { membersRouter } from './members'
 import { progressRouter } from './progress'
+import { promptsRouter } from './prompts'
 import { tenantsRouter } from './tenants'
 import { userRouter } from './user'
 import { createTRPCRouter } from '../trpc'
@@ -13,10 +16,13 @@ import { createTRPCRouter } from '../trpc'
 export const appRouter = createTRPCRouter({
   greeting: greetingRouter,
   courses: coursesRouter,
+  events: eventsRouter,
+  journal: journalRouter,
   lessons: lessonsRouter,
-  progress: progressRouter,
-  admin: adminRouter,
   members: membersRouter,
+  progress: progressRouter,
+  prompts: promptsRouter,
+  admin: adminRouter,
   tenants: tenantsRouter,
   user: userRouter,
 })

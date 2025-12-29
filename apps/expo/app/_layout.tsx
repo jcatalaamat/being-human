@@ -70,6 +70,8 @@ export default function HomeLayout() {
               }}
             />
             <Stack.Screen name="settings" options={{ headerShown: false }} />
+            <Stack.Screen name="journal" options={{ headerShown: false }} />
+            <Stack.Screen name="events" options={{ headerShown: false }} />
           </Stack>
         </Provider>      </View>
     </GestureHandlerRootView>
