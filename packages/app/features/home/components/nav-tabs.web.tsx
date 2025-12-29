@@ -94,7 +94,7 @@ export const NavTabs = (props: TabsProps) => {
         flexDirection={props.orientation === 'horizontal' ? 'row' : 'column'} // temp fix: would be fixed after https://github.com/tamagui/tamagui/pull/1313
       >
         <Tab value="/" onInteraction={handleOnInteraction}>
-          {NAV.training}
+          {NAV.courses}
         </Tab>
         <Tab value="/admin" onInteraction={handleOnInteraction}>
           {NAV.admin}

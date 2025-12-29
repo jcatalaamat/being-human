@@ -10,21 +10,24 @@ export const BRAND = {
 
 // Navigation labels
 export const NAV = {
-  training: 'Training',
+  courses: 'Courses',
   profile: 'Profile',
   settings: 'Settings',
   admin: 'Admin',
   downloads: 'Downloads',
 } as const
 
-// Training/Library section
-export const TRAINING = {
-  pageTitle: 'Training',
+// Courses/Library section
+export const COURSES_SECTION = {
+  pageTitle: 'Courses',
   continueLearning: 'Continue Learning',
   allCourses: 'All Courses',
   noCourses: 'No courses yet',
   noCoursesMessage: 'New courses coming soon.',
 } as const
+
+// Alias for compatibility
+export const TRAINING = COURSES_SECTION
 
 // Course labels (exported as PROGRAM for compatibility)
 export const PROGRAM = {

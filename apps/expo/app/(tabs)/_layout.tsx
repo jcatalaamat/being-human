@@ -24,7 +24,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: NAV.training,
+          title: NAV.courses,
           tabBarIcon: ({ color, size }) => <Dumbbell size={size} color={color} />,
         }}
       />

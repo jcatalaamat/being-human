@@ -8,7 +8,7 @@ export const Page: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Training Courses - Holistic Training</title>
+        <title>Courses - Holistic Training</title>
       </Head>
       <LibraryScreen />
     </>
