@@ -1,4 +1,4 @@
-import { EXERCISE, PROGRAM } from 'app/constants/copy'
+import { LESSON, COURSE } from 'app/constants/copy'
 import { Stack } from 'expo-router'
 import { useTheme } from 'tamagui'
 
@@ -15,8 +15,15 @@ export default function CourseLayout() {
         headerShadowVisible: false,
       }}
     >
-      <Stack.Screen name="[id]" options={{ title: PROGRAM.screenTitle }} />
-      <Stack.Screen name="lesson/[id]" options={{ title: EXERCISE.screenTitle }} />
+      <Stack.Screen
+        name="[id]"
+        options={{
+          title: COURSE.screenTitle,
+          headerBackVisible: true,
+          headerBackTitle: 'Back',
+        }}
+      />
+      <Stack.Screen name="lesson/[id]" options={{ title: LESSON.screenTitle }} />
     </Stack>
   )
 }
