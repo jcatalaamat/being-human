@@ -15,6 +15,8 @@ interface Module {
   id: string
   title: string
   lessons: Lesson[]
+  isLocked?: boolean
+  unlockDate?: string | null
 }
 
 interface ModuleListProps {
@@ -22,7 +24,7 @@ interface ModuleListProps {
   courseId: string
 }
 
-export function ModuleList({ modules, courseId }: ModuleListProps) {
+export function ModuleList({ modules }: ModuleListProps) {
   const router = useAppRouter()
 
   const handleLessonPress = (lessonId: string) => {
@@ -43,6 +45,8 @@ export function ModuleList({ modules, courseId }: ModuleListProps) {
             isComplete: lesson.isComplete,
           }))}
           onLessonPress={handleLessonPress}
+          isLocked={module.isLocked}
+          unlockDate={module.unlockDate}
         />
       ))}
     </YStack>

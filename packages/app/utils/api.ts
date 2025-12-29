@@ -4,6 +4,7 @@ import { createTRPCNext } from '@trpc/next'
 import SuperJSON from 'superjson'
 
 import { getBaseUrl } from './getBaseUrl'
+import { getCurrentTenantSlug } from '../provider/tenant'
 
 export const api = createTRPCNext<AppRouter>({
   /**
@@ -27,7 +28,8 @@ export const api = createTRPCNext<AppRouter>({
 
           // You can pass any HTTP headers you wish here
           async headers() {
-            return {}
+            const tenantSlug = getCurrentTenantSlug()
+            return tenantSlug ? { 'x-tenant-slug': tenantSlug } : {}
           },
         }),
       ],

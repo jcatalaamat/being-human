@@ -1,5 +1,5 @@
 import { Button, EmptyState, H2, Paragraph, ScrollView, Settings, YStack } from '@my/ui'
-import { Plus, Dumbbell, Edit, Trash } from '@tamagui/lucide-icons'
+import { Plus, Dumbbell, Pencil, Trash, Users } from '@tamagui/lucide-icons'
 import { PROGRAM, TRAINING } from 'app/constants/copy'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
@@ -21,9 +21,14 @@ export function AdminCoursesScreen() {
       <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$4">
         <YStack gap="$3">
           <H2>{PROGRAM.manage}</H2>
-          <Button onPress={() => router.push('/admin/courses/new')} icon={Plus} themeInverse>
-            {PROGRAM.create}
-          </Button>
+          <YStack gap="$2">
+            <Button onPress={() => router.push('/admin/courses/new')} icon={Plus} themeInverse>
+              {PROGRAM.create}
+            </Button>
+            <Button onPress={() => router.push('/admin/members')} icon={Users}>
+              View Members
+            </Button>
+          </YStack>
         </YStack>
 
         {isPending ? (
@@ -54,7 +59,7 @@ export function AdminCoursesScreen() {
                     <Button
                       size="$2"
                       chromeless
-                      icon={Edit}
+                      icon={Pencil}
                       onPress={(e) => {
                         e.stopPropagation()
                         router.push(`/admin/courses/${course.id}/edit`)

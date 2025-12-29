@@ -35,9 +35,12 @@ export function CourseDetailScreen({ courseId }: CourseDetailScreenProps) {
   }
 
   const handleResumeCourse = () => {
-    // Find the first incomplete lesson
+    // Find the first incomplete lesson in an unlocked module
     if (modules) {
       for (const module of modules) {
+        // Skip locked modules
+        if (module.isLocked) continue
+
         const incompleteLesson = module.lessons.find((lesson) => !lesson.isComplete)
         if (incompleteLesson) {
           router.push(`/course/lesson/${incompleteLesson.id}`)
@@ -45,9 +48,10 @@ export function CourseDetailScreen({ courseId }: CourseDetailScreenProps) {
         }
       }
 
-      // If all lessons are complete, go to first lesson
-      if (modules[0]?.lessons?.[0]) {
-        router.push(`/course/lesson/${modules[0].lessons[0].id}`)
+      // If all unlocked lessons are complete, go to first unlocked lesson
+      const firstUnlockedModule = modules.find((m) => !m.isLocked)
+      if (firstUnlockedModule?.lessons?.[0]) {
+        router.push(`/course/lesson/${firstUnlockedModule.lessons[0].id}`)
       }
     }
   }

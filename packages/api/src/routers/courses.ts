@@ -2,14 +2,14 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
 import { MOCK_COURSES, MOCK_MODULES } from '../mock-data'
-import { createTRPCRouter, protectedProcedure } from '../trpc'
+import { createTRPCRouter, tenantProcedure } from '../trpc'
 
 // Set to true to use mock data, false to use real database
 const USE_MOCK_DATA = false
 
 export const coursesRouter = createTRPCRouter({
-  // Get all published courses with user progress
-  list: protectedProcedure.query(async ({ ctx }) => {
+  // Get all published courses with user progress (scoped to current tenant)
+  list: tenantProcedure.query(async ({ ctx }) => {
     if (USE_MOCK_DATA) {
       return MOCK_COURSES
     }
@@ -17,6 +17,7 @@ export const coursesRouter = createTRPCRouter({
     const { data: courses, error } = await ctx.supabase
       .from('courses')
       .select('*')
+      .eq('tenant_id', ctx.tenant.tenantId)
       .eq('is_published', true)
       .order('created_at', { ascending: false })
 
@@ -56,8 +57,8 @@ export const coursesRouter = createTRPCRouter({
     return coursesWithProgress
   }),
 
-  // Get single course details
-  getById: protectedProcedure.input(z.object({ courseId: z.string().uuid() })).query(async ({ ctx, input }) => {
+  // Get single course details (must belong to current tenant)
+  getById: tenantProcedure.input(z.object({ courseId: z.string().uuid() })).query(async ({ ctx, input }) => {
     if (USE_MOCK_DATA) {
       const course = MOCK_COURSES.find((c) => c.id === input.courseId)
       if (!course) {
@@ -66,7 +67,12 @@ export const coursesRouter = createTRPCRouter({
       return course
     }
 
-    const { data, error } = await ctx.supabase.from('courses').select('*').eq('id', input.courseId).single()
+    const { data, error } = await ctx.supabase
+      .from('courses')
+      .select('*')
+      .eq('id', input.courseId)
+      .eq('tenant_id', ctx.tenant.tenantId)
+      .single()
 
     if (error) {
       throw new TRPCError({ code: 'NOT_FOUND', message: error.message })
@@ -89,14 +95,36 @@ export const coursesRouter = createTRPCRouter({
     }
   }),
 
-  // Get course modules with lessons and progress
-  getModulesWithLessons: protectedProcedure
+  // Get course modules with lessons and progress (includes lock status)
+  getModulesWithLessons: tenantProcedure
     .input(z.object({ courseId: z.string().uuid() }))
     .query(async ({ ctx, input }) => {
       if (USE_MOCK_DATA) {
         const modules = MOCK_MODULES[input.courseId as keyof typeof MOCK_MODULES] || []
         return modules
       }
+
+      // Verify course belongs to current tenant
+      const { data: course } = await ctx.supabase
+        .from('courses')
+        .select('tenant_id')
+        .eq('id', input.courseId)
+        .single()
+
+      if (!course || course.tenant_id !== ctx.tenant.tenantId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Course not found' })
+      }
+
+      // Get user's enrollment for this course
+      const { data: enrollment } = await ctx.supabase
+        .from('user_course_progress')
+        .select('enrolled_at, started_at')
+        .eq('user_id', ctx.user.id)
+        .eq('course_id', input.courseId)
+        .single()
+
+      const isEnrolled = !!enrollment
+      const enrolledAt = enrollment ? new Date(enrollment.enrolled_at || enrollment.started_at) : null
 
       const { data: modules, error } = await ctx.supabase
         .from('modules')
@@ -108,9 +136,32 @@ export const coursesRouter = createTRPCRouter({
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message })
       }
 
-      // For each module, get its lessons with progress
+      // For each module, get its lessons with progress and lock status
       const modulesWithLessons = await Promise.all(
         modules.map(async (module) => {
+          // Calculate lock status
+          let isLocked = true
+          let unlockDate: Date | null = null
+
+          if (isEnrolled && enrolledAt) {
+            // Check for manual unlock
+            const { data: manualUnlock } = await ctx.supabase
+              .from('user_module_unlocks')
+              .select('unlocked_at')
+              .eq('user_id', ctx.user.id)
+              .eq('module_id', module.id)
+              .single()
+
+            if (manualUnlock) {
+              isLocked = false
+            } else {
+              // Calculate time-based unlock
+              unlockDate = new Date(enrolledAt)
+              unlockDate.setDate(unlockDate.getDate() + (module.unlock_after_days || 0))
+              isLocked = new Date() < unlockDate
+            }
+          }
+
           const { data: lessons, error: lessonsError } = await ctx.supabase
             .from('lessons')
             .select('*')
@@ -153,6 +204,8 @@ export const coursesRouter = createTRPCRouter({
             title: module.title,
             description: module.description,
             orderIndex: module.order_index,
+            isLocked,
+            unlockDate: unlockDate?.toISOString() || null,
             lessons: lessonsWithProgress,
           }
         })
@@ -161,19 +214,32 @@ export const coursesRouter = createTRPCRouter({
       return modulesWithLessons
     }),
 
-  // Enroll in a course (create initial progress record)
-  enroll: protectedProcedure.input(z.object({ courseId: z.string().uuid() })).mutation(async ({ ctx, input }) => {
+  // Enroll in a course (create initial progress record) - must be tenant member
+  enroll: tenantProcedure.input(z.object({ courseId: z.string().uuid() })).mutation(async ({ ctx, input }) => {
     if (USE_MOCK_DATA) {
       return { success: true }
     }
 
-    const { data, error } = await ctx.supabase
+    // Verify course belongs to current tenant
+    const { data: course } = await ctx.supabase
+      .from('courses')
+      .select('tenant_id')
+      .eq('id', input.courseId)
+      .single()
+
+    if (!course || course.tenant_id !== ctx.tenant.tenantId) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Course not found' })
+    }
+
+    const now = new Date().toISOString()
+    const { error } = await ctx.supabase
       .from('user_course_progress')
       .upsert(
         {
           user_id: ctx.user.id,
           course_id: input.courseId,
-          started_at: new Date().toISOString(),
+          started_at: now,
+          enrolled_at: now,
         },
         {
           onConflict: 'user_id,course_id',
@@ -189,8 +255,8 @@ export const coursesRouter = createTRPCRouter({
     return { success: true }
   }),
 
-  // Get continue learning courses (recently accessed)
-  getContinueLearning: protectedProcedure.query(async ({ ctx }) => {
+  // Get continue learning courses (recently accessed, scoped to tenant)
+  getContinueLearning: tenantProcedure.query(async ({ ctx }) => {
     if (USE_MOCK_DATA) {
       // Return courses that have progress
       const continueCourses = MOCK_COURSES.filter((c) => c.progressPct > 0 && c.lastAccessedAt).map((c) => {
@@ -214,10 +280,12 @@ export const coursesRouter = createTRPCRouter({
       return continueCourses
     }
 
+    // Get progress records only for courses in the current tenant
     const { data: progressRecords, error } = await ctx.supabase
       .from('user_course_progress')
-      .select('course_id, last_lesson_id, last_accessed_at')
+      .select('course_id, last_lesson_id, last_accessed_at, courses!inner(tenant_id)')
       .eq('user_id', ctx.user.id)
+      .eq('courses.tenant_id', ctx.tenant.tenantId)
       .not('last_accessed_at', 'is', null)
       .order('last_accessed_at', { ascending: false })
       .limit(3)
@@ -226,10 +294,15 @@ export const coursesRouter = createTRPCRouter({
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message })
     }
 
-    // For each progress record, get the course details
+    // For each progress record, get the course details (already filtered by tenant in query above)
     const coursesWithProgress = await Promise.all(
       progressRecords.map(async (record) => {
-        const { data: course } = await ctx.supabase.from('courses').select('*').eq('id', record.course_id).single()
+        const { data: course } = await ctx.supabase
+          .from('courses')
+          .select('*')
+          .eq('id', record.course_id)
+          .eq('tenant_id', ctx.tenant.tenantId)
+          .single()
 
         if (!course) return null
 

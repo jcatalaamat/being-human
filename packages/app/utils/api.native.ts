@@ -5,6 +5,7 @@ import SuperJSON from 'superjson'
 
 import { getBaseUrl } from './getBaseUrl'
 import { supabase } from './supabase/client.native'
+import { getCurrentTenantSlug } from '../provider/tenant/TenantContext'
 
 export const api = createTRPCReact<AppRouter>()
 export const createTrpcClient = () =>
@@ -23,6 +24,13 @@ export const createTrpcClient = () =>
           if (session?.access_token) {
             headers.set('Authorization', `Bearer ${session.access_token}`)
           }
+
+          // Add tenant header for multi-tenant scoping
+          const tenantSlug = getCurrentTenantSlug()
+          if (tenantSlug) {
+            headers.set('x-tenant-slug', tenantSlug)
+          }
+
           return Object.fromEntries(headers)
         },
       }),

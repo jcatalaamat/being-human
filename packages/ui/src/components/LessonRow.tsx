@@ -9,7 +9,8 @@ export interface LessonRowProps {
   type: LessonType
   durationSec?: number
   isComplete?: boolean
-  onPress: () => void
+  onPress?: () => void
+  disabled?: boolean
 }
 
 const iconMap: Record<LessonType, React.FC<IconProps>> = {
@@ -26,24 +27,27 @@ const formatDuration = (seconds?: number): string => {
   return `${mins}:${secs.toString().padStart(2, '0')}`
 }
 
-export const LessonRow = ({ title, type, durationSec, isComplete = false, onPress }: LessonRowProps) => {
+export const LessonRow = ({ title, type, durationSec, isComplete = false, onPress, disabled = false }: LessonRowProps) => {
   const Icon = iconMap[type]
 
   return (
     <Button
-      onPress={onPress}
+      onPress={disabled ? undefined : onPress}
       jc="flex-start"
       bg="transparent"
       borderWidth={1}
       borderColor="$borderColor"
-      pressStyle={{ bg: '$color3' }}
+      pressStyle={disabled ? undefined : { bg: '$color3' }}
       h="auto"
       py="$3"
       px="$3"
+      opacity={disabled ? 0.5 : 1}
+      cursor={disabled ? 'not-allowed' : 'pointer'}
+      disabled={disabled}
     >
       <XStack gap="$3" ai="center" f={1} w="100%">
-        <Icon size={20} color="$color11" />
-        <Paragraph f={1} numberOfLines={2} ta="left">
+        <Icon size={20} color={disabled ? '$gray8' : '$color11'} />
+        <Paragraph f={1} numberOfLines={2} ta="left" color={disabled ? '$gray9' : undefined}>
           {title}
         </Paragraph>
         {durationSec && (

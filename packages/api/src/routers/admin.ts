@@ -1,13 +1,13 @@
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
-import { createTRPCRouter, protectedProcedure } from '../trpc'
+import { createTRPCRouter, tenantAdminProcedure, tenantContentProcedure } from '../trpc'
 
-// Admin router - for content management
+// Admin router - for content management (requires tenant context)
 export const adminRouter = createTRPCRouter({
   // ============ COURSES ============
 
-  createCourse: protectedProcedure
+  createCourse: tenantContentProcedure
     .input(
       z.object({
         title: z.string().min(1),
@@ -24,6 +24,8 @@ export const adminRouter = createTRPCRouter({
           description: input.description,
           cover_url: input.coverUrl,
           is_published: input.isPublished,
+          tenant_id: ctx.tenant.tenantId, // Assign to current tenant
+          instructor_id: ctx.user.id,
           created_at: new Date().toISOString(),
         })
         .select()
@@ -36,7 +38,7 @@ export const adminRouter = createTRPCRouter({
       return data
     }),
 
-  updateCourse: protectedProcedure
+  updateCourse: tenantContentProcedure
     .input(
       z.object({
         id: z.string().uuid(),
@@ -49,6 +51,17 @@ export const adminRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { id, ...updates } = input
+
+      // Verify course belongs to current tenant
+      const { data: course } = await ctx.supabase
+        .from('courses')
+        .select('tenant_id')
+        .eq('id', id)
+        .single()
+
+      if (!course || course.tenant_id !== ctx.tenant.tenantId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Course not found' })
+      }
 
       const { data, error } = await ctx.supabase
         .from('courses')
@@ -70,9 +83,20 @@ export const adminRouter = createTRPCRouter({
       return data
     }),
 
-  deleteCourse: protectedProcedure
+  deleteCourse: tenantAdminProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
+      // Verify course belongs to current tenant
+      const { data: course } = await ctx.supabase
+        .from('courses')
+        .select('tenant_id')
+        .eq('id', input.id)
+        .single()
+
+      if (!course || course.tenant_id !== ctx.tenant.tenantId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Course not found' })
+      }
+
       const { error } = await ctx.supabase.from('courses').delete().eq('id', input.id)
 
       if (error) {
@@ -84,7 +108,7 @@ export const adminRouter = createTRPCRouter({
 
   // ============ MODULES ============
 
-  createModule: protectedProcedure
+  createModule: tenantContentProcedure
     .input(
       z.object({
         courseId: z.string().uuid(),
@@ -94,6 +118,17 @@ export const adminRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // Verify course belongs to current tenant
+      const { data: course } = await ctx.supabase
+        .from('courses')
+        .select('tenant_id')
+        .eq('id', input.courseId)
+        .single()
+
+      if (!course || course.tenant_id !== ctx.tenant.tenantId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Course not found' })
+      }
+
       const { data, error } = await ctx.supabase
         .from('modules')
         .insert({
@@ -112,7 +147,7 @@ export const adminRouter = createTRPCRouter({
       return data
     }),
 
-  updateModule: protectedProcedure
+  updateModule: tenantContentProcedure
     .input(
       z.object({
         id: z.string().uuid(),
@@ -123,6 +158,17 @@ export const adminRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { id, ...updates } = input
+
+      // Verify module's course belongs to current tenant
+      const { data: module } = await ctx.supabase
+        .from('modules')
+        .select('courses!inner(tenant_id)')
+        .eq('id', id)
+        .single()
+
+      if (!module || (module.courses as { tenant_id: string }).tenant_id !== ctx.tenant.tenantId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Module not found' })
+      }
 
       const { data, error } = await ctx.supabase
         .from('modules')
@@ -142,9 +188,20 @@ export const adminRouter = createTRPCRouter({
       return data
     }),
 
-  deleteModule: protectedProcedure
+  deleteModule: tenantContentProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
+      // Verify module's course belongs to current tenant
+      const { data: module } = await ctx.supabase
+        .from('modules')
+        .select('courses!inner(tenant_id)')
+        .eq('id', input.id)
+        .single()
+
+      if (!module || (module.courses as { tenant_id: string }).tenant_id !== ctx.tenant.tenantId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Module not found' })
+      }
+
       const { error } = await ctx.supabase.from('modules').delete().eq('id', input.id)
 
       if (error) {
@@ -156,7 +213,7 @@ export const adminRouter = createTRPCRouter({
 
   // ============ LESSONS ============
 
-  createLesson: protectedProcedure
+  createLesson: tenantContentProcedure
     .input(
       z.object({
         moduleId: z.string().uuid(),
@@ -170,6 +227,17 @@ export const adminRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // Verify module's course belongs to current tenant
+      const { data: module } = await ctx.supabase
+        .from('modules')
+        .select('courses!inner(tenant_id)')
+        .eq('id', input.moduleId)
+        .single()
+
+      if (!module || (module.courses as { tenant_id: string }).tenant_id !== ctx.tenant.tenantId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Module not found' })
+      }
+
       const { data, error } = await ctx.supabase
         .from('lessons')
         .insert({
@@ -192,7 +260,7 @@ export const adminRouter = createTRPCRouter({
       return data
     }),
 
-  updateLesson: protectedProcedure
+  updateLesson: tenantContentProcedure
     .input(
       z.object({
         id: z.string().uuid(),
@@ -207,6 +275,22 @@ export const adminRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { id, ...updates } = input
+
+      // Verify lesson's module's course belongs to current tenant
+      const { data: lesson } = await ctx.supabase
+        .from('lessons')
+        .select('modules!inner(courses!inner(tenant_id))')
+        .eq('id', id)
+        .single()
+
+      if (!lesson) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Lesson not found' })
+      }
+
+      const modules = lesson.modules as { courses: { tenant_id: string } }
+      if (modules.courses.tenant_id !== ctx.tenant.tenantId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Lesson not found' })
+      }
 
       const { data, error } = await ctx.supabase
         .from('lessons')
@@ -230,9 +314,25 @@ export const adminRouter = createTRPCRouter({
       return data
     }),
 
-  deleteLesson: protectedProcedure
+  deleteLesson: tenantContentProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
+      // Verify lesson's module's course belongs to current tenant
+      const { data: lesson } = await ctx.supabase
+        .from('lessons')
+        .select('modules!inner(courses!inner(tenant_id))')
+        .eq('id', input.id)
+        .single()
+
+      if (!lesson) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Lesson not found' })
+      }
+
+      const modules = lesson.modules as { courses: { tenant_id: string } }
+      if (modules.courses.tenant_id !== ctx.tenant.tenantId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Lesson not found' })
+      }
+
       const { error } = await ctx.supabase.from('lessons').delete().eq('id', input.id)
 
       if (error) {
@@ -244,7 +344,7 @@ export const adminRouter = createTRPCRouter({
 
   // ============ REORDERING ============
 
-  reorderModule: protectedProcedure
+  reorderModule: tenantContentProcedure
     .input(
       z.object({
         id: z.string().uuid(),
@@ -252,6 +352,17 @@ export const adminRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // Verify module's course belongs to current tenant
+      const { data: module } = await ctx.supabase
+        .from('modules')
+        .select('courses!inner(tenant_id)')
+        .eq('id', input.id)
+        .single()
+
+      if (!module || (module.courses as { tenant_id: string }).tenant_id !== ctx.tenant.tenantId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Module not found' })
+      }
+
       const { data, error } = await ctx.supabase
         .from('modules')
         .update({ order_index: input.newOrderIndex })
@@ -266,7 +377,7 @@ export const adminRouter = createTRPCRouter({
       return data
     }),
 
-  reorderLesson: protectedProcedure
+  reorderLesson: tenantContentProcedure
     .input(
       z.object({
         id: z.string().uuid(),
@@ -274,6 +385,22 @@ export const adminRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // Verify lesson's module's course belongs to current tenant
+      const { data: lesson } = await ctx.supabase
+        .from('lessons')
+        .select('modules!inner(courses!inner(tenant_id))')
+        .eq('id', input.id)
+        .single()
+
+      if (!lesson) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Lesson not found' })
+      }
+
+      const modules = lesson.modules as { courses: { tenant_id: string } }
+      if (modules.courses.tenant_id !== ctx.tenant.tenantId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Lesson not found' })
+      }
+
       const { data, error } = await ctx.supabase
         .from('lessons')
         .update({ order_index: input.newOrderIndex })

@@ -6,10 +6,12 @@ import { AuthProvider } from './auth'
 import { QueryClientProvider } from './react-query'
 import { SafeAreaProvider } from './safe-area'
 import { TamaguiProvider } from './tamagui'
+import { TenantProvider } from './tenant'
 import { UniversalThemeProvider } from './theme'
 import { ToastProvider } from './toast'
 
 export { loadThemePromise } from './theme/UniversalThemeProvider'
+export { useTenant, useTenantSlug, type Tenant, type TenantRole } from './tenant'
 
 export function Provider({
   initialSession,
@@ -22,7 +24,9 @@ export function Provider({
     // Note: DatePickerProvider Conflicted with Popover so this is just a temporary solution
     <DatePickerProvider config={{ selectedDates: [], onDatesChange: () => {} }}>
       <AuthProvider initialSession={initialSession}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <TenantProvider>{children}</TenantProvider>
+        </Providers>
       </AuthProvider>
     </DatePickerProvider>
   )

@@ -1,9 +1,21 @@
-import { H2, Paragraph, ScrollView, Settings, YStack } from '@my/ui'
-import { Lock, LogOut, Mail, Moon, User } from '@tamagui/lucide-icons'
+import {
+  AlertDialog,
+  Button,
+  H2,
+  Paragraph,
+  ScrollView,
+  Settings,
+  XStack,
+  YStack,
+  useToastController,
+} from '@my/ui'
+import { Lock, LogOut, Mail, Moon, Trash2, User } from '@tamagui/lucide-icons'
 import { NAV } from 'app/constants/copy'
 import { useThemeSetting } from 'app/provider/theme'
+import { api } from 'app/utils/api'
 import { useSupabase } from 'app/utils/supabase/useSupabase'
 import { usePathname } from 'app/utils/usePathname'
+import { useState } from 'react'
 import { useLink } from 'solito/link'
 
 import packageJson from '../../package.json'
@@ -56,6 +68,14 @@ export const SettingsScreen = () => {
           </Settings.Items>
         </Settings>
 
+        <Settings>
+          <Settings.Items>
+            <Settings.Group>
+              <DeleteAccountAction />
+            </Settings.Group>
+          </Settings.Items>
+        </Settings>
+
         <Paragraph py="$2" ta="center" theme="alt2">
           Holistic Training {packageJson.version}
         </Paragraph>
@@ -81,5 +101,119 @@ const SettingsItemLogoutAction = () => {
     <Settings.Item icon={LogOut} accentTheme="red" onPress={() => supabase.auth.signOut()}>
       Log Out
     </Settings.Item>
+  )
+}
+
+const DeleteAccountAction = () => {
+  const [open, setOpen] = useState(false)
+  const toast = useToastController()
+  const utils = api.useUtils()
+
+  const { data: deletionStatus } = api.user.getDeletionStatus.useQuery()
+
+  const requestDeletion = api.user.requestAccountDeletion.useMutation({
+    onSuccess: () => {
+      utils.user.getDeletionStatus.invalidate()
+      toast.show('Deletion request submitted')
+      setOpen(false)
+    },
+    onError: (error) => {
+      toast.show(error.message)
+    },
+  })
+
+  const cancelDeletion = api.user.cancelDeletionRequest.useMutation({
+    onSuccess: () => {
+      utils.user.getDeletionStatus.invalidate()
+      toast.show('Deletion request cancelled')
+    },
+    onError: (error) => {
+      toast.show(error.message)
+    },
+  })
+
+  if (deletionStatus?.deletionRequested) {
+    return (
+      <YStack p="$4" gap="$3" bg="$red2" borderRadius="$3">
+        <Paragraph theme="alt2" size="$3">
+          Account deletion requested on{' '}
+          {new Date(deletionStatus.requestedAt!).toLocaleDateString()}
+        </Paragraph>
+        <Paragraph size="$2" theme="alt2">
+          Your account is scheduled for deletion. This process may take up to 30 days.
+        </Paragraph>
+        <Button
+          size="$3"
+          onPress={() => cancelDeletion.mutate()}
+          disabled={cancelDeletion.isPending}
+        >
+          Cancel Deletion Request
+        </Button>
+      </YStack>
+    )
+  }
+
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialog.Trigger asChild>
+        <Settings.Item icon={Trash2} accentTheme="red">
+          Delete Account
+        </Settings.Item>
+      </AlertDialog.Trigger>
+
+      <AlertDialog.Portal>
+        <AlertDialog.Overlay
+          key="overlay"
+          animation="quick"
+          opacity={0.5}
+          enterStyle={{ opacity: 0 }}
+          exitStyle={{ opacity: 0 }}
+        />
+        <AlertDialog.Content
+          bordered
+          elevate
+          key="content"
+          animation={[
+            'quick',
+            {
+              opacity: {
+                overshootClamping: true,
+              },
+            },
+          ]}
+          enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
+          exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
+          x={0}
+          scale={1}
+          opacity={1}
+          y={0}
+          p="$4"
+          gap="$4"
+          maw={400}
+        >
+          <AlertDialog.Title size="$7">Delete Account</AlertDialog.Title>
+          <AlertDialog.Description size="$3">
+            Are you sure you want to delete your account? This action will submit a request to
+            permanently delete your account and all associated data. This process may take up to 30
+            days to complete.
+          </AlertDialog.Description>
+
+          <XStack gap="$3" jc="flex-end">
+            <AlertDialog.Cancel asChild>
+              <Button>Cancel</Button>
+            </AlertDialog.Cancel>
+            <AlertDialog.Action asChild>
+              <Button
+                theme="red"
+                onPress={() => requestDeletion.mutate()}
+                disabled={requestDeletion.isPending}
+              >
+                Delete Account
+              </Button>
+            </AlertDialog.Action>
+          </XStack>
+        </AlertDialog.Content>
+      </AlertDialog.Portal>
+    </AlertDialog>
   )
 }

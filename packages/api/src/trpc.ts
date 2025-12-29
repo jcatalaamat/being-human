@@ -7,6 +7,15 @@ import * as jose from 'jose'
 import { cookies, type UnsafeUnwrappedCookies } from 'next/headers'
 import superJson from 'superjson'
 
+// Tenant role types
+export type TenantRole = 'owner' | 'admin' | 'instructor' | 'member'
+
+export interface TenantContext {
+  tenantId: string
+  tenantSlug: string
+  role: TenantRole
+}
+
 const jwtSecret = process.env.SUPABASE_AUTH_JWT_SECRET
 
 // Supabase public JWK for ES256 token verification
@@ -74,6 +83,35 @@ export const createTRPCContext = async (opts: FetchCreateContextFnOptions) => {
     )
   }
 
+  // Extract tenant slug from header (set by frontend)
+  const tenantSlug = opts.req.headers.get('x-tenant-slug')
+  let tenantContext: TenantContext | null = null
+
+  // If user is authenticated and tenant slug is provided, lookup their membership
+  if (userId && tenantSlug) {
+    const { data: membership } = await supabase
+      .from('tenant_memberships')
+      .select(`
+        role,
+        tenants!inner (
+          id,
+          slug
+        )
+      `)
+      .eq('user_id', userId)
+      .eq('tenants.slug', tenantSlug)
+      .single()
+
+    if (membership && membership.tenants) {
+      const tenant = membership.tenants as unknown as { id: string; slug: string }
+      tenantContext = {
+        tenantId: tenant.id,
+        tenantSlug: tenant.slug,
+        role: membership.role as TenantRole,
+      }
+    }
+  }
+
   return {
     requestOrigin: opts.req.headers.get('origin'),
 
@@ -90,6 +128,11 @@ export const createTRPCContext = async (opts: FetchCreateContextFnOptions) => {
      * do anything on behalf of the service role (RLS doesn't work - you're admin)
      */
     supabase,
+
+    /**
+     * Tenant context (null if not in tenant scope or user is not a member)
+     */
+    tenant: tenantContext,
   }
 }
 
@@ -137,3 +180,71 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed)
+
+// ============================================================================
+// Tenant-aware middleware and procedures
+// ============================================================================
+
+/** Middleware that requires tenant context */
+const enforceTenantContext = t.middleware(({ ctx, next }) => {
+  if (!ctx.user) {
+    throw new TRPCError({ code: 'UNAUTHORIZED' })
+  }
+  if (!ctx.tenant) {
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
+      message: 'Tenant context required. Set x-tenant-slug header.',
+    })
+  }
+  return next({
+    ctx: {
+      user: ctx.user,
+      tenant: ctx.tenant, // Now non-nullable
+    },
+  })
+})
+
+/** Middleware factory for enforcing specific tenant roles */
+const enforceTenantRole = (allowedRoles: TenantRole[]) => {
+  return t.middleware(({ ctx, next }) => {
+    if (!ctx.user) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' })
+    }
+    if (!ctx.tenant) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Tenant context required',
+      })
+    }
+    if (!allowedRoles.includes(ctx.tenant.role)) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: `Required role: ${allowedRoles.join(' or ')}`,
+      })
+    }
+    return next({
+      ctx: {
+        user: ctx.user,
+        tenant: ctx.tenant,
+      },
+    })
+  })
+}
+
+/**
+ * Tenant procedure - requires authenticated user with tenant membership
+ * Use for any operation that needs tenant context but any role is fine
+ */
+export const tenantProcedure = t.procedure.use(enforceTenantContext)
+
+/**
+ * Tenant admin procedure - requires owner or admin role
+ * Use for user management, settings, deleting courses
+ */
+export const tenantAdminProcedure = t.procedure.use(enforceTenantRole(['owner', 'admin']))
+
+/**
+ * Tenant content procedure - requires owner, admin, or instructor role
+ * Use for creating/editing courses, modules, lessons
+ */
+export const tenantContentProcedure = t.procedure.use(enforceTenantRole(['owner', 'admin', 'instructor']))

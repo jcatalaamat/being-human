@@ -29,17 +29,19 @@ ON CONFLICT (id) DO UPDATE SET
 -- ============================================================================
 -- MODULE 1: FOUNDATIONS & CONTROL (Beginner, Weeks 1-5)
 -- ============================================================================
-INSERT INTO modules (id, course_id, title, description, order_index)
+INSERT INTO modules (id, course_id, title, description, order_index, unlock_after_days)
 VALUES (
   'b1000000-0000-0000-0000-000000000001',
   'a0000000-0000-0000-0000-000000000001',
   'FOUNDATIONS & CONTROL',
   'Build awareness, mobility, and baseline strength while mastering TRX fundamentals. Circuit Format: Complete all exercises in Group A, then B, then C, then D — and repeat for 2-3 rounds.',
-  1
+  1,
+  0  -- Unlocks immediately upon enrollment
 )
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
-  description = EXCLUDED.description;
+  description = EXCLUDED.description,
+  unlock_after_days = EXCLUDED.unlock_after_days;
 
 -- Module 1 - Group A: Warm-Up & Mobility (4 exercises)
 INSERT INTO lessons (id, module_id, title, description, lesson_type, content_url, duration_sec, order_index)
@@ -113,17 +115,19 @@ ON CONFLICT (id) DO UPDATE SET
 -- ============================================================================
 -- MODULE 2: STRENGTH & STABILITY EVOLUTION (Intermediate, Weeks 6-10)
 -- ============================================================================
-INSERT INTO modules (id, course_id, title, description, order_index)
+INSERT INTO modules (id, course_id, title, description, order_index, unlock_after_days)
 VALUES (
   'b2000000-0000-0000-0000-000000000001',
   'a0000000-0000-0000-0000-000000000001',
   'STRENGTH & STABILITY EVOLUTION',
   'Build on the foundation with deeper strength, better balance, improved coordination, and increased mobility. Circuit Format training continues.',
-  2
+  2,
+  35  -- Unlocks 5 weeks (35 days) after enrollment
 )
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
-  description = EXCLUDED.description;
+  description = EXCLUDED.description,
+  unlock_after_days = EXCLUDED.unlock_after_days;
 
 -- Module 2 Lessons (12 exercises)
 INSERT INTO lessons (id, module_id, title, description, lesson_type, content_url, duration_sec, order_index)
@@ -183,17 +187,19 @@ ON CONFLICT (id) DO UPDATE SET
 -- ============================================================================
 -- MODULE 3: ADVANCED FUNCTIONAL TRAINING (Advanced, Weeks 11-15)
 -- ============================================================================
-INSERT INTO modules (id, course_id, title, description, order_index)
+INSERT INTO modules (id, course_id, title, description, order_index, unlock_after_days)
 VALUES (
   'b3000000-0000-0000-0000-000000000001',
   'a0000000-0000-0000-0000-000000000001',
   'ADVANCED FUNCTIONAL TRAINING',
   'Unlock full-body control, advanced strength, flow-based movement, and athletic stability. Master complex movement patterns.',
-  3
+  3,
+  70  -- Unlocks 10 weeks (70 days) after enrollment
 )
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
-  description = EXCLUDED.description;
+  description = EXCLUDED.description,
+  unlock_after_days = EXCLUDED.unlock_after_days;
 
 -- Module 3 Lessons (12 exercises)
 INSERT INTO lessons (id, module_id, title, description, lesson_type, content_url, duration_sec, order_index)
@@ -274,17 +280,19 @@ ON CONFLICT (id) DO UPDATE SET
 -- ============================================================================
 -- SWISS BALL MODULE 1: FOUNDATION (Beginner, Weeks 1-5)
 -- ============================================================================
-INSERT INTO modules (id, course_id, title, description, order_index)
+INSERT INTO modules (id, course_id, title, description, order_index, unlock_after_days)
 VALUES (
   'b1000000-0000-0000-0000-000000000002',
   'a0000000-0000-0000-0000-000000000002',
   'FOUNDATION',
   'Building stability, learning proper positioning, and gentle core activation. Learn safe sitting, basic balance, pelvic tilts, gentle spine mobility, and breathing techniques for stability.',
-  1
+  1,
+  0  -- Unlocks immediately upon enrollment
 )
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
-  description = EXCLUDED.description;
+  description = EXCLUDED.description,
+  unlock_after_days = EXCLUDED.unlock_after_days;
 
 -- Swiss Ball Module 1 Lessons (12 exercises)
 INSERT INTO lessons (id, module_id, title, description, lesson_type, content_url, duration_sec, order_index)
@@ -344,17 +352,19 @@ ON CONFLICT (id) DO UPDATE SET
 -- ============================================================================
 -- SWISS BALL MODULE 2: PROGRESSIVE (Intermediate, Weeks 6-10)
 -- ============================================================================
-INSERT INTO modules (id, course_id, title, description, order_index)
+INSERT INTO modules (id, course_id, title, description, order_index, unlock_after_days)
 VALUES (
   'b2000000-0000-0000-0000-000000000002',
   'a0000000-0000-0000-0000-000000000002',
   'PROGRESSIVE',
   'Increasing movement complexity, building endurance, and addressing imbalances. Dynamic balance challenges, bridge variations, wall squats, thoracic mobility, and controlled rolling.',
-  2
+  2,
+  35  -- Unlocks 5 weeks (35 days) after enrollment
 )
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
-  description = EXCLUDED.description;
+  description = EXCLUDED.description,
+  unlock_after_days = EXCLUDED.unlock_after_days;
 
 -- Swiss Ball Module 2 Lessons (12 exercises)
 INSERT INTO lessons (id, module_id, title, description, lesson_type, content_url, duration_sec, order_index)
@@ -414,17 +424,19 @@ ON CONFLICT (id) DO UPDATE SET
 -- ============================================================================
 -- SWISS BALL MODULE 3: MASTERY (Advanced, Weeks 11-15)
 -- ============================================================================
-INSERT INTO modules (id, course_id, title, description, order_index)
+INSERT INTO modules (id, course_id, title, description, order_index, unlock_after_days)
 VALUES (
   'b3000000-0000-0000-0000-000000000002',
   'a0000000-0000-0000-0000-000000000002',
   'MASTERY',
   'Full-body integration, advanced balance, and functional movement patterns. Pike and plank variations, single-leg work, advanced hamstring curls, and complex spine articulation.',
-  3
+  3,
+  70  -- Unlocks 10 weeks (70 days) after enrollment
 )
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
-  description = EXCLUDED.description;
+  description = EXCLUDED.description,
+  unlock_after_days = EXCLUDED.unlock_after_days;
 
 -- Swiss Ball Module 3 Lessons (12 exercises)
 INSERT INTO lessons (id, module_id, title, description, lesson_type, content_url, duration_sec, order_index)
