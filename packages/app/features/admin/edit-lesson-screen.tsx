@@ -1,10 +1,11 @@
-import { Button, H2, Paragraph, ScrollView, YStack, XStack, Spinner } from '@my/ui'
+import { Button, H2, H4, Paragraph, ScrollView, Settings, YStack, XStack, Spinner, useToastController } from '@my/ui'
 import { Input, TextArea, Label, Select, Adapt, Sheet } from 'tamagui'
-import { Check, ChevronDown } from '@tamagui/lucide-icons'
+import { Check, ChevronDown, Edit3, Pencil, Plus, Trash } from '@tamagui/lucide-icons'
 import { ACTIONS } from 'app/constants/copy'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
 import { useState, useEffect } from 'react'
+import { PromptFormSheet, DeletePromptDialog } from './prompt-form-sheet'
 
 type LessonStatus = 'draft' | 'scheduled' | 'live'
 type LessonType = 'video' | 'audio' | 'pdf' | 'text' | 'live'
@@ -41,7 +42,21 @@ export function EditLessonScreen({ courseId, moduleId, lessonId }: EditLessonScr
   const [meetingUrl, setMeetingUrl] = useState('')
   const [replayUrl, setReplayUrl] = useState('')
 
+  // Prompts state
+  const [promptSheetOpen, setPromptSheetOpen] = useState(false)
+  const [editingPrompt, setEditingPrompt] = useState<any>(null)
+  const [deletePromptId, setDeletePromptId] = useState<string | null>(null)
+
   const updateMutation = api.admin.updateLesson.useMutation()
+
+  // Prompts queries and mutations
+  const { data: prompts, refetch: refetchPrompts } = api.prompts.getForLesson.useQuery({ lessonId })
+  const deletePromptMutation = api.prompts.deletePrompt.useMutation({
+    onSuccess: () => {
+      refetchPrompts()
+      setDeletePromptId(null)
+    },
+  })
 
   // Populate form when lesson loads
   useEffect(() => {
@@ -401,6 +416,79 @@ export function EditLessonScreen({ courseId, moduleId, lessonId }: EditLessonScr
           </YStack>
         )}
 
+        {/* Prompts/Assignments Section */}
+        <YStack gap="$3" mt="$4" pt="$4" borderTopWidth={1} borderTopColor="$borderColor">
+          <XStack jc="space-between" ai="center">
+            <H4>Prompts & Assignments</H4>
+            <Button
+              size="$3"
+              icon={Plus}
+              onPress={() => {
+                setEditingPrompt(null)
+                setPromptSheetOpen(true)
+              }}
+            >
+              Add Prompt
+            </Button>
+          </XStack>
+
+          {prompts && prompts.length > 0 ? (
+            <YStack gap="$2">
+              {prompts.map((prompt) => (
+                <XStack
+                  key={prompt.id}
+                  bg="$color2"
+                  borderWidth={1}
+                  borderColor="$borderColor"
+                  borderRadius="$3"
+                  p="$3"
+                  ai="center"
+                  jc="space-between"
+                >
+                  <YStack f={1} mr="$3">
+                    <Paragraph fontWeight="600">{prompt.title}</Paragraph>
+                    <Paragraph size="$2" theme="alt2" numberOfLines={1}>
+                      {prompt.promptBody}
+                    </Paragraph>
+                    <XStack gap="$2" mt="$1">
+                      <Paragraph size="$1" theme="alt2">
+                        {prompt.responseSchema?.length || 0} field(s)
+                      </Paragraph>
+                      {prompt.required && (
+                        <Paragraph size="$1" color="$orange10">
+                          Required
+                        </Paragraph>
+                      )}
+                    </XStack>
+                  </YStack>
+                  <XStack gap="$2">
+                    <Button
+                      size="$2"
+                      chromeless
+                      icon={Pencil}
+                      onPress={() => {
+                        setEditingPrompt(prompt)
+                        setPromptSheetOpen(true)
+                      }}
+                    />
+                    <Button
+                      size="$2"
+                      chromeless
+                      icon={Trash}
+                      theme="red"
+                      onPress={() => setDeletePromptId(prompt.id)}
+                    />
+                  </XStack>
+                </XStack>
+              ))}
+            </YStack>
+          ) : (
+            <YStack bg="$color2" p="$4" borderRadius="$3" ai="center">
+              <Paragraph theme="alt2">No prompts yet. Add one to collect member responses.</Paragraph>
+            </YStack>
+          )}
+        </YStack>
+
         <XStack gap="$3" mt="$4">
           <Button f={1} onPress={() => router.back()}>
             {ACTIONS.cancel}
@@ -410,6 +498,31 @@ export function EditLessonScreen({ courseId, moduleId, lessonId }: EditLessonScr
           </Button>
         </XStack>
       </YStack>
+
+      {/* Prompt Form Sheet */}
+      <PromptFormSheet
+        lessonId={lessonId}
+        open={promptSheetOpen}
+        onOpenChange={setPromptSheetOpen}
+        editingPrompt={editingPrompt}
+        onSuccess={() => {
+          refetchPrompts()
+          setPromptSheetOpen(false)
+          setEditingPrompt(null)
+        }}
+      />
+
+      {/* Delete Prompt Confirmation */}
+      <DeletePromptDialog
+        open={!!deletePromptId}
+        onOpenChange={(open) => !open && setDeletePromptId(null)}
+        onConfirm={() => {
+          if (deletePromptId) {
+            deletePromptMutation.mutate({ id: deletePromptId })
+          }
+        }}
+        isLoading={deletePromptMutation.isPending}
+      />
     </ScrollView>
   )
 }
