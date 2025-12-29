@@ -13,20 +13,25 @@ export const adminRouter = createTRPCRouter({
         title: z.string().min(1),
         description: z.string().optional(),
         coverUrl: z.string().url().optional(),
-        isPublished: z.boolean().default(false),
+        status: z.enum(['draft', 'scheduled', 'live']).default('draft'),
+        releaseAt: z.string().datetime().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const now = new Date().toISOString()
       const { data, error } = await ctx.supabase
         .from('courses')
         .insert({
           title: input.title,
           description: input.description,
           cover_url: input.coverUrl,
-          is_published: input.isPublished,
-          tenant_id: ctx.tenant.tenantId, // Assign to current tenant
+          status: input.status,
+          release_at: input.status === 'live' ? (input.releaseAt || now) : input.releaseAt,
+          is_published: input.status === 'live', // Keep for backward compat
+          published_at: input.status === 'live' ? now : null,
+          tenant_id: ctx.tenant.tenantId,
           instructor_id: ctx.user.id,
-          created_at: new Date().toISOString(),
+          created_at: now,
         })
         .select()
         .single()
@@ -46,22 +51,31 @@ export const adminRouter = createTRPCRouter({
         description: z.string().optional(),
         coverUrl: z.string().url().optional(),
         promoVideoUrl: z.string().url().optional(),
-        isPublished: z.boolean().optional(),
+        status: z.enum(['draft', 'scheduled', 'live']).optional(),
+        releaseAt: z.string().datetime().optional().nullable(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const { id, ...updates } = input
 
-      // Verify course belongs to current tenant
+      // Verify course belongs to current tenant and user has access
       const { data: course } = await ctx.supabase
         .from('courses')
-        .select('tenant_id')
+        .select('tenant_id, instructor_id, status')
         .eq('id', id)
         .single()
 
       if (!course || course.tenant_id !== ctx.tenant.tenantId) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Course not found' })
       }
+
+      // Instructors can only edit their own courses; admins/owners can edit any
+      if (ctx.tenant.role === 'instructor' && course.instructor_id !== ctx.user.id) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'You can only edit your own courses' })
+      }
+
+      const now = new Date().toISOString()
+      const isGoingLive = updates.status === 'live' && course.status !== 'live'
 
       const { data, error } = await ctx.supabase
         .from('courses')
@@ -70,7 +84,12 @@ export const adminRouter = createTRPCRouter({
           ...(updates.description !== undefined && { description: updates.description }),
           ...(updates.coverUrl !== undefined && { cover_url: updates.coverUrl }),
           ...(updates.promoVideoUrl !== undefined && { promo_video_url: updates.promoVideoUrl }),
-          ...(updates.isPublished !== undefined && { is_published: updates.isPublished }),
+          ...(updates.status !== undefined && {
+            status: updates.status,
+            is_published: updates.status === 'live',
+            ...(isGoingLive && { published_at: now, release_at: updates.releaseAt || now }),
+          }),
+          ...(updates.releaseAt !== undefined && { release_at: updates.releaseAt }),
         })
         .eq('id', id)
         .select()
@@ -82,6 +101,38 @@ export const adminRouter = createTRPCRouter({
 
       return data
     }),
+
+  // List all courses for admin (includes unpublished; instructors only see their own)
+  listCourses: tenantContentProcedure.query(async ({ ctx }) => {
+    let query = ctx.supabase
+      .from('courses')
+      .select('*')
+      .eq('tenant_id', ctx.tenant.tenantId)
+      .order('created_at', { ascending: false })
+
+    // Instructors only see their own courses
+    if (ctx.tenant.role === 'instructor') {
+      query = query.eq('instructor_id', ctx.user.id)
+    }
+
+    const { data: courses, error } = await query
+
+    if (error) {
+      throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message })
+    }
+
+    return courses.map((course) => ({
+      id: course.id,
+      title: course.title,
+      description: course.description,
+      coverUrl: course.cover_url,
+      status: (course.status || (course.is_published ? 'live' : 'draft')) as 'draft' | 'scheduled' | 'live',
+      releaseAt: course.release_at,
+      isPublished: course.is_published, // backward compat
+      createdAt: course.created_at,
+      instructorId: course.instructor_id,
+    }))
+  }),
 
   deleteCourse: tenantAdminProcedure
     .input(z.object({ id: z.string().uuid() }))

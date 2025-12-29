@@ -20,30 +20,30 @@ export const NAV = {
 // Training/Library section
 export const TRAINING = {
   pageTitle: 'Training',
-  continueTraining: 'Continue Training',
-  allPrograms: 'All Programs',
-  noPrograms: 'No programs yet',
-  noProgramsMessage: 'New training programs coming soon.',
+  continueLearning: 'Continue Learning',
+  allCourses: 'All Courses',
+  noCourses: 'No courses yet',
+  noCoursesMessage: 'New courses coming soon.',
 } as const
 
-// Program (formerly Course) labels
+// Course labels (exported as PROGRAM for compatibility)
 export const PROGRAM = {
-  screenTitle: 'Program',
-  start: 'Start Program',
-  resume: 'Resume Program',
-  noExercises: 'No exercises yet',
-  noExercisesMessage: "This program doesn't have any exercises yet.",
+  screenTitle: 'Course',
+  start: 'Start Course',
+  resume: 'Resume Course',
+  noExercises: 'No lessons yet',
+  noExercisesMessage: "This course doesn't have any lessons yet.",
   // Admin labels
-  manage: 'Manage Programs',
-  create: 'Create Program',
+  manage: 'Manage Courses',
+  create: 'Create Course',
   creating: 'Creating...',
   noDescription: 'No description',
-  createFirst: 'Create your first program to get started.',
+  createFirst: 'Create your first course to get started.',
 } as const
 
-// Exercise (formerly Lesson) labels
+// Lesson labels (exported as EXERCISE for compatibility)
 export const EXERCISE = {
-  screenTitle: 'Exercise',
+  screenTitle: 'Lesson',
   done: 'Done',
   completed: 'Completed',
   next: 'Next',
@@ -76,3 +76,7 @@ export const ERRORS = {
   failedToLoad: 'Failed to load',
   unknownType: 'Unknown content type',
 } as const
+
+// Aliases
+export const COURSE = PROGRAM
+export const LESSON = EXERCISE

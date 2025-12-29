@@ -8,17 +8,18 @@ import { createTRPCRouter, tenantProcedure } from '../trpc'
 const USE_MOCK_DATA = false
 
 export const coursesRouter = createTRPCRouter({
-  // Get all published courses with user progress (scoped to current tenant)
+  // Get all live/scheduled courses with user progress (scoped to current tenant)
   list: tenantProcedure.query(async ({ ctx }) => {
     if (USE_MOCK_DATA) {
       return MOCK_COURSES
     }
 
+    // Members see live and scheduled courses (not drafts)
     const { data: courses, error } = await ctx.supabase
       .from('courses')
       .select('*')
       .eq('tenant_id', ctx.tenant.tenantId)
-      .eq('is_published', true)
+      .in('status', ['live', 'scheduled'])
       .order('created_at', { ascending: false })
 
     if (error) {
@@ -91,6 +92,8 @@ export const coursesRouter = createTRPCRouter({
       coverUrl: data.cover_url,
       promoVideoUrl: data.promo_video_url,
       isPublished: data.is_published,
+      status: data.status as 'draft' | 'scheduled' | 'live',
+      releaseAt: data.release_at,
       progressPct: progressPct || 0,
     }
   }),
@@ -104,10 +107,10 @@ export const coursesRouter = createTRPCRouter({
         return modules
       }
 
-      // Verify course belongs to current tenant
+      // Verify course belongs to current tenant and get release info
       const { data: course } = await ctx.supabase
         .from('courses')
-        .select('tenant_id')
+        .select('tenant_id, status, release_at')
         .eq('id', input.courseId)
         .single()
 
@@ -115,21 +118,31 @@ export const coursesRouter = createTRPCRouter({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Course not found' })
       }
 
-      // Get user's enrollment for this course
+      // Get user's enrollment for this course (must be active)
       const { data: enrollment } = await ctx.supabase
         .from('user_course_progress')
-        .select('enrolled_at, started_at')
+        .select('enrolled_at, started_at, status')
         .eq('user_id', ctx.user.id)
         .eq('course_id', input.courseId)
+        .eq('status', 'active')
         .single()
 
       const isEnrolled = !!enrollment
       const enrolledAt = enrollment ? new Date(enrollment.enrolled_at || enrollment.started_at) : null
 
+      // Calculate effective start: later of course release or enrollment
+      const courseReleaseAt = course.release_at ? new Date(course.release_at) : null
+      const effectiveStart =
+        enrolledAt && courseReleaseAt
+          ? new Date(Math.max(enrolledAt.getTime(), courseReleaseAt.getTime()))
+          : enrolledAt
+
+      // Get published modules only (admins/instructors see all via admin routes)
       const { data: modules, error } = await ctx.supabase
         .from('modules')
         .select('*')
         .eq('course_id', input.courseId)
+        .eq('is_published', true)
         .order('order_index', { ascending: true })
 
       if (error) {
@@ -143,7 +156,7 @@ export const coursesRouter = createTRPCRouter({
           let isLocked = true
           let unlockDate: Date | null = null
 
-          if (isEnrolled && enrolledAt) {
+          if (isEnrolled && effectiveStart) {
             // Check for manual unlock
             const { data: manualUnlock } = await ctx.supabase
               .from('user_module_unlocks')
@@ -155,17 +168,26 @@ export const coursesRouter = createTRPCRouter({
             if (manualUnlock) {
               isLocked = false
             } else {
-              // Calculate time-based unlock
-              unlockDate = new Date(enrolledAt)
-              unlockDate.setDate(unlockDate.getDate() + (module.unlock_after_days || 0))
-              isLocked = new Date() < unlockDate
+              // Check module-level release override
+              const moduleReleaseAt = module.release_at ? new Date(module.release_at) : null
+              if (moduleReleaseAt && new Date() < moduleReleaseAt) {
+                isLocked = true
+                unlockDate = moduleReleaseAt
+              } else {
+                // Calculate time-based unlock from effective start (cohort-aware)
+                unlockDate = new Date(effectiveStart)
+                unlockDate.setDate(unlockDate.getDate() + (module.unlock_after_days || 0))
+                isLocked = new Date() < unlockDate
+              }
             }
           }
 
+          // Get published lessons only
           const { data: lessons, error: lessonsError } = await ctx.supabase
             .from('lessons')
             .select('*')
             .eq('module_id', module.id)
+            .eq('is_published', true)
             .order('order_index', { ascending: true })
 
           if (lessonsError) {
@@ -182,6 +204,8 @@ export const coursesRouter = createTRPCRouter({
                 .eq('lesson_id', lesson.id)
                 .single()
 
+              const isComplete = progress?.is_complete || false
+
               return {
                 id: lesson.id,
                 moduleId: lesson.module_id,
@@ -192,11 +216,14 @@ export const coursesRouter = createTRPCRouter({
                 contentUrl: lesson.content_url,
                 contentText: lesson.content_text,
                 orderIndex: lesson.order_index,
-                isComplete: progress?.is_complete || false,
+                isComplete,
                 lastPositionSec: progress?.last_position_sec || 0,
               }
             })
           )
+
+          // Check if any lesson in this module is completed (completion overrides lock)
+          const hasCompletedLesson = lessonsWithProgress.some((l) => l.isComplete)
 
           return {
             id: module.id,
@@ -204,7 +231,8 @@ export const coursesRouter = createTRPCRouter({
             title: module.title,
             description: module.description,
             orderIndex: module.order_index,
-            isLocked,
+            // Completion overrides lock - if user completed any lesson, module stays accessible
+            isLocked: hasCompletedLesson ? false : isLocked,
             unlockDate: unlockDate?.toISOString() || null,
             lessons: lessonsWithProgress,
           }

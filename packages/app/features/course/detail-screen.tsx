@@ -1,9 +1,10 @@
 import { Button, EmptyState, ErrorState, FullscreenSpinner } from '@my/ui'
 import { ScrollView, YStack } from '@my/ui'
-import { PROGRAM } from 'app/constants/copy'
+import { COURSE } from 'app/constants/copy'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
 
+import { CountdownOverlay } from './components/countdown-overlay'
 import { CourseHeader } from './components/course-header'
 import { ModuleList } from './components/module-list'
 
@@ -74,6 +75,20 @@ export function CourseDetailScreen({ courseId }: CourseDetailScreenProps) {
   // Check if user has started the course (has any progress)
   const hasStarted = course.progressPct > 0
 
+  // Show countdown for scheduled courses that haven't started yet
+  const isScheduled = course.status === 'scheduled' && course.releaseAt
+  const releaseDate = course.releaseAt ? new Date(course.releaseAt) : null
+  const isBeforeRelease = releaseDate && releaseDate > new Date()
+
+  if (isScheduled && isBeforeRelease) {
+    return (
+      <CountdownOverlay
+        releaseAt={course.releaseAt!}
+        courseTitle={course.title}
+      />
+    )
+  }
+
   return (
     <ScrollView>
       <YStack maw={800} mx="auto" w="100%" gap="$4">
@@ -85,13 +100,13 @@ export function CourseDetailScreen({ courseId }: CourseDetailScreenProps) {
         />
 
         <Button onPress={hasStarted ? handleResumeCourse : handleStartCourse} size="$5" mx="$4" themeInverse>
-          {hasStarted ? PROGRAM.resume : PROGRAM.start}
+          {hasStarted ? COURSE.resume : COURSE.start}
         </Button>
 
         {modules.length > 0 ? (
           <ModuleList modules={modules} courseId={courseId} />
         ) : (
-          <EmptyState title={PROGRAM.noExercises} message={PROGRAM.noExercisesMessage} />
+          <EmptyState title={COURSE.noLessons} message={COURSE.noLessonsMessage} />
         )}
       </YStack>
     </ScrollView>

@@ -31,7 +31,7 @@ export function ContinueLearningSection({ courses }: ContinueLearningSectionProp
 
   return (
     <YStack gap="$3">
-      <H3>{TRAINING.continueTraining}</H3>
+      <H3>{TRAINING.continueLearning}</H3>
       {courses.map((course) => (
         <ContinueCard
           key={course.id}

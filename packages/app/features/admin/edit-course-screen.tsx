@@ -50,7 +50,7 @@ export function EditCourseScreen({ courseId }: EditCourseScreenProps) {
 
       router.back()
     } catch (error) {
-      alert('Failed to update program')
+      alert('Failed to update course')
     }
   }
 
@@ -65,11 +65,11 @@ export function EditCourseScreen({ courseId }: EditCourseScreenProps) {
   return (
     <ScrollView>
       <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$4">
-        <H2>Edit Program</H2>
+        <H2>Edit Course</H2>
 
         <YStack gap="$2">
           <Label htmlFor="title">Title *</Label>
-          <Input id="title" value={title} onChangeText={setTitle} placeholder="Program title" />
+          <Input id="title" value={title} onChangeText={setTitle} placeholder="Course title" />
         </YStack>
 
         <YStack gap="$2">
@@ -78,7 +78,7 @@ export function EditCourseScreen({ courseId }: EditCourseScreenProps) {
             id="description"
             value={description}
             onChangeText={setDescription}
-            placeholder="Program description"
+            placeholder="Course description"
             numberOfLines={4}
           />
         </YStack>

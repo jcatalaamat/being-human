@@ -25,7 +25,7 @@ export function AllCoursesSection({ courses, isLoading }: AllCoursesSectionProps
 
   return (
     <YStack gap="$3">
-      <H3>{TRAINING.allPrograms}</H3>
+      <H3>{TRAINING.allCourses}</H3>
       {isLoading ? (
         <>
           <CourseCardSkeleton />

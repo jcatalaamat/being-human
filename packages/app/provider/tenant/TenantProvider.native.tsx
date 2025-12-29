@@ -57,9 +57,18 @@ export function TenantProvider({ children }: { children: React.ReactNode }) {
       const storedTenant = storedSlug ? tenants.find((t) => t.slug === storedSlug) : null
       const tenantToSet = storedTenant ?? tenants[0]
 
+      // Clear stale slug if stored tenant no longer exists
+      if (storedSlug && !storedTenant) {
+        AsyncStorage.removeItem(TENANT_STORAGE_KEY)
+      }
+
       if (tenantToSet) {
         setCurrentTenantState(tenantToSet)
         setCurrentTenantSlug(tenantToSet.slug)
+        // Persist the fallback selection
+        if (!storedTenant) {
+          AsyncStorage.setItem(TENANT_STORAGE_KEY, tenantToSet.slug)
+        }
       }
 
       setIsInitialized(true)

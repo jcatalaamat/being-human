@@ -14,12 +14,19 @@ A multi-tenant course platform built on Tamagui Takeout.
 - Courses with modules and lessons
 - Lesson types: video, audio, PDF, text
 - Cover images and promo videos
-- Publish/unpublish workflow
+- Release state workflow: draft → scheduled → live
 
-### Drip Content
-- Modules unlock X days after enrollment
+### Drip Content (Cohort-Ready)
+- Modules unlock X days after **effective start**
+- Effective start = max(course.release_at, enrolled_at)
 - Manual unlock override by admins
 - Per-user unlock tracking
+- Completion overrides lock (completed lessons stay accessible)
+
+### Enrollment Management
+- Enrollment status: active / revoked
+- Access revocation by admins
+- Auto-enrollment on tenant join (published courses)
 
 ### User Progress
 - Lesson completion tracking
@@ -41,17 +48,18 @@ A multi-tenant course platform built on Tamagui Takeout.
 | Table | Description |
 |-------|-------------|
 | `profiles` | User profiles (name, avatar) |
-| `courses` | Course content with `tenant_id` |
-| `modules` | Course sections with `unlock_after_days` |
-| `lessons` | Individual lessons (video/audio/pdf/text) |
+| `courses` | Course content with `tenant_id`, `status` (draft/scheduled/live), `release_at` |
+| `modules` | Course sections with `unlock_after_days`, `release_at` override |
+| `lessons` | Individual lessons (video/audio/pdf/text), `is_published` |
 
 ### Progress Tables
 
 | Table | Description |
 |-------|-------------|
-| `user_course_progress` | Enrollment, `enrolled_at`, last accessed |
+| `user_course_progress` | Enrollment with `status` (active/revoked), `enrolled_at` |
 | `user_lesson_progress` | Completion status, playback position |
 | `user_module_unlocks` | Manual admin overrides for drip |
+| `activity_log` | Audit trail for enrollments, completions, membership changes |
 
 ### Multi-Tenancy Tables
 
@@ -93,10 +101,12 @@ A multi-tenant course platform built on Tamagui Takeout.
 | Procedure | Auth | Description |
 |-----------|------|-------------|
 | `listByCourse` | admin | Members enrolled in course |
-| `listAll` | admin | All tenant members |
+| `listAll` | admin | All tenant members (active only) |
 | `getMemberProgress` | admin | Detailed progress per user |
 | `unlockModule` | admin | Manual drip override |
 | `revokeUnlock` | admin | Remove manual unlock |
+| `revokeEnrollment` | admin | Revoke user's course access |
+| `restoreEnrollment` | admin | Restore revoked access |
 
 ### `api.tenants.*`
 | Procedure | Auth | Description |
@@ -172,7 +182,10 @@ packages/app/
 supabase/migrations/
 ├── 20251227000000_add_drip_content.sql     # Drip content tables
 ├── 20251227100000_add_deletion_requested.sql
-└── 20251228000000_add_multi_tenancy.sql    # Multi-tenant schema
+├── 20251228000000_add_multi_tenancy.sql    # Multi-tenant schema
+├── 20251228100000_auto_enroll_on_join.sql  # Auto-enrollment triggers
+├── 20251228200000_mvp_hardening.sql        # Status, activity logging
+└── 20251228300000_release_state.sql        # draft/scheduled/live status
 ```
 
 ---

@@ -46,7 +46,7 @@ export function LibraryScreen() {
       <ScrollView>
         <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$6">
           <H2>{TRAINING.pageTitle}</H2>
-          <EmptyState title={TRAINING.noPrograms} message={TRAINING.noProgramsMessage} />
+          <EmptyState title={TRAINING.noCourses} message={TRAINING.noCoursesMessage} />
         </YStack>
       </ScrollView>
     )

@@ -22,7 +22,7 @@ export const membersRouter = createTRPCRouter({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Course not found' })
       }
 
-      // Get all users enrolled in this course with their progress
+      // Get all users enrolled in this course with their progress (active only)
       const { data: enrollments, error } = await ctx.supabase
         .from('user_course_progress')
         .select(`
@@ -30,9 +30,11 @@ export const membersRouter = createTRPCRouter({
           enrolled_at,
           started_at,
           last_accessed_at,
-          last_lesson_id
+          last_lesson_id,
+          status
         `)
         .eq('course_id', input.courseId)
+        .eq('status', 'active')
         .order('enrolled_at', { ascending: false })
 
       if (error) {
@@ -114,7 +116,7 @@ export const membersRouter = createTRPCRouter({
 
   // List all members across all courses in tenant (tenant admin only)
   listAll: tenantAdminProcedure.query(async ({ ctx }) => {
-    // Get all unique users with course progress for courses in this tenant
+    // Get all unique users with course progress for courses in this tenant (active only)
     const { data: enrollments, error } = await ctx.supabase
       .from('user_course_progress')
       .select(`
@@ -122,9 +124,11 @@ export const membersRouter = createTRPCRouter({
         course_id,
         enrolled_at,
         last_accessed_at,
+        status,
         courses!inner(tenant_id)
       `)
       .eq('courses.tenant_id', ctx.tenant.tenantId)
+      .eq('status', 'active')
       .order('enrolled_at', { ascending: false })
 
     if (error) {
@@ -370,6 +374,82 @@ export const membersRouter = createTRPCRouter({
         .delete()
         .eq('user_id', input.userId)
         .eq('module_id', input.moduleId)
+
+      if (error) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message })
+      }
+
+      return { success: true }
+    }),
+
+  // ============ ENROLLMENT MANAGEMENT ============
+
+  // Revoke a user's enrollment in a course (tenant admin only)
+  revokeEnrollment: tenantAdminProcedure
+    .input(
+      z.object({
+        userId: z.string().uuid(),
+        courseId: z.string().uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Verify course belongs to current tenant
+      const { data: course } = await ctx.supabase
+        .from('courses')
+        .select('tenant_id')
+        .eq('id', input.courseId)
+        .single()
+
+      if (!course || course.tenant_id !== ctx.tenant.tenantId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Course not found' })
+      }
+
+      const { error } = await ctx.supabase
+        .from('user_course_progress')
+        .update({
+          status: 'revoked',
+          revoked_at: new Date().toISOString(),
+          revoked_by: ctx.user.id,
+        })
+        .eq('user_id', input.userId)
+        .eq('course_id', input.courseId)
+
+      if (error) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message })
+      }
+
+      return { success: true }
+    }),
+
+  // Restore a revoked enrollment (tenant admin only)
+  restoreEnrollment: tenantAdminProcedure
+    .input(
+      z.object({
+        userId: z.string().uuid(),
+        courseId: z.string().uuid(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Verify course belongs to current tenant
+      const { data: course } = await ctx.supabase
+        .from('courses')
+        .select('tenant_id')
+        .eq('id', input.courseId)
+        .single()
+
+      if (!course || course.tenant_id !== ctx.tenant.tenantId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Course not found' })
+      }
+
+      const { error } = await ctx.supabase
+        .from('user_course_progress')
+        .update({
+          status: 'active',
+          revoked_at: null,
+          revoked_by: null,
+        })
+        .eq('user_id', input.userId)
+        .eq('course_id', input.courseId)
 
       if (error) {
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message })

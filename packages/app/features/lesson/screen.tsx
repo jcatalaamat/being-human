@@ -67,9 +67,23 @@ export function LessonScreen({ lessonId }: LessonScreenProps) {
   const renderContent = () => {
     switch (lesson.type) {
       case 'video':
-        return <VideoPlayer url={lesson.contentUrl || ''} lessonId={lessonId} courseId={lesson.module.courseId} />
+        return (
+          <VideoPlayer
+            url={lesson.contentUrl || ''}
+            lessonId={lessonId}
+            courseId={lesson.module.courseId}
+            initialPositionSec={lesson.lastPositionSec}
+          />
+        )
       case 'audio':
-        return <AudioPlayer url={lesson.contentUrl || ''} lessonId={lessonId} courseId={lesson.module.courseId} />
+        return (
+          <AudioPlayer
+            url={lesson.contentUrl || ''}
+            lessonId={lessonId}
+            courseId={lesson.module.courseId}
+            initialPositionSec={lesson.lastPositionSec}
+          />
+        )
       case 'pdf':
         return <PdfViewer url={lesson.contentUrl || ''} />
       case 'text':
