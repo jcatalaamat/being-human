@@ -7,7 +7,7 @@ import { NextPageWithLayout } from './_app'
 const Page: NextPageWithLayout = () => (
   <>
     <Head>
-      <title>Reset Password - Holistic Training</title>
+      <title>Reset Password - Inner Ascend</title>
     </Head>
     <ResetPasswordScreen />
   </>

@@ -6,6 +6,15 @@ import { useAppRouter } from 'app/utils/navigation'
 import { useState } from 'react'
 
 type LessonStatus = 'draft' | 'scheduled' | 'live'
+type LessonType = 'video' | 'audio' | 'pdf' | 'text' | 'live'
+type ContentCategory =
+  | 'orientation'
+  | 'transmission'
+  | 'clarification'
+  | 'embodiment'
+  | 'inquiry'
+  | 'meditation'
+  | 'assignment'
 
 interface CreateLessonScreenProps {
   courseId: string
@@ -16,13 +25,17 @@ export function CreateLessonScreen({ courseId, moduleId }: CreateLessonScreenPro
   const router = useAppRouter()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [lessonType, setLessonType] = useState<'video' | 'audio' | 'pdf' | 'text'>('video')
+  const [lessonType, setLessonType] = useState<LessonType>('video')
   const [contentUrl, setContentUrl] = useState('')
   const [contentText, setContentText] = useState('')
   const [durationSec, setDurationSec] = useState('')
   const [orderIndex, setOrderIndex] = useState('0')
   const [status, setStatus] = useState<LessonStatus>('live')
   const [releaseAt, setReleaseAt] = useState('')
+  const [contentCategory, setContentCategory] = useState<ContentCategory | ''>('')
+  const [scheduledAt, setScheduledAt] = useState('')
+  const [meetingUrl, setMeetingUrl] = useState('')
+  const [replayUrl, setReplayUrl] = useState('')
 
   const { data: modules } = api.courses.getModulesWithLessons.useQuery({ courseId })
   const createMutation = api.admin.createLesson.useMutation()
@@ -53,6 +66,10 @@ export function CreateLessonScreen({ courseId, moduleId }: CreateLessonScreenPro
         orderIndex: parseInt(orderIndex) || nextOrder,
         status,
         releaseAt: releaseAt || undefined,
+        contentCategory: contentCategory || undefined,
+        scheduledAt: lessonType === 'live' && scheduledAt ? scheduledAt : undefined,
+        meetingUrl: lessonType === 'live' && meetingUrl.trim() ? meetingUrl.trim() : undefined,
+        replayUrl: lessonType === 'live' && replayUrl.trim() ? replayUrl.trim() : undefined,
       })
 
       router.back()
@@ -127,6 +144,82 @@ export function CreateLessonScreen({ courseId, moduleId }: CreateLessonScreenPro
                     <Check size={16} />
                   </Select.ItemIndicator>
                 </Select.Item>
+                <Select.Item index={4} value="live">
+                  <Select.ItemText>Live Call</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
+                </Select.Item>
+              </Select.Viewport>
+              <Select.ScrollDownButton />
+            </Select.Content>
+          </Select>
+        </YStack>
+
+        {/* Content Category (optional) */}
+        <YStack gap="$2">
+          <Label>Content Category (optional)</Label>
+          <Select value={contentCategory} onValueChange={(val) => setContentCategory(val as ContentCategory)}>
+            <Select.Trigger iconAfter={ChevronDown}>
+              <Select.Value placeholder="Select category" />
+            </Select.Trigger>
+
+            <Adapt when="sm" platform="touch">
+              <Sheet modal dismissOnSnapToBottom>
+                <Sheet.Frame>
+                  <Sheet.ScrollView>
+                    <Adapt.Contents />
+                  </Sheet.ScrollView>
+                </Sheet.Frame>
+                <Sheet.Overlay />
+              </Sheet>
+            </Adapt>
+
+            <Select.Content zIndex={200000}>
+              <Select.ScrollUpButton />
+              <Select.Viewport>
+                <Select.Item index={0} value="orientation">
+                  <Select.ItemText>Orientation</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
+                </Select.Item>
+                <Select.Item index={1} value="transmission">
+                  <Select.ItemText>Transmission</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
+                </Select.Item>
+                <Select.Item index={2} value="clarification">
+                  <Select.ItemText>Clarification</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
+                </Select.Item>
+                <Select.Item index={3} value="embodiment">
+                  <Select.ItemText>Embodiment Practice</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
+                </Select.Item>
+                <Select.Item index={4} value="inquiry">
+                  <Select.ItemText>Living Inquiry</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
+                </Select.Item>
+                <Select.Item index={5} value="meditation">
+                  <Select.ItemText>Meditation</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
+                </Select.Item>
+                <Select.Item index={6} value="assignment">
+                  <Select.ItemText>Deeper Assignment</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <Check size={16} />
+                  </Select.ItemIndicator>
+                </Select.Item>
               </Select.Viewport>
               <Select.ScrollDownButton />
             </Select.Content>
@@ -143,6 +236,42 @@ export function CreateLessonScreen({ courseId, moduleId }: CreateLessonScreenPro
               placeholder="https://... (YouTube, Vimeo, direct link)"
             />
           </YStack>
+        )}
+
+        {/* Live Call specific fields */}
+        {lessonType === 'live' && (
+          <>
+            <YStack gap="$2">
+              <Label htmlFor="scheduledAt">Scheduled Date/Time</Label>
+              <Input
+                id="scheduledAt"
+                value={scheduledAt}
+                onChangeText={setScheduledAt}
+                placeholder="2025-01-15T19:00:00Z"
+              />
+              <Paragraph size="$2" theme="alt2">
+                When is the live call scheduled? (ISO format)
+              </Paragraph>
+            </YStack>
+            <YStack gap="$2">
+              <Label htmlFor="meetingUrl">Meeting URL</Label>
+              <Input
+                id="meetingUrl"
+                value={meetingUrl}
+                onChangeText={setMeetingUrl}
+                placeholder="https://zoom.us/j/..."
+              />
+            </YStack>
+            <YStack gap="$2">
+              <Label htmlFor="replayUrl">Replay URL (optional)</Label>
+              <Input
+                id="replayUrl"
+                value={replayUrl}
+                onChangeText={setReplayUrl}
+                placeholder="https://... (add after call ends)"
+              />
+            </YStack>
+          </>
         )}
 
         {lessonType === 'text' && (

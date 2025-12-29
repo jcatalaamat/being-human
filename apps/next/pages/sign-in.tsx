@@ -7,7 +7,7 @@ import { NextPageWithLayout } from './_app'
 const Page: NextPageWithLayout = () => (
   <>
     <Head>
-      <title>Sign In - Holistic Training</title>
+      <title>Sign In - Inner Ascend</title>
     </Head>
     <SignInScreen />
   </>

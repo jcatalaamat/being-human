@@ -1,8 +1,17 @@
-import { CheckCircle, FileText, Headphones, Video } from '@tamagui/lucide-icons'
+import { Calendar, CheckCircle, FileText, Headphones, Radio, Video } from '@tamagui/lucide-icons'
 import type { IconProps } from '@tamagui/lucide-icons'
 import { Button, Paragraph, XStack } from 'tamagui'
 
-export type LessonType = 'video' | 'audio' | 'pdf' | 'text'
+export type LessonType = 'video' | 'audio' | 'pdf' | 'text' | 'live'
+
+export type ContentCategory =
+  | 'orientation'
+  | 'transmission'
+  | 'clarification'
+  | 'embodiment'
+  | 'inquiry'
+  | 'meditation'
+  | 'assignment'
 
 export interface LessonRowProps {
   title: string
@@ -18,6 +27,7 @@ const iconMap: Record<LessonType, React.FC<IconProps>> = {
   audio: Headphones,
   pdf: FileText,
   text: FileText,
+  live: Calendar,
 }
 
 const formatDuration = (seconds?: number): string => {

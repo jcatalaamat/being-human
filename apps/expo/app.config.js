@@ -1,9 +1,9 @@
 export default {
   expo: {
-    name: 'Holistic Training',
-    slug: 'holistic-training',
+    name: 'Inner Ascend',
+    slug: 'inner-ascend',
     jsEngine: 'hermes',
-    scheme: 'holistictraining',
+    scheme: 'innerascend',
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/icon.png',

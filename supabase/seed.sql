@@ -1,497 +1,334 @@
--- Seed data for Holistic Training - TRX & Swiss Ball Training Courses
--- This seeds both 15-week programs with 3 modules and 36 lessons each
+-- Seed data for Inner Ascend - A 12-Month Journey of Awakening
+-- Month One: Foundations of Self-Awareness (4 weeks, 28 lessons)
 
 -- ============================================================================
--- STORAGE BASE URL (update this for your Supabase project)
--- Format: https://<project-id>.supabase.co/storage/v1/object/public/courses/
+-- TENANT: Create default tenant for Inner Ascend
 -- ============================================================================
+INSERT INTO tenants (id, name, slug)
+VALUES (
+  '00000000-0000-0000-0000-000000000001',
+  'Inner Ascend',
+  'inner-ascend'
+)
+ON CONFLICT (id) DO UPDATE SET
+  name = EXCLUDED.name,
+  slug = EXCLUDED.slug;
 
 -- ============================================================================
--- COURSE: TRX Suspension Training
+-- COURSE: Inner Ascend
 -- ============================================================================
-INSERT INTO courses (id, title, description, cover_url, promo_video_url, is_published, instructor_id)
+INSERT INTO courses (id, tenant_id, title, description, cover_url, status, is_published, instructor_id)
 VALUES (
   'a0000000-0000-0000-0000-000000000001',
-  'Complete TRX Suspension Training Program',
-  'Master TRX Suspension Training — Build Strength Without Joint Stress. Transform your body using suspension training that builds functional strength, improves mobility, and protects your joints. Perfect for ages 30-65 with pain, injuries, or mobility concerns. 15-week structured program taking you from beginner to advanced.',
-  'https://vpdwubpodcrbicvldskg.supabase.co/storage/v1/object/public/courses/trx-egon-main-DWobt6NW.jpg',
-  'https://youtu.be/PGo77NuDRAg',
+  '00000000-0000-0000-0000-000000000001',
+  'Inner Ascend: A 12-Month Journey of Awakening',
+  E'**Month One: Foundations of Self-Awareness**\n\nThis transformative journey begins with the essential foundation: learning to see ourselves clearly, without judgment, and without the agenda to fix.\n\nOver these four weeks, you will:\n- Discover the observer within — the awareness that exists prior to thought\n- Reframe your relationship with ego from enemy to adaptive ally\n- Understand how shame became encoded in your nervous system\n- Reclaim your inner authority and trust your own knowing\n\n**Weekly Structure:**\n- Weekly Orientation (2-3 min)\n- Deep Transmission Teaching (10-20 min)\n- Live Clarification Call (60-90 min)\n- Embodiment Practice (5-10 min)\n- Living Inquiry for Daily Life\n- Guided Meditation (10-20 min)\n- Deeper Assignment for Integration\n\n**Time Commitment:**\n- 1 live call per week\n- 10-20 minutes daily practice\n- Optional deeper exploration',
+  '',
+  'live',
   true,
-  (SELECT id FROM auth.users LIMIT 1)
+  NULL
 )
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
   description = EXCLUDED.description,
-  cover_url = EXCLUDED.cover_url,
-  promo_video_url = EXCLUDED.promo_video_url,
+  status = EXCLUDED.status,
   is_published = EXCLUDED.is_published;
 
 -- ============================================================================
--- MODULE 1: FOUNDATIONS & CONTROL (Beginner, Weeks 1-5)
+-- WEEK 1: Awareness Before Change
 -- ============================================================================
-INSERT INTO modules (id, course_id, title, description, order_index, unlock_after_days)
+INSERT INTO modules (id, course_id, title, description, order_index, unlock_after_days, status, is_published)
 VALUES (
   'b1000000-0000-0000-0000-000000000001',
   'a0000000-0000-0000-0000-000000000001',
-  'FOUNDATIONS & CONTROL',
-  'Build awareness, mobility, and baseline strength while mastering TRX fundamentals. Circuit Format: Complete all exercises in Group A, then B, then C, then D — and repeat for 2-3 rounds.',
-  1,
-  0  -- Unlocks immediately upon enrollment
+  'Week 1: Awareness Before Change',
+  'Week One lays the foundation for the entire INNER ASCEND journey. Nothing in this work moves forward without awareness. Before regulation, before integration, before creation — there is seeing.',
+  0,
+  0,
+  'live',
+  true
 )
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
   description = EXCLUDED.description,
   unlock_after_days = EXCLUDED.unlock_after_days;
 
--- Module 1 - Group A: Warm-Up & Mobility (4 exercises)
-INSERT INTO lessons (id, module_id, title, description, lesson_type, content_url, duration_sec, order_index)
+-- Week 1 Lessons
+INSERT INTO lessons (id, module_id, title, description, lesson_type, content_category, content_url, duration_sec, order_index, status, is_published)
 VALUES
   ('c1000001-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-000000000001',
-   'Suspended Downdog', 'Warm-up and mobility exercise to open the shoulders and decompress the spine.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', 300, 1),
+   'Weekly Orientation: Awareness Before Change',
+   'Set expectations and calm the system before content. Names the tone of the week, normalizes resistance, and prevents over-efforting.',
+   'video', 'orientation', '', 180, 0, 'live', true),
 
   ('c1000002-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-000000000001',
-   'Windmills', 'Dynamic mobility exercise for thoracic spine rotation and shoulder mobility.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', 240, 2),
+   'Transmission: The Observer Within',
+   'Most human suffering does not come from experience itself, but from the unconscious resistance to experience. We try to change what we have not yet fully felt.',
+   'video', 'transmission', '', 900, 1, 'live', true),
 
   ('c1000003-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-000000000001',
-   'Kickbacks to Superman', 'Full body mobility flow combining hip extension with spinal extension.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', 360, 3),
+   'Live Clarification Call: Week 1',
+   'Live Q&A session to anchor presence, clarify misunderstandings, and model how to be with the work. No new content — only clarification, reflection, orientation.',
+   'live', 'clarification', NULL, 5400, 2, 'live', true),
 
   ('c1000004-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-000000000001',
-   'Hawaiian Squats', 'Hip mobility exercise focusing on lateral hip movement and ankle mobility.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', 300, 4)
-ON CONFLICT (id) DO UPDATE SET
-  title = EXCLUDED.title,
-  description = EXCLUDED.description,
-  duration_sec = EXCLUDED.duration_sec;
+   'Embodiment Practice: Learning to Stay',
+   'A somatic practice to experience raw sensation before the mind creates labels and stories. The practice is not focus — the practice is staying.',
+   'video', 'embodiment', '', 480, 3, 'live', true),
 
--- Module 1 - Group B: Core (3 exercises)
-INSERT INTO lessons (id, module_id, title, description, lesson_type, content_url, duration_sec, order_index)
-VALUES
   ('c1000005-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-000000000001',
-   'Scapular Push-Ups', 'Core and shoulder stability exercise focusing on scapular control.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4', 240, 5),
+   'Living Inquiry: What Do I Try to Change Before I Have Fully Felt It?',
+   'A self-inquiry practice to bring into daily life. Let the answer reveal itself through lived moments.',
+   'text', 'inquiry', NULL, 180, 4, 'live', true),
 
   ('c1000006-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-000000000001',
-   'Kneeling Overhead Reaches', 'Core stability with overhead mobility, building anti-extension strength.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4', 300, 6),
+   'Meditation: Staying With What Is',
+   'A guided meditation to settle into pure awareness, the unchanging background of all experience.',
+   'audio', 'meditation', '', 900, 5, 'live', true),
 
   ('c1000007-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-000000000001',
-   'Hip Extensions', 'Posterior chain activation focusing on glutes and core stability.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4', 240, 7)
+   'Deeper Assignment: Interrupting Premature Change',
+   'A contemplative practice to deepen your relationship with the observing presence.',
+   'text', 'assignment', NULL, 240, 6, 'live', true)
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
   description = EXCLUDED.description,
+  lesson_type = EXCLUDED.lesson_type,
+  content_category = EXCLUDED.content_category,
   duration_sec = EXCLUDED.duration_sec;
 
--- Module 1 - Group C: Strength (5 exercises)
-INSERT INTO lessons (id, module_id, title, description, lesson_type, content_url, duration_sec, order_index)
-VALUES
-  ('c1000008-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-000000000001',
-   'Side to Side Lunges', 'Lower body strength with lateral movement pattern and hip mobility.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4', 360, 8),
+-- Update Week 1 text content
+UPDATE lessons SET content_text = E'# Living Inquiry: Week One\n\nHold this question gently throughout the week:\n\n**"What do I try to change before I have fully felt it?"**\n\n## How to Practice\n\nDo not answer this intellectually. Let the answer reveal itself through lived moments.\n\nNotice when you:\n- Want an emotion to end before you''ve felt it fully\n- Want a conversation to resolve quickly\n- Want clarity before presence\n- Rush ahead of yourself\n\nWhen you notice this, pause. Take one slow breath. Ask internally: "What is actually happening right now?"\n\nThis is awareness in motion.\n\nThere is no rush. This work unfolds at the pace of safety.'
+WHERE id = 'c1000005-0000-0000-0000-000000000001';
 
-  ('c1000009-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-000000000001',
-   'Upright Rows', 'Upper body pulling strength targeting the upper back and shoulders.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4', 300, 9),
+UPDATE lessons SET content_text = E'# Deeper Assignment: Interrupting Premature Change\n\nFor 7 days, notice one specific pattern:\n\n**The moment you try to change an experience before fully feeling it.**\n\nThis might show up as:\n- Wanting an emotion to end\n- Explaining yourself internally\n- Distracting yourself\n- Spiritualizing discomfort\n\n## The Practice\n\nEach time you notice this:\n1. Pause for one breath\n2. Name silently: "Not yet seen."\n3. Do nothing else\n\nNo journaling required. No correction. Just interruption.\n\nThis trains awareness to arrive before action.'
+WHERE id = 'c1000007-0000-0000-0000-000000000001';
 
-  ('c1000010-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-000000000001',
-   'Low Plank Pendulum', 'Core stability with anti-rotation, building deep abdominal strength.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', 300, 10),
-
-  ('c1000011-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-000000000001',
-   'Shrimp Squats', 'Single leg strength focusing on balance, quad strength, and hip stability.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4', 360, 11),
-
-  ('c1000012-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-000000000001',
-   'TRX Push-Ups', 'Upper body pushing strength with added instability for core engagement.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4', 300, 12)
-ON CONFLICT (id) DO UPDATE SET
-  title = EXCLUDED.title,
-  description = EXCLUDED.description,
-  duration_sec = EXCLUDED.duration_sec;
+-- Update Week 1 live call scheduled_at
+UPDATE lessons SET scheduled_at = '2025-01-08T19:00:00Z', meeting_url = ''
+WHERE id = 'c1000003-0000-0000-0000-000000000001';
 
 -- ============================================================================
--- MODULE 2: STRENGTH & STABILITY EVOLUTION (Intermediate, Weeks 6-10)
+-- WEEK 2: Meeting the Ego as Adaptive Intelligence
 -- ============================================================================
-INSERT INTO modules (id, course_id, title, description, order_index, unlock_after_days)
+INSERT INTO modules (id, course_id, title, description, order_index, unlock_after_days, status, is_published)
 VALUES (
   'b2000000-0000-0000-0000-000000000001',
   'a0000000-0000-0000-0000-000000000001',
-  'STRENGTH & STABILITY EVOLUTION',
-  'Build on the foundation with deeper strength, better balance, improved coordination, and increased mobility. Circuit Format training continues.',
-  2,
-  35  -- Unlocks 5 weeks (35 days) after enrollment
+  'Week 2: Meeting the Ego as Adaptive Intelligence',
+  'Week Two invites you into a radically different relationship with the ego. Instead of trying to rise above it, silence it, or dismantle it, you are asked to understand it from the inside.',
+  1,
+  7,
+  'live',
+  true
 )
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
   description = EXCLUDED.description,
   unlock_after_days = EXCLUDED.unlock_after_days;
 
--- Module 2 Lessons (12 exercises)
-INSERT INTO lessons (id, module_id, title, description, lesson_type, content_url, duration_sec, order_index)
+-- Week 2 Lessons
+INSERT INTO lessons (id, module_id, title, description, lesson_type, content_category, content_url, duration_sec, order_index, status, is_published)
 VALUES
   ('c2000001-0000-0000-0000-000000000001', 'b2000000-0000-0000-0000-000000000001',
-   'Dynamic Spinal Waves', 'Advanced mobility flow for spinal articulation and neural activation.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', 300, 1),
+   'Weekly Orientation: The Ego as Protector',
+   'Introduction to reframing our relationship with ego from enemy to ally. This week is about ending the inner war.',
+   'video', 'orientation', '', 150, 0, 'live', true),
 
   ('c2000002-0000-0000-0000-000000000001', 'b2000000-0000-0000-0000-000000000001',
-   'TRX World''s Greatest Stretch', 'Comprehensive mobility exercise targeting hips, thoracic spine, and hamstrings.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', 360, 2),
+   'Transmission: Adaptive Intelligence',
+   'The ego is not your enemy. It is a constellation of adaptive strategies developed in response to lived experience. Every ego strategy was once intelligent.',
+   'video', 'transmission', '', 1080, 1, 'live', true),
 
   ('c2000003-0000-0000-0000-000000000001', 'b2000000-0000-0000-0000-000000000001',
-   'Suspended Hip Circles', 'Hip mobility in all planes of motion with TRX support.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', 300, 3),
+   'Live Clarification Call: Week 2',
+   'Exploring our relationship with ego patterns. Safe space for questions and sharing about protective strategies.',
+   'live', 'clarification', NULL, 5400, 2, 'live', true),
 
   ('c2000004-0000-0000-0000-000000000001', 'b2000000-0000-0000-0000-000000000001',
-   'TRX Body Saw', 'Advanced anti-extension core exercise for deep abdominal strength.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4', 300, 4),
+   'Embodiment Practice: Naming Protection',
+   'A body-based practice for meeting protective patterns with compassion. Whenever you notice defensiveness, pause and silently say: "This is protection."',
+   'video', 'embodiment', '', 420, 3, 'live', true),
 
   ('c2000005-0000-0000-0000-000000000001', 'b2000000-0000-0000-0000-000000000001',
-   'TRX Mountain Climbers', 'Dynamic core exercise combining anti-extension with hip flexion.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4', 300, 5),
+   'Living Inquiry: What Is This Part of Me Trying to Protect?',
+   'Questions to bring curiosity to our automatic responses and defenses.',
+   'text', 'inquiry', NULL, 180, 4, 'live', true),
 
   ('c2000006-0000-0000-0000-000000000001', 'b2000000-0000-0000-0000-000000000001',
-   'Side Plank with Reach', 'Anti-lateral flexion with rotation for oblique strength.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4', 300, 6),
+   'Meditation: Seeing Protection Without Judgment',
+   'A meditation of radical acceptance for meeting the ego with awareness instead of war.',
+   'audio', 'meditation', '', 1200, 5, 'live', true),
 
   ('c2000007-0000-0000-0000-000000000001', 'b2000000-0000-0000-0000-000000000001',
-   'TRX Inverted Row', 'Horizontal pulling for upper back and bicep strength.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4', 360, 7),
-
-  ('c2000008-0000-0000-0000-000000000001', 'b2000000-0000-0000-0000-000000000001',
-   'TRX Pistol Squat Progression', 'Single leg squat with TRX assistance for balance and strength.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4', 420, 8),
-
-  ('c2000009-0000-0000-0000-000000000001', 'b2000000-0000-0000-0000-000000000001',
-   'TRX Chest Press', 'Upper body pushing with increased instability demands.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', 300, 9),
-
-  ('c2000010-0000-0000-0000-000000000001', 'b2000000-0000-0000-0000-000000000001',
-   'TRX Single Leg Deadlift', 'Hip hinge pattern with balance challenge for posterior chain.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4', 360, 10),
-
-  ('c2000011-0000-0000-0000-000000000001', 'b2000000-0000-0000-0000-000000000001',
-   'TRX Chest Opener', 'Deep pectoral and anterior shoulder stretch.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4', 240, 11),
-
-  ('c2000012-0000-0000-0000-000000000001', 'b2000000-0000-0000-0000-000000000001',
-   'TRX Hamstring Stretch', 'Posterior chain lengthening with TRX support.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4', 300, 12)
+   'Deeper Assignment: Mapping Your Protectors',
+   'An exercise to identify and honor the protective strategies that have served you.',
+   'text', 'assignment', NULL, 300, 6, 'live', true)
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
   description = EXCLUDED.description,
+  lesson_type = EXCLUDED.lesson_type,
+  content_category = EXCLUDED.content_category,
   duration_sec = EXCLUDED.duration_sec;
 
+-- Update Week 2 text content
+UPDATE lessons SET content_text = E'# Living Inquiry: Week Two\n\nHold this inquiry gently throughout the week:\n\n**"What is this part of me trying to protect?"**\n\n## How to Practice\n\nLet the answer emerge through sensation, memory, and behavior — not thought alone.\n\nWhen you notice:\n- Defensiveness\n- Self-justification\n- The urge to explain or withdraw\n\nAsk with genuine curiosity: "What is this protecting?"\n\nYou do not need to resolve anything. Curiosity keeps awareness open. Judgment collapses it.\n\nSeeing is enough.'
+WHERE id = 'c2000005-0000-0000-0000-000000000001';
+
+UPDATE lessons SET content_text = E'# Deeper Assignment: Mapping Protection\n\nOnce this week, sit down with a notebook.\n\nWrite the answers to these prompts slowly:\n\n1. **What situations trigger protection most often?**\n\n2. **What does protection look like in me?**\n   (control, silence, performance, withdrawal, attack)\n\n3. **What does this part seem to be afraid would happen if it relaxed?**\n\nDo not try to heal or reframe.\n\nEnd the assignment by writing this sentence:\n\n**"This strategy once kept me safe."**\n\nStop there.'
+WHERE id = 'c2000007-0000-0000-0000-000000000001';
+
+-- Update Week 2 live call
+UPDATE lessons SET scheduled_at = '2025-01-15T19:00:00Z', meeting_url = ''
+WHERE id = 'c2000003-0000-0000-0000-000000000001';
+
 -- ============================================================================
--- MODULE 3: ADVANCED FUNCTIONAL TRAINING (Advanced, Weeks 11-15)
+-- WEEK 3: Conditioning, Shame, and the Nervous System
 -- ============================================================================
-INSERT INTO modules (id, course_id, title, description, order_index, unlock_after_days)
+INSERT INTO modules (id, course_id, title, description, order_index, unlock_after_days, status, is_published)
 VALUES (
   'b3000000-0000-0000-0000-000000000001',
   'a0000000-0000-0000-0000-000000000001',
-  'ADVANCED FUNCTIONAL TRAINING',
-  'Unlock full-body control, advanced strength, flow-based movement, and athletic stability. Master complex movement patterns.',
-  3,
-  70  -- Unlocks 10 weeks (70 days) after enrollment
+  'Week 3: Conditioning, Shame, and the Nervous System',
+  'Week Three deepens the work by bringing compassion and clarity to one of the most misunderstood aspects of being human: conditioning. This week is about dissolving shame by understanding how patterns are formed.',
+  2,
+  14,
+  'live',
+  true
 )
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
   description = EXCLUDED.description,
   unlock_after_days = EXCLUDED.unlock_after_days;
 
--- Module 3 Lessons (12 exercises)
-INSERT INTO lessons (id, module_id, title, description, lesson_type, content_url, duration_sec, order_index)
+-- Week 3 Lessons
+INSERT INTO lessons (id, module_id, title, description, lesson_type, content_category, content_url, duration_sec, order_index, status, is_published)
 VALUES
   ('c3000001-0000-0000-0000-000000000001', 'b3000000-0000-0000-0000-000000000001',
-   'TRX Flow Sequence', 'Dynamic movement flow combining multiple patterns for full-body activation.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', 420, 1),
+   'Weekly Orientation: The Roots of Shame',
+   'Understanding how shame develops in early life and shapes our sense of self. Conditioning is learned, not chosen.',
+   'video', 'orientation', '', 180, 0, 'live', true),
 
   ('c3000002-0000-0000-0000-000000000001', 'b3000000-0000-0000-0000-000000000001',
-   'TRX Rotational Lunge', 'Multi-planar movement combining lunge with thoracic rotation.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', 360, 2),
+   'Transmission: Shame and the Body',
+   'Conditioning is not something you chose. It is the result of a nervous system learning how to survive, belong, and orient in the world. Shame arises when we judge adaptive responses through the lens of adult consciousness.',
+   'video', 'transmission', '', 1020, 1, 'live', true),
 
   ('c3000003-0000-0000-0000-000000000001', 'b3000000-0000-0000-0000-000000000001',
-   'TRX Bear Crawl', 'Quadrupedal movement pattern for coordination and core stability.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', 300, 3),
+   'Live Clarification Call: Week 3',
+   'A tender exploration of shame patterns. Safe space for questions and sharing. Regulation always comes before insight.',
+   'live', 'clarification', NULL, 5400, 2, 'live', true),
 
   ('c3000004-0000-0000-0000-000000000001', 'b3000000-0000-0000-0000-000000000001',
-   'TRX Pike', 'Advanced core exercise requiring hip flexion with suspended feet.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', 300, 4),
+   'Embodiment Practice: Tracking Conditioning in the Body',
+   'Practical tools for working with shame activation in the body. Notice where tension appears, changes in breath.',
+   'video', 'embodiment', '', 540, 3, 'live', true),
 
   ('c3000005-0000-0000-0000-000000000001', 'b3000000-0000-0000-0000-000000000001',
-   'TRX Suspended Plank', 'Core stability with feet suspended for maximum instability.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4', 300, 5),
+   'Living Inquiry: What Am I Blaming Myself For That Was Never a Conscious Choice?',
+   'Body-based inquiry to locate and witness shame without drowning in it.',
+   'text', 'inquiry', NULL, 180, 4, 'live', true),
 
   ('c3000006-0000-0000-0000-000000000001', 'b3000000-0000-0000-0000-000000000001',
-   'TRX Atomic Push-Up', 'Combination of push-up and knee tuck for total body challenge.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4', 360, 6),
+   'Meditation: Safe Haven Within',
+   'A restorative meditation to establish inner safety and resource. Meeting the pattern at its origin.',
+   'audio', 'meditation', '', 1080, 5, 'live', true),
 
   ('c3000007-0000-0000-0000-000000000001', 'b3000000-0000-0000-0000-000000000001',
-   'TRX Single Arm Row', 'Unilateral pulling with anti-rotation core demand.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4', 360, 7),
-
-  ('c3000008-0000-0000-0000-000000000001', 'b3000000-0000-0000-0000-000000000001',
-   'TRX High Row', 'Upper back and rear deltoid strengthening with external rotation.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4', 300, 8),
-
-  ('c3000009-0000-0000-0000-000000000001', 'b3000000-0000-0000-0000-000000000001',
-   'TRX Low Row', 'Mid-back strengthening with focus on scapular retraction.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4', 300, 9),
-
-  ('c3000010-0000-0000-0000-000000000001', 'b3000000-0000-0000-0000-000000000001',
-   'TRX Sprinter Start', 'Explosive hip drive with core stability for athletic power.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', 360, 10),
-
-  ('c3000011-0000-0000-0000-000000000001', 'b3000000-0000-0000-0000-000000000001',
-   'TRX Spinal Decompression', 'Hanging stretch for spinal decompression and relaxation.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4', 300, 11),
-
-  ('c3000012-0000-0000-0000-000000000001', 'b3000000-0000-0000-0000-000000000001',
-   'TRX Full Body Stretch Flow', 'Complete cool-down sequence for recovery and flexibility.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4', 420, 12)
+   'Deeper Assignment: Separating Learning From Identity',
+   'A compassionate writing practice to offer understanding to the one who learned to feel ashamed.',
+   'text', 'assignment', NULL, 270, 6, 'live', true)
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
   description = EXCLUDED.description,
+  lesson_type = EXCLUDED.lesson_type,
+  content_category = EXCLUDED.content_category,
   duration_sec = EXCLUDED.duration_sec;
 
--- ============================================================================
--- ============================================================================
--- COURSE 2: SWISS BALL TRAINING
--- ============================================================================
--- ============================================================================
+-- Update Week 3 text content
+UPDATE lessons SET content_text = E'# Living Inquiry: Week Three\n\nHold this inquiry throughout the week:\n\n**"What am I blaming myself for that was never a conscious choice?"**\n\n## How to Practice\n\nThroughout the week, notice moments when shame appears.\n\nInstead of believing the narrative, name the process:\n\n"This is conditioning."\n\nNotice how naming reduces intensity.\nNotice how compassion restores choice.\n\nThis is not indulgence. It is precision.\n\nLet understanding show itself through sensation, memory, and behavior.\n\nUnderstanding is the beginning of freedom.'
+WHERE id = 'c3000005-0000-0000-0000-000000000001';
 
-INSERT INTO courses (id, title, description, cover_url, is_published, instructor_id)
+UPDATE lessons SET content_text = E'# Deeper Assignment: Separating Learning From Identity\n\nChoose one shame-based belief you carry:\n- "I''m too much"\n- "I''m unsafe"\n- "I ruin things"\n- "I''m not enough"\n\nFor 7 days, every time it appears, repeat internally:\n\n**"This is conditioning, not identity."**\n\nDo not argue with the belief.\nDo not replace it.\nJust separate.\n\nThis trains the nervous system to distinguish pattern from self.'
+WHERE id = 'c3000007-0000-0000-0000-000000000001';
+
+-- Update Week 3 live call
+UPDATE lessons SET scheduled_at = '2025-01-22T19:00:00Z', meeting_url = ''
+WHERE id = 'c3000003-0000-0000-0000-000000000001';
+
+-- ============================================================================
+-- WEEK 4: The Observer and Inner Authority
+-- ============================================================================
+INSERT INTO modules (id, course_id, title, description, order_index, unlock_after_days, status, is_published)
 VALUES (
-  'a0000000-0000-0000-0000-000000000002',
-  'Complete Swiss Ball Training Program',
-  'Master Swiss Ball Training — Gentle Strength for Your Body. Build core strength, improve balance, and rehabilitate injuries using gentle stability ball exercises. Perfect for ages 30-65 seeking low-impact, therapeutic training. 15-week structured program from beginner to advanced.',
-  'https://vpdwubpodcrbicvldskg.supabase.co/storage/v1/object/public/courses/egon-rings.jpg',
-  true,
-  (SELECT id FROM auth.users LIMIT 1)
-)
-ON CONFLICT (id) DO UPDATE SET
-  title = EXCLUDED.title,
-  description = EXCLUDED.description,
-  cover_url = EXCLUDED.cover_url,
-  is_published = EXCLUDED.is_published;
-
--- ============================================================================
--- SWISS BALL MODULE 1: FOUNDATION (Beginner, Weeks 1-5)
--- ============================================================================
-INSERT INTO modules (id, course_id, title, description, order_index, unlock_after_days)
-VALUES (
-  'b1000000-0000-0000-0000-000000000002',
-  'a0000000-0000-0000-0000-000000000002',
-  'FOUNDATION',
-  'Building stability, learning proper positioning, and gentle core activation. Learn safe sitting, basic balance, pelvic tilts, gentle spine mobility, and breathing techniques for stability.',
-  1,
-  0  -- Unlocks immediately upon enrollment
-)
-ON CONFLICT (id) DO UPDATE SET
-  title = EXCLUDED.title,
-  description = EXCLUDED.description,
-  unlock_after_days = EXCLUDED.unlock_after_days;
-
--- Swiss Ball Module 1 Lessons (12 exercises)
-INSERT INTO lessons (id, module_id, title, description, lesson_type, content_url, duration_sec, order_index)
-VALUES
-  ('d1000001-0000-0000-0000-000000000002', 'b1000000-0000-0000-0000-000000000002',
-   'Safe Sitting & Ball Basics', 'Learn proper positioning and safe sitting technique on the Swiss Ball.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', 300, 1),
-
-  ('d1000002-0000-0000-0000-000000000002', 'b1000000-0000-0000-0000-000000000002',
-   'Basic Balance Introduction', 'Develop fundamental balance skills while seated on the ball.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', 240, 2),
-
-  ('d1000003-0000-0000-0000-000000000002', 'b1000000-0000-0000-0000-000000000002',
-   'Pelvic Tilts', 'Gentle pelvic movements to activate the core and mobilize the lower spine.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', 300, 3),
-
-  ('d1000004-0000-0000-0000-000000000002', 'b1000000-0000-0000-0000-000000000002',
-   'Gentle Spine Mobility', 'Soft spinal movements to increase flexibility and reduce stiffness.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', 300, 4),
-
-  ('d1000005-0000-0000-0000-000000000002', 'b1000000-0000-0000-0000-000000000002',
-   'Beginner Core Engagement', 'Learn to activate deep core muscles with gentle contractions.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4', 300, 5),
-
-  ('d1000006-0000-0000-0000-000000000002', 'b1000000-0000-0000-0000-000000000002',
-   'Seated Marching', 'Gentle leg lifts while maintaining balance and core stability.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4', 240, 6),
-
-  ('d1000007-0000-0000-0000-000000000002', 'b1000000-0000-0000-0000-000000000002',
-   'Upper Body Support Work', 'Build shoulder and arm stability using the ball for support.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4', 300, 7),
-
-  ('d1000008-0000-0000-0000-000000000002', 'b1000000-0000-0000-0000-000000000002',
-   'Breathing for Stability', 'Master diaphragmatic breathing techniques that enhance core stability.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4', 300, 8),
-
-  ('d1000009-0000-0000-0000-000000000002', 'b1000000-0000-0000-0000-000000000002',
-   'Seated Arm Reaches', 'Challenge balance while performing controlled arm movements.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4', 240, 9),
-
-  ('d1000010-0000-0000-0000-000000000002', 'b1000000-0000-0000-0000-000000000002',
-   'Gentle Ball Bouncing', 'Light bouncing to develop rhythm and coordination on the ball.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', 240, 10),
-
-  ('d1000011-0000-0000-0000-000000000002', 'b1000000-0000-0000-0000-000000000002',
-   'Supine Ball Support', 'Lying back on the ball for gentle spine extension and relaxation.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4', 300, 11),
-
-  ('d1000012-0000-0000-0000-000000000002', 'b1000000-0000-0000-0000-000000000002',
-   'Flexibility & Stretching Basics', 'Gentle stretching movements using the ball for support.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4', 360, 12)
-ON CONFLICT (id) DO UPDATE SET
-  title = EXCLUDED.title,
-  description = EXCLUDED.description,
-  duration_sec = EXCLUDED.duration_sec;
-
--- ============================================================================
--- SWISS BALL MODULE 2: PROGRESSIVE (Intermediate, Weeks 6-10)
--- ============================================================================
-INSERT INTO modules (id, course_id, title, description, order_index, unlock_after_days)
-VALUES (
-  'b2000000-0000-0000-0000-000000000002',
-  'a0000000-0000-0000-0000-000000000002',
-  'PROGRESSIVE',
-  'Increasing movement complexity, building endurance, and addressing imbalances. Dynamic balance challenges, bridge variations, wall squats, thoracic mobility, and controlled rolling.',
-  2,
-  35  -- Unlocks 5 weeks (35 days) after enrollment
-)
-ON CONFLICT (id) DO UPDATE SET
-  title = EXCLUDED.title,
-  description = EXCLUDED.description,
-  unlock_after_days = EXCLUDED.unlock_after_days;
-
--- Swiss Ball Module 2 Lessons (12 exercises)
-INSERT INTO lessons (id, module_id, title, description, lesson_type, content_url, duration_sec, order_index)
-VALUES
-  ('d2000001-0000-0000-0000-000000000002', 'b2000000-0000-0000-0000-000000000002',
-   'Dynamic Balance Challenges', 'Progress your balance with movement-based challenges on the ball.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', 300, 1),
-
-  ('d2000002-0000-0000-0000-000000000002', 'b2000000-0000-0000-0000-000000000002',
-   'Bridge Variations', 'Glute and hamstring strengthening with ball-supported bridges.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', 360, 2),
-
-  ('d2000003-0000-0000-0000-000000000002', 'b2000000-0000-0000-0000-000000000002',
-   'Wall Squats with Ball', 'Build leg strength with ball-supported wall squats.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', 300, 3),
-
-  ('d2000004-0000-0000-0000-000000000002', 'b2000000-0000-0000-0000-000000000002',
-   'Thoracic Mobility Work', 'Open up the upper back and improve thoracic spine movement.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', 300, 4),
-
-  ('d2000005-0000-0000-0000-000000000002', 'b2000000-0000-0000-0000-000000000002',
-   'Side-Lying Oblique Work', 'Strengthen obliques with supported side-lying exercises.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4', 300, 5),
-
-  ('d2000006-0000-0000-0000-000000000002', 'b2000000-0000-0000-0000-000000000002',
-   'Controlled Rolling', 'Learn to roll on the ball with control and coordination.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4', 300, 6),
-
-  ('d2000007-0000-0000-0000-000000000002', 'b2000000-0000-0000-0000-000000000002',
-   'Weight Shifting Exercises', 'Develop proprioception through controlled weight transfers.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4', 300, 7),
-
-  ('d2000008-0000-0000-0000-000000000002', 'b2000000-0000-0000-0000-000000000002',
-   'Prone Ball Balance', 'Build core strength lying face-down over the ball.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4', 300, 8),
-
-  ('d2000009-0000-0000-0000-000000000002', 'b2000000-0000-0000-0000-000000000002',
-   'Ball Pass Crunches', 'Core strengthening with ball passing between hands and feet.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4', 300, 9),
-
-  ('d2000010-0000-0000-0000-000000000002', 'b2000000-0000-0000-0000-000000000002',
-   'Hip Flexor Stretches', 'Open up tight hip flexors using the ball for support.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', 300, 10),
-
-  ('d2000011-0000-0000-0000-000000000002', 'b2000000-0000-0000-0000-000000000002',
-   'Back Extension', 'Strengthen the posterior chain with supported back extensions.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4', 300, 11),
-
-  ('d2000012-0000-0000-0000-000000000002', 'b2000000-0000-0000-0000-000000000002',
-   'Intermediate Flow Sequence', 'Combine multiple movements into a flowing sequence.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4', 420, 12)
-ON CONFLICT (id) DO UPDATE SET
-  title = EXCLUDED.title,
-  description = EXCLUDED.description,
-  duration_sec = EXCLUDED.duration_sec;
-
--- ============================================================================
--- SWISS BALL MODULE 3: MASTERY (Advanced, Weeks 11-15)
--- ============================================================================
-INSERT INTO modules (id, course_id, title, description, order_index, unlock_after_days)
-VALUES (
-  'b3000000-0000-0000-0000-000000000002',
-  'a0000000-0000-0000-0000-000000000002',
-  'MASTERY',
-  'Full-body integration, advanced balance, and functional movement patterns. Pike and plank variations, single-leg work, advanced hamstring curls, and complex spine articulation.',
+  'b4000000-0000-0000-0000-000000000001',
+  'a0000000-0000-0000-0000-000000000001',
+  'Week 4: The Observer and Inner Authority',
+  'Week Four completes the first month by stabilizing the observer. This week is about discovering the part of you that can see clearly without abandoning experience. This capacity is what restores inner authority.',
   3,
-  70  -- Unlocks 10 weeks (70 days) after enrollment
+  21,
+  'live',
+  true
 )
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
   description = EXCLUDED.description,
   unlock_after_days = EXCLUDED.unlock_after_days;
 
--- Swiss Ball Module 3 Lessons (12 exercises)
-INSERT INTO lessons (id, module_id, title, description, lesson_type, content_url, duration_sec, order_index)
+-- Week 4 Lessons
+INSERT INTO lessons (id, module_id, title, description, lesson_type, content_category, content_url, duration_sec, order_index, status, is_published)
 VALUES
-  ('d3000001-0000-0000-0000-000000000002', 'b3000000-0000-0000-0000-000000000002',
-   'Pike Variations', 'Advanced core exercise bringing hips up with feet on the ball.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', 360, 1),
+  ('c4000001-0000-0000-0000-000000000001', 'b4000000-0000-0000-0000-000000000001',
+   'Weekly Orientation: Reclaiming Your Authority',
+   'Introduction to the shift from seeking external approval to trusting inner wisdom. Moving from external validation to inner knowing.',
+   'video', 'orientation', '', 165, 0, 'live', true),
 
-  ('d3000002-0000-0000-0000-000000000002', 'b3000000-0000-0000-0000-000000000002',
-   'Plank Variations', 'Build total body stability with hands or feet on the ball.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', 360, 2),
+  ('c4000002-0000-0000-0000-000000000001', 'b4000000-0000-0000-0000-000000000001',
+   'Transmission: The Authority Within',
+   'The observer is not the mind watching itself. It is awareness prior to interpretation. It sees sensation, emotion, impulse, and thought as movements, not as truth. When the observer is present, identity loosens.',
+   'video', 'transmission', '', 1140, 1, 'live', true),
 
-  ('d3000003-0000-0000-0000-000000000002', 'b3000000-0000-0000-0000-000000000002',
-   'Single-Leg Balance Work', 'Challenge stability with single-leg exercises on the ball.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', 360, 3),
+  ('c4000003-0000-0000-0000-000000000001', 'b4000000-0000-0000-0000-000000000001',
+   'Live Clarification Call: Week 4',
+   'Completing Month One with integration and Q&A on inner authority. The foundation is now in place.',
+   'live', 'clarification', NULL, 5400, 2, 'live', true),
 
-  ('d3000004-0000-0000-0000-000000000002', 'b3000000-0000-0000-0000-000000000002',
-   'Advanced Hamstring Curls', 'Intense hamstring strengthening with feet on the ball.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', 360, 4),
+  ('c4000004-0000-0000-0000-000000000001', 'b4000000-0000-0000-0000-000000000001',
+   'Embodiment Practice: Establishing the Observer',
+   'A grounding practice to feel the physical experience of inner authority. Recognize that something is aware of all experience.',
+   'video', 'embodiment', '', 480, 3, 'live', true),
 
-  ('d3000005-0000-0000-0000-000000000002', 'b3000000-0000-0000-0000-000000000002',
-   'Upper Body Push on Ball', 'Push-up variations with hands or chest on the ball.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4', 360, 5),
+  ('c4000005-0000-0000-0000-000000000001', 'b4000000-0000-0000-0000-000000000001',
+   'Living Inquiry: What Changes When Experience Is Seen Rather Than Believed?',
+   'Questions that help distinguish between conditioned beliefs and inner knowing.',
+   'text', 'inquiry', NULL, 180, 4, 'live', true),
 
-  ('d3000006-0000-0000-0000-000000000002', 'b3000000-0000-0000-0000-000000000002',
-   'Upper Body Pull on Ball', 'Pulling exercises using the ball for support and instability.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4', 360, 6),
+  ('c4000006-0000-0000-0000-000000000001', 'b4000000-0000-0000-0000-000000000001',
+   'Meditation: Connecting to Inner Guidance',
+   'A meditation to strengthen the connection to your inner wise one. Seeing without becoming.',
+   'audio', 'meditation', '', 960, 5, 'live', true),
 
-  ('d3000007-0000-0000-0000-000000000002', 'b3000000-0000-0000-0000-000000000002',
-   'Complex Spine Articulation', 'Advanced spinal movements for mobility and control.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4', 360, 7),
-
-  ('d3000008-0000-0000-0000-000000000002', 'b3000000-0000-0000-0000-000000000002',
-   'Jackknife Exercise', 'Full-body core challenge bringing knees to chest on the ball.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4', 300, 8),
-
-  ('d3000009-0000-0000-0000-000000000002', 'b3000000-0000-0000-0000-000000000002',
-   'Stir the Pot', 'Advanced anti-rotation core exercise with forearms on the ball.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4', 300, 9),
-
-  ('d3000010-0000-0000-0000-000000000002', 'b3000000-0000-0000-0000-000000000002',
-   'Ball Rollout', 'Build core strength with controlled ball rollouts.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', 300, 10),
-
-  ('d3000011-0000-0000-0000-000000000002', 'b3000000-0000-0000-0000-000000000002',
-   'Creating Personal Routines', 'Learn to design your own therapeutic ball routines.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4', 420, 11),
-
-  ('d3000012-0000-0000-0000-000000000002', 'b3000000-0000-0000-0000-000000000002',
-   'Advanced Full Body Flow', 'Complete advanced sequence integrating all learned movements.',
-   'video', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4', 480, 12)
+  ('c4000007-0000-0000-0000-000000000001', 'b4000000-0000-0000-0000-000000000001',
+   'Deeper Assignment: Authority in Action',
+   'Reflection and integration of the first month. Preparing for what comes next.',
+   'text', 'assignment', NULL, 300, 6, 'live', true)
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
   description = EXCLUDED.description,
+  lesson_type = EXCLUDED.lesson_type,
+  content_category = EXCLUDED.content_category,
   duration_sec = EXCLUDED.duration_sec;
+
+-- Update Week 4 text content
+UPDATE lessons SET content_text = E'# Living Inquiry: Week Four\n\nHold this inquiry lightly throughout the week:\n\n**"What changes when experience is seen rather than believed?"**\n\n## How to Practice\n\nThroughout the day, notice moments of strong reaction.\n\nPause briefly and ask: "Can this be seen?"\n\nDo not change the reaction.\nDo not delay action if action is needed.\n\nSimply notice whether awareness is present.\n\nEven one second of observation changes the trajectory of response.\n\nThis is how inner authority is rebuilt — moment by moment.\n\nLet the answer reveal itself through direct experience.\n\nMonth One ends here — not with mastery, but with capacity.\n\nThe foundation is now in place.'
+WHERE id = 'c4000005-0000-0000-0000-000000000001';
+
+UPDATE lessons SET content_text = E'# Deeper Assignment: Authority in Action\n\nFor 7 days, choose one daily moment where you normally react automatically:\n- A conversation\n- A decision\n- A message\n- A request\n\nIn that moment:\n\n1. **Pause for one second**\n2. **Ask internally: "Can this be seen?"**\n3. **Act after awareness is present**\n\nYou are not slowing life down.\n\nYou are letting awareness arrive before action.\n\nThis is inner authority.\n\n---\n\n## Month One Complete\n\nYou have laid the foundation:\n- Awareness before change\n- Meeting the ego with compassion\n- Understanding conditioning and shame\n- Reclaiming inner authority\n\nThe work continues. The foundation is solid.'
+WHERE id = 'c4000007-0000-0000-0000-000000000001';
+
+-- Update Week 4 live call
+UPDATE lessons SET scheduled_at = '2025-01-29T19:00:00Z', meeting_url = ''
+WHERE id = 'c4000003-0000-0000-0000-000000000001';
 
 -- ============================================================================
 -- VERIFICATION QUERY (run after seeding to verify)

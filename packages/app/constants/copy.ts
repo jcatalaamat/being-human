@@ -1,11 +1,11 @@
 /**
- * Centralized copy/strings for the Holistic Training app.
+ * Centralized copy/strings for the Inner Ascend app.
  * All user-facing text should be defined here for easy localization and iteration.
  */
 
 export const BRAND = {
-  name: 'Holistic Training',
-  tagline: 'Transform your body, mind, and movement',
+  name: 'Inner Ascend',
+  tagline: 'Awaken to your true nature',
 } as const
 
 // Navigation labels

@@ -211,7 +211,7 @@ export const coursesRouter = createTRPCRouter({
                 moduleId: lesson.module_id,
                 title: lesson.title,
                 description: lesson.description,
-                type: lesson.lesson_type as 'video' | 'audio' | 'pdf' | 'text',
+                type: lesson.lesson_type as 'video' | 'audio' | 'pdf' | 'text' | 'live',
                 durationSec: lesson.duration_sec,
                 contentUrl: lesson.content_url,
                 contentText: lesson.content_text,
@@ -219,6 +219,18 @@ export const coursesRouter = createTRPCRouter({
                 status: (lesson.status || 'live') as 'draft' | 'scheduled' | 'live',
                 releaseAt: lesson.release_at,
                 isPublished: lesson.is_published,
+                contentCategory: lesson.content_category as
+                  | 'orientation'
+                  | 'transmission'
+                  | 'clarification'
+                  | 'embodiment'
+                  | 'inquiry'
+                  | 'meditation'
+                  | 'assignment'
+                  | null,
+                scheduledAt: lesson.scheduled_at,
+                replayUrl: lesson.replay_url,
+                meetingUrl: lesson.meeting_url,
                 isComplete,
                 lastPositionSec: progress?.last_position_sec || 0,
               }

@@ -282,13 +282,27 @@ export const adminRouter = createTRPCRouter({
         moduleId: z.string().uuid(),
         title: z.string().min(1),
         description: z.string().optional(),
-        lessonType: z.enum(['video', 'audio', 'pdf', 'text']),
+        lessonType: z.enum(['video', 'audio', 'pdf', 'text', 'live']),
         contentUrl: z.string().optional(),
         contentText: z.string().optional(),
         durationSec: z.number().int().min(0).optional(),
         orderIndex: z.number().int().min(0),
         status: z.enum(['draft', 'scheduled', 'live']).default('live'),
         releaseAt: z.string().datetime().optional(),
+        contentCategory: z
+          .enum([
+            'orientation',
+            'transmission',
+            'clarification',
+            'embodiment',
+            'inquiry',
+            'meditation',
+            'assignment',
+          ])
+          .optional(),
+        scheduledAt: z.string().datetime().optional(),
+        replayUrl: z.string().url().optional(),
+        meetingUrl: z.string().url().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -317,6 +331,10 @@ export const adminRouter = createTRPCRouter({
           status: input.status,
           release_at: input.releaseAt,
           is_published: input.status === 'live',
+          content_category: input.contentCategory,
+          scheduled_at: input.scheduledAt,
+          replay_url: input.replayUrl,
+          meeting_url: input.meetingUrl,
         })
         .select()
         .single()
@@ -334,13 +352,28 @@ export const adminRouter = createTRPCRouter({
         id: z.string().uuid(),
         title: z.string().min(1).optional(),
         description: z.string().optional(),
-        lessonType: z.enum(['video', 'audio', 'pdf', 'text']).optional(),
+        lessonType: z.enum(['video', 'audio', 'pdf', 'text', 'meditation', 'live']).optional(),
         contentUrl: z.string().optional(),
         contentText: z.string().optional(),
         durationSec: z.number().int().min(0).optional(),
         orderIndex: z.number().int().min(0).optional(),
         status: z.enum(['draft', 'scheduled', 'live']).optional(),
         releaseAt: z.string().datetime().optional().nullable(),
+        contentCategory: z
+          .enum([
+            'orientation',
+            'transmission',
+            'clarification',
+            'embodiment',
+            'inquiry',
+            'meditation',
+            'assignment',
+          ])
+          .optional()
+          .nullable(),
+        scheduledAt: z.string().datetime().optional().nullable(),
+        replayUrl: z.string().url().optional().nullable(),
+        meetingUrl: z.string().url().optional().nullable(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -377,6 +410,10 @@ export const adminRouter = createTRPCRouter({
             is_published: updates.status === 'live',
           }),
           ...(updates.releaseAt !== undefined && { release_at: updates.releaseAt }),
+          ...(updates.contentCategory !== undefined && { content_category: updates.contentCategory }),
+          ...(updates.scheduledAt !== undefined && { scheduled_at: updates.scheduledAt }),
+          ...(updates.replayUrl !== undefined && { replay_url: updates.replayUrl }),
+          ...(updates.meetingUrl !== undefined && { meeting_url: updates.meetingUrl }),
         })
         .eq('id', id)
         .select()

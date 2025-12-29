@@ -14,11 +14,11 @@ const sizeConfig = {
 }
 
 /**
- * Holistic Training brand logo component.
+ * Inner Ascend brand logo component.
  *
  * Usage:
  * - <BrandLogo /> - Icon only (default)
- * - <BrandLogo showText /> - Icon + "Holistic Training" text
+ * - <BrandLogo showText /> - Icon + "Inner Ascend" text
  * - <BrandLogo showText size="lg" /> - Large variant
  */
 export const BrandLogo = ({ showText = false, size = 'md', ...props }: BrandLogoProps) => {
@@ -27,14 +27,14 @@ export const BrandLogo = ({ showText = false, size = 'md', ...props }: BrandLogo
   return (
     <XStack ai="center" gap={config.gap} {...props}>
       <Image
-        source={{ uri: '/images/holistic-training-logo.png' }}
+        source={{ uri: '/images/inner-ascend-logo.png' }}
         width={config.iconSize}
         height={config.iconSize}
         borderRadius={config.iconSize / 4}
       />
       {showText && (
         <SizableText size={config.textSize} fontWeight="700" color="$color12">
-          Holistic Training
+          Inner Ascend
         </SizableText>
       )}
     </XStack>

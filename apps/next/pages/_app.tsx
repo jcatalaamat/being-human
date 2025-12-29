@@ -32,29 +32,29 @@ function MyApp({
   return (
     <>
       <Head>
-        <title>Holistic Training</title>
+        <title>Inner Ascend</title>
         <meta
           name="description"
-          content="Build Strength and Mobility Without Pain — Science-based TRX and Swiss Ball training for ages 30-65. Move better, feel stronger, train smarter."
+          content="Awaken to your true nature — A 12-month journey of self-discovery, embodied awareness, and inner transformation."
         />
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="stylesheet" href="/tamagui.css" />
 
         {/* Open Graph */}
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Holistic Training" />
+        <meta property="og:title" content="Inner Ascend" />
         <meta
           property="og:description"
-          content="Build Strength and Mobility Without Pain — Science-based TRX and Swiss Ball training for ages 30-65. Move better, feel stronger, train smarter."
+          content="Awaken to your true nature — A 12-month journey of self-discovery, embodied awareness, and inner transformation."
         />
         <meta property="og:image" content="/images/og-image.jpg" />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Holistic Training" />
+        <meta name="twitter:title" content="Inner Ascend" />
         <meta
           name="twitter:description"
-          content="Build Strength and Mobility Without Pain — Science-based TRX and Swiss Ball training for ages 30-65."
+          content="Awaken to your true nature — A 12-month journey of self-discovery and inner transformation."
         />
         <meta name="twitter:image" content="/images/og-image.jpg" />
       </Head>

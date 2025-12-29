@@ -5,6 +5,7 @@ import { useAppRouter } from 'app/utils/navigation'
 import { useState } from 'react'
 
 import { AudioPlayer } from './components/audio-player'
+import { LiveLesson } from './components/live-lesson'
 import { PdfViewer } from './components/pdf-viewer'
 import { TextContent } from './components/text-content'
 import { VideoPlayer } from './components/video-player'
@@ -88,6 +89,17 @@ export function LessonScreen({ lessonId }: LessonScreenProps) {
         return <PdfViewer url={lesson.contentUrl || ''} />
       case 'text':
         return <TextContent content={lesson.contentText || ''} />
+      case 'live':
+        return (
+          <LiveLesson
+            scheduledAt={lesson.scheduledAt}
+            replayUrl={lesson.replayUrl}
+            meetingUrl={lesson.meetingUrl}
+            lessonId={lessonId}
+            courseId={lesson.module.courseId}
+            initialPositionSec={lesson.lastPositionSec}
+          />
+        )
       default:
         return <ErrorState message="Unknown lesson type" />
     }

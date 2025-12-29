@@ -71,7 +71,7 @@ export const lessonsRouter = createTRPCRouter({
       moduleId: lesson.module_id,
       title: lesson.title,
       description: lesson.description,
-      type: lesson.lesson_type as 'video' | 'audio' | 'pdf' | 'text',
+      type: lesson.lesson_type as 'video' | 'audio' | 'pdf' | 'text' | 'live',
       durationSec: lesson.duration_sec,
       contentUrl: lesson.content_url,
       contentText: lesson.content_text,
@@ -79,6 +79,18 @@ export const lessonsRouter = createTRPCRouter({
       status: (lesson.status || 'live') as 'draft' | 'scheduled' | 'live',
       releaseAt: lesson.release_at,
       isPublished: lesson.is_published,
+      contentCategory: lesson.content_category as
+        | 'orientation'
+        | 'transmission'
+        | 'clarification'
+        | 'embodiment'
+        | 'inquiry'
+        | 'meditation'
+        | 'assignment'
+        | null,
+      scheduledAt: lesson.scheduled_at,
+      replayUrl: lesson.replay_url,
+      meetingUrl: lesson.meeting_url,
       module: {
         id: lesson.modules.id,
         title: lesson.modules.title,
@@ -170,7 +182,7 @@ export const lessonsRouter = createTRPCRouter({
           id: nextInModule.id,
           moduleId: nextInModule.module_id,
           title: nextInModule.title,
-          type: nextInModule.lesson_type as 'video' | 'audio' | 'pdf' | 'text',
+          type: nextInModule.lesson_type as 'video' | 'audio' | 'pdf' | 'text' | 'live',
         }
       }
 
@@ -206,7 +218,7 @@ export const lessonsRouter = createTRPCRouter({
         id: firstLessonNextModule.id,
         moduleId: firstLessonNextModule.module_id,
         title: firstLessonNextModule.title,
-        type: firstLessonNextModule.lesson_type as 'video' | 'audio' | 'pdf' | 'text',
+        type: firstLessonNextModule.lesson_type as 'video' | 'audio' | 'pdf' | 'text' | 'live',
       }
     }),
 
@@ -249,7 +261,7 @@ export const lessonsRouter = createTRPCRouter({
           id: previousInModule.id,
           moduleId: previousInModule.module_id,
           title: previousInModule.title,
-          type: previousInModule.lesson_type as 'video' | 'audio' | 'pdf' | 'text',
+          type: previousInModule.lesson_type as 'video' | 'audio' | 'pdf' | 'text' | 'live',
         }
       }
 
@@ -285,7 +297,7 @@ export const lessonsRouter = createTRPCRouter({
         id: lastLessonPreviousModule.id,
         moduleId: lastLessonPreviousModule.module_id,
         title: lastLessonPreviousModule.title,
-        type: lastLessonPreviousModule.lesson_type as 'video' | 'audio' | 'pdf' | 'text',
+        type: lastLessonPreviousModule.lesson_type as 'video' | 'audio' | 'pdf' | 'text' | 'live',
       }
     }),
 })
