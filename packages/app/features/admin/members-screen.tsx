@@ -1,4 +1,4 @@
-import { Avatar, Button, EmptyState, H2, Paragraph, ScrollView, Settings, XStack, YStack, getTokens } from '@my/ui'
+import { Avatar, Button, EmptyState, FullscreenSpinner, H2, Paragraph, ScrollView, Settings, XStack, YStack, getTokens } from '@my/ui'
 import { Eye, User, Users } from '@tamagui/lucide-icons'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
@@ -27,7 +27,7 @@ export function AdminMembersScreen() {
         <H2>Members</H2>
 
         {isPending ? (
-          <Paragraph>Loading...</Paragraph>
+          <FullscreenSpinner />
         ) : members && members.length === 0 ? (
           <EmptyState icon={Users} title="No members yet" message="Members will appear here when they enroll in courses" />
         ) : (

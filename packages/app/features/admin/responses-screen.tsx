@@ -2,6 +2,7 @@ import {
   Avatar,
   Button,
   EmptyState,
+  FullscreenSpinner,
   H2,
   Paragraph,
   ScrollView,
@@ -43,7 +44,7 @@ export function AdminResponsesScreen() {
         </Paragraph>
 
         {isPending ? (
-          <Paragraph>Loading...</Paragraph>
+          <FullscreenSpinner />
         ) : responses && responses.length === 0 ? (
           <EmptyState
             icon={ClipboardList}

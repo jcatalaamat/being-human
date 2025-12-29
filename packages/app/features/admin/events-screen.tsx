@@ -3,6 +3,7 @@ import {
   Button,
   EmptyState,
   FormSheet,
+  FullscreenSpinner,
   H2,
   Input,
   Paragraph,
@@ -395,7 +396,7 @@ export function AdminEventsScreen() {
         </XStack>
 
         {isPending ? (
-          <Paragraph>Loading...</Paragraph>
+          <FullscreenSpinner />
         ) : events && events.length === 0 ? (
           <EmptyState
             icon={Calendar}

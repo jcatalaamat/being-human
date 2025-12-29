@@ -3,6 +3,7 @@ import {
   Button,
   EmptyState,
   FormSheet,
+  FullscreenSpinner,
   H4,
   Input,
   Paragraph,
@@ -339,7 +340,7 @@ export function AdminCoursesScreen() {
         </YStack>
 
         {isPending ? (
-          <Paragraph>Loading...</Paragraph>
+          <FullscreenSpinner />
         ) : courses && courses.length === 0 ? (
           <EmptyState
             icon={Dumbbell}

@@ -3,6 +3,7 @@ import {
   Button,
   EmptyState,
   ErrorState,
+  FullscreenSpinner,
   H2,
   Paragraph,
   ScrollView,
@@ -71,7 +72,7 @@ export function AdminJournalInboxScreen() {
         <H2>Journal Inbox</H2>
 
         {isPending ? (
-          <Paragraph>Loading...</Paragraph>
+          <FullscreenSpinner />
         ) : entries && entries.length === 0 ? (
           <EmptyState
             icon={BookOpen}

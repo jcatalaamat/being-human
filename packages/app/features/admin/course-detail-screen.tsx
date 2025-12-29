@@ -1,4 +1,4 @@
-import { Button, H2, H4, Paragraph, ScrollView, Settings, YStack, XStack } from '@my/ui'
+import { Button, FullscreenSpinner, H2, H4, Paragraph, ScrollView, Settings, YStack, XStack } from '@my/ui'
 import { Plus, FileText, Trash, Pencil, ChevronUp, ChevronDown } from '@tamagui/lucide-icons'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
@@ -67,7 +67,7 @@ export function AdminCourseDetailScreen({ courseId }: AdminCourseDetailScreenPro
     refetch()
   }
 
-  if (!course) return <Paragraph>Loading...</Paragraph>
+  if (!course) return <FullscreenSpinner />
 
   return (
     <ScrollView>
