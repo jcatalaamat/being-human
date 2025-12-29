@@ -1,10 +1,11 @@
 import { Edit3 } from '@tamagui/lucide-icons'
-import { Card, H5, Paragraph, XStack, YStack } from 'tamagui'
+import { Card, H5, Image, Paragraph, XStack, YStack } from 'tamagui'
 
 export interface NextActionCardProps {
   title: string
   lessonTitle: string
   courseTitle: string
+  thumbnailUrl?: string | null
   onPress?: () => void
 }
 
@@ -12,6 +13,7 @@ export const NextActionCard = ({
   title,
   lessonTitle,
   courseTitle,
+  thumbnailUrl,
   onPress,
 }: NextActionCardProps) => {
   return (
@@ -25,9 +27,19 @@ export const NextActionCard = ({
       animation="quick"
     >
       <XStack gap="$3" ai="center" pointerEvents="none">
-        <YStack bg="$orange5" br="$3" p="$3" ai="center" jc="center" w={56} h={56}>
-          <Edit3 size={24} color="$orange10" />
-        </YStack>
+        {thumbnailUrl ? (
+          <Image
+            source={{ uri: thumbnailUrl }}
+            w={56}
+            h={56}
+            br="$3"
+            resizeMode="cover"
+          />
+        ) : (
+          <YStack bg="$orange5" br="$3" p="$3" ai="center" jc="center" w={56} h={56}>
+            <Edit3 size={24} color="$orange10" />
+          </YStack>
+        )}
 
         <YStack f={1} gap="$1">
           <Paragraph size="$2" theme="alt2">

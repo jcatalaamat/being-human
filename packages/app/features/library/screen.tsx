@@ -102,6 +102,7 @@ export function LibraryScreen() {
             title={pendingPrompts[0].title}
             lessonTitle={pendingPrompts[0].lessonTitle}
             courseTitle={pendingPrompts[0].courseTitle}
+            thumbnailUrl={pendingPrompts[0].thumbnailUrl}
             onPress={() => handlePromptPress(pendingPrompts[0].lessonId)}
           />
         )}

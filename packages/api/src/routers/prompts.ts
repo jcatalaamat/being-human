@@ -225,6 +225,7 @@ export const promptsRouter = createTRPCRouter({
             courses!inner(
               id,
               title,
+              cover_url,
               tenant_id
             )
           )
@@ -270,7 +271,7 @@ export const promptsRouter = createTRPCRouter({
           title: string
           modules: {
             title: string
-            courses: { id: string; title: string; tenant_id: string }
+            courses: { id: string; title: string; cover_url: string | null; tenant_id: string }
           }
         }
         const courseId = lessons.modules.courses.id
@@ -282,7 +283,7 @@ export const promptsRouter = createTRPCRouter({
           title: string
           modules: {
             title: string
-            courses: { id: string; title: string; tenant_id: string }
+            courses: { id: string; title: string; cover_url: string | null; tenant_id: string }
           }
         }
 
@@ -293,6 +294,7 @@ export const promptsRouter = createTRPCRouter({
           lessonTitle: lessons.title,
           moduleTitle: lessons.modules.title,
           courseTitle: lessons.modules.courses.title,
+          thumbnailUrl: lessons.modules.courses.cover_url,
         }
       })
 

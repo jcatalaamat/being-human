@@ -294,6 +294,7 @@ export function PromptFormSheet({
               <XStack gap="$2">
                 <YStack f={1}>
                   <Select
+                    disablePreventBodyScroll
                     value={field.type}
                     onValueChange={(v) =>
                       updateField(field.id, { type: v as PromptField['type'] })
@@ -304,18 +305,22 @@ export function PromptFormSheet({
                     </Select.Trigger>
 
                     <Adapt when="sm" platform="touch">
-                      <Sheet modal dismissOnSnapToBottom>
+                      <Sheet
+                        modal
+                        dismissOnSnapToBottom
+                        zIndex={200_000}
+                        snapPointsMode="fit"
+                      >
                         <Sheet.Frame>
                           <Sheet.ScrollView>
                             <Adapt.Contents />
                           </Sheet.ScrollView>
                         </Sheet.Frame>
-                        <Sheet.Overlay />
+                        <Sheet.Overlay zIndex={199_999} />
                       </Sheet>
                     </Adapt>
 
-                    <Select.Content zIndex={200000}>
-                      <Select.ScrollUpButton />
+                    <Select.Content zIndex={200_000}>
                       <Select.Viewport>
                         <Select.Item value="text" index={0}>
                           <Select.ItemText>Short Text</Select.ItemText>
@@ -336,7 +341,6 @@ export function PromptFormSheet({
                           </Select.ItemIndicator>
                         </Select.Item>
                       </Select.Viewport>
-                      <Select.ScrollDownButton />
                     </Select.Content>
                   </Select>
                 </YStack>
