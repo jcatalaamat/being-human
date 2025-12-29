@@ -1,36 +1,36 @@
 import { Onboarding, OnboardingStepInfo, StepContent } from '@my/ui'
-import { Activity, Heart, TrendingUp } from '@tamagui/lucide-icons'
+import { Eye, Heart, Sparkles } from '@tamagui/lucide-icons'
 import React from 'react'
 import { useRouter } from 'solito/router'
 
 const steps: OnboardingStepInfo[] = [
   {
-    theme: 'orange',
+    theme: 'purple',
     Content: () => (
       <StepContent
-        title="Build Strength"
-        icon={Activity}
-        description="Science-based TRX and Swiss Ball training designed specifically for ages 30-65. Move better, feel stronger, train smarter."
+        title="Awaken Self-Awareness"
+        icon={Eye}
+        description="Discover the observer within — the awareness that exists prior to thought. Learn to see yourself clearly, without judgment."
       />
     ),
   },
   {
-    theme: 'green',
+    theme: 'purple',
     Content: () => (
       <StepContent
-        title="Pain-Free Movement"
+        title="Embody Your Truth"
         icon={Heart}
-        description="Train smarter, not harder. Protect your muscles while gaining strength and mobility without aggravating old injuries."
+        description="Move beyond intellectual understanding into lived experience. Transform patterns through presence, not force."
       />
     ),
   },
   {
-    theme: 'blue',
+    theme: 'purple',
     Content: () => (
       <StepContent
-        title="Progressive Training"
-        icon={TrendingUp}
-        description="Three carefully designed levels from Beginner to Advanced that safely advance your capabilities at your own pace."
+        title="Reclaim Inner Authority"
+        icon={Sparkles}
+        description="Trust your own knowing. A 12-month journey of self-discovery, embodied awareness, and inner transformation."
       />
     ),
   },

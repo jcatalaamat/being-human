@@ -77,7 +77,7 @@ export const SettingsScreen = () => {
         </Settings>
 
         <Paragraph py="$2" ta="center" theme="alt2">
-          Holistic Training {packageJson.version}
+          Inner Ascend {packageJson.version}
         </Paragraph>
       </YStack>
     </ScrollView>

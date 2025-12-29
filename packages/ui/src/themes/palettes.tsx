@@ -34,7 +34,7 @@ export const palettes = (() => {
     ]
   }
 
-  // Brand color from config - uses Holistic Training brand colors
+  // Brand color from config - uses Inner Ascend brand colors
   const brandColorKey = `${brandConfig.primaryColorName}${brandConfig.lightStep}` as keyof typeof color
   const brandColorKeyLight = `${brandColorKey}Light` as keyof typeof color
   const brandColorKeyDark = `${brandColorKey}Dark` as keyof typeof color

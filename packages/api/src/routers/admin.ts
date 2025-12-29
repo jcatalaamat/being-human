@@ -49,8 +49,8 @@ export const adminRouter = createTRPCRouter({
         id: z.string().uuid(),
         title: z.string().min(1).optional(),
         description: z.string().optional(),
-        coverUrl: z.string().url().optional(),
-        promoVideoUrl: z.string().url().optional(),
+        coverUrl: z.string().url().optional().nullable().or(z.literal('')),
+        promoVideoUrl: z.string().url().optional().nullable().or(z.literal('')),
         status: z.enum(['draft', 'scheduled', 'live']).optional(),
         releaseAt: z.string().datetime().optional().nullable(),
       })

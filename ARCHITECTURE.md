@@ -1,4 +1,4 @@
-# Holistic Training - Architecture Guide
+# Inner Ascend - Architecture Guide
 
 A multi-tenant course platform built on Tamagui Takeout.
 

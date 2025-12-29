@@ -131,57 +131,9 @@ RETURNS BOOLEAN AS $$
 $$ LANGUAGE sql SECURITY DEFINER;
 
 -- ============================================================================
--- 7. Create default tenant and migrate existing data
+-- 7. Default tenant is now created via seed.sql (Inner Ascend)
 -- ============================================================================
-DO $$
-DECLARE
-  v_default_tenant_id UUID;
-  v_first_instructor_id UUID;
-BEGIN
-  -- Check if there are any existing courses
-  IF EXISTS (SELECT 1 FROM courses LIMIT 1) THEN
-    -- Get the first instructor (course creator) to be the owner
-    SELECT instructor_id INTO v_first_instructor_id
-    FROM courses
-    WHERE instructor_id IS NOT NULL
-    LIMIT 1;
-
-    -- Create default tenant
-    INSERT INTO tenants (name, slug, description)
-    VALUES ('Holistic Training', 'holistic-training', 'Default organization for existing courses')
-    RETURNING id INTO v_default_tenant_id;
-
-    -- Assign all existing courses to default tenant
-    UPDATE courses SET tenant_id = v_default_tenant_id WHERE tenant_id IS NULL;
-
-    -- Make original instructors tenant members
-    INSERT INTO tenant_memberships (tenant_id, user_id, role, accepted_at)
-    SELECT DISTINCT v_default_tenant_id, instructor_id, 'instructor'::tenant_role, NOW()
-    FROM courses
-    WHERE instructor_id IS NOT NULL
-    ON CONFLICT (tenant_id, user_id) DO NOTHING;
-
-    -- Make first instructor the owner (if exists)
-    IF v_first_instructor_id IS NOT NULL THEN
-      UPDATE tenant_memberships
-      SET role = 'owner'
-      WHERE tenant_id = v_default_tenant_id
-        AND user_id = v_first_instructor_id;
-    END IF;
-
-    -- Add all existing users with course progress as members
-    INSERT INTO tenant_memberships (tenant_id, user_id, role, accepted_at)
-    SELECT DISTINCT v_default_tenant_id, ucp.user_id, 'member'::tenant_role, NOW()
-    FROM user_course_progress ucp
-    WHERE NOT EXISTS (
-      SELECT 1 FROM tenant_memberships tm
-      WHERE tm.tenant_id = v_default_tenant_id AND tm.user_id = ucp.user_id
-    )
-    ON CONFLICT (tenant_id, user_id) DO NOTHING;
-
-    RAISE NOTICE 'Migrated existing data to tenant: %', v_default_tenant_id;
-  END IF;
-END $$;
+-- Tenant creation moved to supabase/seed.sql
 
 -- ============================================================================
 -- 8. Make tenant_id NOT NULL after migration

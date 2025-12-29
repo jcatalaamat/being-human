@@ -27,7 +27,7 @@ export const BrandLogo = ({ showText = false, size = 'md', ...props }: BrandLogo
   return (
     <XStack ai="center" gap={config.gap} {...props}>
       <Image
-        source={{ uri: '/images/inner-ascend-logo.png' }}
+        source={{ uri: '/images/double-spiral.jpg' }}
         width={config.iconSize}
         height={config.iconSize}
         borderRadius={config.iconSize / 4}

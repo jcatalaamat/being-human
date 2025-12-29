@@ -23,7 +23,7 @@ VALUES (
   '00000000-0000-0000-0000-000000000001',
   'Inner Ascend: A 12-Month Journey of Awakening',
   E'**Month One: Foundations of Self-Awareness**\n\nThis transformative journey begins with the essential foundation: learning to see ourselves clearly, without judgment, and without the agenda to fix.\n\nOver these four weeks, you will:\n- Discover the observer within — the awareness that exists prior to thought\n- Reframe your relationship with ego from enemy to adaptive ally\n- Understand how shame became encoded in your nervous system\n- Reclaim your inner authority and trust your own knowing\n\n**Weekly Structure:**\n- Weekly Orientation (2-3 min)\n- Deep Transmission Teaching (10-20 min)\n- Live Clarification Call (60-90 min)\n- Embodiment Practice (5-10 min)\n- Living Inquiry for Daily Life\n- Guided Meditation (10-20 min)\n- Deeper Assignment for Integration\n\n**Time Commitment:**\n- 1 live call per week\n- 10-20 minutes daily practice\n- Optional deeper exploration',
-  '',
+  'https://rupqjzppjiqocmniioiv.supabase.co/storage/v1/object/public/courses/spiral-logo.jpg',
   'live',
   true,
   NULL

@@ -16,7 +16,7 @@ const Page: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Lesson - Holistic Training</title>
+        <title>Lesson - Inner Ascend</title>
       </Head>
       <LessonScreen lessonId={id} />
     </>

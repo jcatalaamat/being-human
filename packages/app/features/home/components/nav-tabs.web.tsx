@@ -10,6 +10,7 @@ import {
   TabsTabProps,
 } from '@my/ui'
 import { NAV } from 'app/constants/copy'
+import { useTenant } from 'app/provider/tenant/TenantContext'
 import { useRouter as useNextRouter } from 'next/router'
 import { useState } from 'react'
 import { useRouter } from 'solito/router'
@@ -20,7 +21,11 @@ import { useRouter } from 'solito/router'
 export const NavTabs = (props: TabsProps) => {
   const nextRouter = useNextRouter()
   const router = useRouter()
+  const { currentTenant } = useTenant()
   const currentTab = nextRouter.pathname
+
+  // Only show admin tab for owners, admins, and instructors
+  const canAccessAdmin = currentTenant?.role && ['owner', 'admin', 'instructor'].includes(currentTenant.role)
   const setCurrentTab = (newRoute: string) => router.push(newRoute)
   /**
    * Layout of the Tab user might intend to select (hovering / focusing)
@@ -96,9 +101,11 @@ export const NavTabs = (props: TabsProps) => {
         <Tab value="/" onInteraction={handleOnInteraction}>
           {NAV.courses}
         </Tab>
-        <Tab value="/admin" onInteraction={handleOnInteraction}>
-          {NAV.admin}
-        </Tab>
+        {canAccessAdmin && (
+          <Tab value="/admin" onInteraction={handleOnInteraction}>
+            {NAV.admin}
+          </Tab>
+        )}
         <Tab value="/settings" onInteraction={handleOnInteraction}>
           {NAV.settings}
         </Tab>
