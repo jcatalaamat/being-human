@@ -1,5 +1,5 @@
-import { LibraryScreen } from 'app/features/library/screen'
+import { HomeScreen } from 'app/features/home/screen'
 
 export default function Screen() {
-  return <LibraryScreen />
+  return <HomeScreen />
 }

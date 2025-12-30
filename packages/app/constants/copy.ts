@@ -10,20 +10,23 @@ export const BRAND = {
 
 // Navigation labels
 export const NAV = {
-  courses: 'Courses',
+  home: 'Home',
+  course: 'Course',
+  courses: 'Course', // Legacy alias
+  assignments: 'Assignments',
   profile: 'Profile',
   settings: 'Settings',
   admin: 'Admin',
   downloads: 'Downloads',
 } as const
 
-// Courses/Library section
+// Course section (contains modules which contain lessons)
 export const COURSES_SECTION = {
-  pageTitle: 'Courses',
+  pageTitle: 'Course',
   continueLearning: 'Continue Learning',
   allCourses: 'All Courses',
-  noCourses: 'No courses yet',
-  noCoursesMessage: 'New courses coming soon.',
+  noCourses: 'No course yet',
+  noCoursesMessage: 'New content coming soon.',
 } as const
 
 // Alias for compatibility
@@ -80,6 +83,19 @@ export const ERRORS = {
   unknownType: 'Unknown content type',
 } as const
 
+// Assignments section (formerly Journal)
+export const ASSIGNMENTS = {
+  pageTitle: 'Assignments',
+  newEntry: 'New Assignment',
+  myEntries: 'My Assignments',
+  staffInbox: 'Staff Inbox',
+  noEntries: 'No assignments',
+  noEntriesMessage: 'Start writing to capture your reflections.',
+  noSubmissions: 'No submissions',
+  noSubmissionsMessage: 'Student assignments will appear here.',
+} as const
+
 // Aliases
 export const COURSE = PROGRAM
 export const LESSON = EXERCISE
+export const JOURNAL = ASSIGNMENTS

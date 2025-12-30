@@ -2,6 +2,8 @@ import {
   BookOpen,
   Calendar,
   Download,
+  Home,
+  PenTool,
   Sparkles,
   Settings as SettingsIcon,
   Shield,
@@ -37,7 +39,14 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: NAV.courses,
+          title: NAV.home,
+          tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="course"
+        options={{
+          title: NAV.course,
           tabBarIcon: ({ color, size }) => <Sparkles size={size} color={color} />,
         }}
       />
@@ -49,10 +58,16 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="assignments"
+        options={{
+          title: NAV.assignments,
+          tabBarIcon: ({ color, size }) => <PenTool size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="journal"
         options={{
-          title: 'Journal',
-          tabBarIcon: ({ color, size }) => <BookOpen size={size} color={color} />,
+          href: null, // Hidden - redirects to assignments
         }}
       />
       <Tabs.Screen

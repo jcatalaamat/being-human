@@ -1,5 +1,5 @@
 import { EmptyState, ErrorState, FullscreenSpinner, JournalEntryCard } from '@my/ui'
-import { BookOpen, Plus, X } from '@tamagui/lucide-icons'
+import { PenTool, Plus, X } from '@tamagui/lucide-icons'
 import {
   Button,
   H2,
@@ -12,6 +12,7 @@ import {
   XStack,
   YStack,
 } from 'tamagui'
+import { ASSIGNMENTS } from 'app/constants/copy'
 import { useTenant } from 'app/provider/tenant/TenantContext'
 import { api } from 'app/utils/api'
 import { useAppRouter } from 'app/utils/navigation'
@@ -56,7 +57,7 @@ export function JournalScreen() {
       setShowCreateSheet(false)
       setNewTitle('')
       setNewBody('')
-      router.push(`/journal/${data.id}`)
+      router.push(`/assignments/${data.id}`)
     },
   })
 
@@ -74,7 +75,7 @@ export function JournalScreen() {
   }
 
   const handleEntryPress = (entryId: string) => {
-    router.push(`/journal/${entryId}`)
+    router.push(`/assignments/${entryId}`)
   }
 
   const handleCreate = () => {
@@ -94,10 +95,10 @@ export function JournalScreen() {
       <ScrollView>
         <YStack maw={800} mx="auto" w="100%" py="$6" px="$4" gap="$4">
           <XStack jc="space-between" ai="center">
-            <H2>Journal</H2>
+            <H2>{ASSIGNMENTS.pageTitle}</H2>
             {!showStaffView && (
               <Button size="$3" icon={Plus} onPress={handleCreate} themeInverse>
-                New Entry
+                {ASSIGNMENTS.newEntry}
               </Button>
             )}
           </XStack>
@@ -110,7 +111,7 @@ export function JournalScreen() {
                 color={!showStaffView ? 'white' : '$color12'}
                 onPress={() => setShowStaffView(false)}
               >
-                My Entries
+                {ASSIGNMENTS.myEntries}
               </Button>
               <Button
                 size="$3"
@@ -118,19 +119,19 @@ export function JournalScreen() {
                 color={showStaffView ? 'white' : '$color12'}
                 onPress={() => setShowStaffView(true)}
               >
-                Staff Inbox
+                {ASSIGNMENTS.staffInbox}
               </Button>
             </XStack>
           )}
 
           {!entries || entries.length === 0 ? (
             <EmptyState
-              icon={BookOpen}
-              title={showStaffView ? 'No submissions' : 'No journal entries'}
+              icon={PenTool}
+              title={showStaffView ? ASSIGNMENTS.noSubmissions : ASSIGNMENTS.noEntries}
               message={
                 showStaffView
-                  ? 'Student journal entries will appear here.'
-                  : 'Start writing to capture your reflections.'
+                  ? ASSIGNMENTS.noSubmissionsMessage
+                  : ASSIGNMENTS.noEntriesMessage
               }
             />
           ) : (
@@ -171,7 +172,7 @@ export function JournalScreen() {
         <Sheet.Handle />
         <Sheet.Frame p="$4" gap="$4">
           <XStack jc="space-between" ai="center">
-            <H4>New Journal Entry</H4>
+            <H4>{ASSIGNMENTS.newEntry}</H4>
             <Button
               size="$2"
               circular
