@@ -20,7 +20,8 @@ export const coursesRouter = createTRPCRouter({
       .select('*')
       .eq('tenant_id', ctx.tenant.tenantId)
       .in('status', ['live', 'scheduled'])
-      .order('created_at', { ascending: false })
+      .order('order_index', { ascending: true })
+      .order('created_at', { ascending: true })
 
     if (error) {
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message })

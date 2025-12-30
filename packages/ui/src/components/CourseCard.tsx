@@ -13,6 +13,9 @@ export interface CourseCardProps extends CardProps {
   onPress?: () => void
 }
 
+// Default placeholder image for courses without a cover
+const DEFAULT_COVER_URL = 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?w=800&q=80'
+
 export const CourseCard = ({
   id,
   title,
@@ -22,18 +25,18 @@ export const CourseCard = ({
   onPress,
   ...props
 }: CourseCardProps) => {
+  const imageUrl = coverUrl || DEFAULT_COVER_URL
+
   return (
     <Card br="$3" bordered overflow="hidden" pressStyle={{ scale: 0.98, opacity: 0.8 }} cursor="pointer" onPress={onPress} animation="quick" {...props}>
       <Card.Header p="$0">
-        {coverUrl && (
-          <Image
-            source={{
-              uri: coverUrl,
-            }}
-            h={150}
-            resizeMode="cover"
-          />
-        )}
+        <Image
+          source={{
+            uri: imageUrl,
+          }}
+          h={150}
+          resizeMode="cover"
+        />
         <YStack padding="$3" gap="$2">
           <H4 size="$5" numberOfLines={2}>
             {title}
