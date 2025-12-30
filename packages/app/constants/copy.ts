@@ -22,10 +22,10 @@ export const NAV = {
 
 // Course section (contains modules which contain lessons)
 export const COURSES_SECTION = {
-  pageTitle: 'Course',
+  pageTitle: 'All Modules',
   continueLearning: 'Continue Learning',
-  allCourses: 'All Courses',
-  noCourses: 'No course yet',
+  allCourses: 'All Modules',
+  noCourses: 'No modules yet',
   noCoursesMessage: 'New content coming soon.',
 } as const
 
