@@ -13,8 +13,8 @@ export interface CourseCardProps extends CardProps {
   onPress?: () => void
 }
 
-// Default placeholder image for courses without a cover
-const DEFAULT_COVER_URL = 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?w=800&q=80'
+// Default placeholder image for courses without a cover (Inner Ascend branding)
+const DEFAULT_COVER_URL = 'https://rupqjzppjiqocmniioiv.supabase.co/storage/v1/object/public/courses/spiral-logo.jpg'
 
 export const CourseCard = ({
   id,
