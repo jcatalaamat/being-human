@@ -11,8 +11,8 @@ export const BRAND = {
 // Navigation labels
 export const NAV = {
   home: 'Home',
-  course: 'Course',
-  courses: 'Course', // Legacy alias
+  course: 'Modules',
+  courses: 'Modules', // Legacy alias
   assignments: 'Assignments',
   profile: 'Profile',
   settings: 'Settings',

@@ -81,7 +81,7 @@ export function HomeScreen() {
           <XStack gap="$3" flexWrap="wrap">
             <QuickLinkCard
               icon={<BookOpen size={24} color="$color11" />}
-              title="Course"
+              title="Modules"
               description="Continue your journey"
               onPress={() => router.push('/course')}
             />
